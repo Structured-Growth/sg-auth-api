@@ -1,6 +1,5 @@
 import { randomBytes, createCipheriv, createDecipheriv } from "crypto";
 import { BeforeCreate, BeforeUpdate, Column, DataType, Model, Table } from "sequelize-typescript";
-import { Optional } from "sequelize";
 import { container, RegionEnum, DefaultModelInterface } from "@structured-growth/microservice-sdk";
 
 export interface OAuthClientAttributes extends DefaultModelInterface {
@@ -12,12 +11,12 @@ export interface OAuthClientAttributes extends DefaultModelInterface {
 }
 
 export interface OAuthClientCreationAttributes
-	extends Optional<
+	extends Omit<
 		OAuthClientAttributes,
 		"id" | "arn" | "clientId" | "clientSecretHash" | "clientSecretHashIv" | "createdAt" | "updatedAt" | "deletedAt"
 	> {}
 
-export interface OAuthClientUpdateAttributes extends Pick<OAuthClientAttributes, "title" | "status"> {}
+export interface OAuthClientUpdateAttributes extends Partial<Pick<OAuthClientAttributes, "title" | "status">> {}
 
 @Table({
 	tableName: "oauth_clients",

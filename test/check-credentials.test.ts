@@ -27,7 +27,7 @@ describe("Check credentials", () => {
 		assert.isFalse(model.validatePassword("111111"));
 	});
 
-	it("Should return JWT token", async () => {
+	it("Should return credentials without password", async () => {
 		const result = await credentialsService.check({
 			orgId: 1,
 			provider: "local",
@@ -35,5 +35,6 @@ describe("Check credentials", () => {
 			password: password,
 		});
 
+		assert.equal(result.status, "verification");
 	});
 });

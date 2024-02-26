@@ -5,6 +5,7 @@ import { container, Lifecycle, logWriters, Logger } from "@structured-growth/mic
 import { loadEnvironment } from "./load-environment";
 import { CredentialsService } from "../modules/credentials/credentials.service";
 import { CredentialsRepository } from "../modules/credentials/credentials.repository";
+import { OauthClientsRepository } from "../modules/oauth-clients/oauth-clients.repository";
 
 // load and validate env variables
 loadEnvironment();
@@ -30,3 +31,4 @@ container.register("CredentialsService", CredentialsService);
 
 // repositories
 container.register("CredentialsRepository", CredentialsRepository);
+container.register("OauthClientsRepository", OauthClientsRepository);

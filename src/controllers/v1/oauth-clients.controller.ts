@@ -4,12 +4,20 @@ import {
 	BaseController,
 	DescribeAction,
 	DescribeResource,
+	inject,
+	NotFoundError,
 	SearchResultInterface,
+	ValidateFuncArgs,
 } from "@structured-growth/microservice-sdk";
 import { OAuthClientAttributes } from "../../../database/models/oauth-client";
 import { OAuthClientSearchParamsInterface } from "../../interfaces/oauth-client-search-params.interface";
 import { OAuthClientCreateBodyInterface } from "../../interfaces/oauth-client-create-body.interface";
 import { OAuthClientUpdateBodyInterface } from "../../interfaces/oauth-client-update-body.interface";
+import { OauthClientsRepository } from "../../modules/oauth-clients/oauth-clients.repository";
+import { pick } from "lodash";
+import { OAuthClientsSearchParamsValidator } from "../../validators/oauth-clients-search-params.validator";
+import { OAuthClientCreateBodyValidator } from "../../validators/oauth-client-create-body.validator";
+import { OAuthClientUpdateBodyValidator } from "../../validators/oauth-client-update-body.validator";
 
 const publicOAuthClientAttributes = [
 	"id",
@@ -30,6 +38,10 @@ type PublicOAuthClientAttributes = Pick<OAuthClientAttributes, OAuthClientKeys>;
 @Tags("OAuth Clients")
 @autoInjectable()
 export class OAuthClientController extends BaseController {
+	constructor(@inject("OauthClientsRepository") private oauthClientsRepository: OauthClientsRepository) {
+		super();
+	}
+
 	/**
 	 * Search OAuthClients
 	 */
@@ -39,10 +51,19 @@ export class OAuthClientController extends BaseController {
 	@DescribeAction("oauth-client/search")
 	@DescribeResource("Organization", ({ query }) => Number(query.orgId))
 	@DescribeResource("Account", ({ query }) => Number(query.accountId))
+	@ValidateFuncArgs(OAuthClientsSearchParamsValidator)
 	async search(
 		@Queries() query: OAuthClientSearchParamsInterface
 	): Promise<SearchResultInterface<PublicOAuthClientAttributes>> {
-		return undefined;
+		const { data, ...result } = await this.oauthClientsRepository.search(query);
+
+		return {
+			data: data.map((model) => ({
+				...(pick(model.toJSON(), publicOAuthClientAttributes) as PublicOAuthClientAttributes),
+				arn: model.arn,
+			})),
+			...result,
+		};
 	}
 
 	/**
@@ -56,6 +77,7 @@ export class OAuthClientController extends BaseController {
 	@DescribeAction("oauth-client/create")
 	@DescribeResource("Organization", ({ body }) => Number(body.orgId))
 	@DescribeResource("Account", ({ body }) => Number(body.accountId))
+	@ValidateFuncArgs(OAuthClientCreateBodyValidator)
 	async create(
 		@Queries() query: {},
 		@Body() body: OAuthClientCreateBodyInterface
@@ -64,7 +86,20 @@ export class OAuthClientController extends BaseController {
 			clientSecret: string;
 		}
 	> {
-		return undefined;
+		const model = await this.oauthClientsRepository.create({
+			accountId: body.accountId,
+			orgId: body.orgId,
+			region: body.region,
+			status: body.status,
+			title: body.title,
+		});
+		this.response.status(201);
+
+		return {
+			...(pick(model.toJSON(), publicOAuthClientAttributes) as PublicOAuthClientAttributes),
+			arn: model.arn,
+			clientSecret: model.clientSecretString,
+		};
 	}
 
 	/**
@@ -76,7 +111,16 @@ export class OAuthClientController extends BaseController {
 	@DescribeAction("oauth-client/read")
 	@DescribeResource("OAuthClient", ({ params }) => Number(params.oauthClientId))
 	async get(@Path() oauthClientId: number): Promise<PublicOAuthClientAttributes> {
-		return undefined;
+		const model = await this.oauthClientsRepository.read(oauthClientId);
+
+		if (!model) {
+			throw new NotFoundError(`OAuthClient ${oauthClientId} not found`);
+		}
+
+		return {
+			...(pick(model.toJSON(), publicOAuthClientAttributes) as PublicOAuthClientAttributes),
+			arn: model.arn,
+		};
 	}
 
 	/**
@@ -87,12 +131,18 @@ export class OAuthClientController extends BaseController {
 	@SuccessResponse(200, "Returns updated OAuth client")
 	@DescribeAction("oauth-client/update")
 	@DescribeResource("OAuthClient", ({ params }) => Number(params.oauthClientId))
+	@ValidateFuncArgs(OAuthClientUpdateBodyValidator)
 	async update(
 		@Path() oauthClientId: number,
 		@Queries() query: {},
 		@Body() body: OAuthClientUpdateBodyInterface
 	): Promise<PublicOAuthClientAttributes> {
-		return undefined;
+		const model = await this.oauthClientsRepository.update(oauthClientId, body);
+
+		return {
+			...(pick(model.toJSON(), publicOAuthClientAttributes) as PublicOAuthClientAttributes),
+			arn: model.arn,
+		};
 	}
 
 	/**
@@ -104,6 +154,7 @@ export class OAuthClientController extends BaseController {
 	@DescribeAction("oauth-client/delete")
 	@DescribeResource("OAuthClient", ({ params }) => Number(params.oauthClientId))
 	async delete(@Path() oauthClientId: number): Promise<void> {
-		return undefined;
+		await this.oauthClientsRepository.delete(oauthClientId);
+		this.response.status(204);
 	}
 }
