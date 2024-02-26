@@ -27,6 +27,13 @@ router.get(pathPrefix + '/v1/credentials/:credentialsId', handleRequest(Controll
 router.put(pathPrefix + '/v1/credentials/:credentialsId', handleRequest(Controllers.CredentialsController, "update", handlerOpts));
 router.delete(pathPrefix + '/v1/credentials/:credentialsId', handleRequest(Controllers.CredentialsController, "delete", handlerOpts));
 
+//OAuthClientController
+router.get(pathPrefix + '/v1/oauth-clients', handleRequest(Controllers.OAuthClientController, "search", handlerOpts));
+router.post(pathPrefix + '/v1/oauth-clients', handleRequest(Controllers.OAuthClientController, "create", handlerOpts));
+router.get(pathPrefix + '/v1/oauth-clients/:oauthClientId', handleRequest(Controllers.OAuthClientController, "get", handlerOpts));
+router.put(pathPrefix + '/v1/oauth-clients/:oauthClientId', handleRequest(Controllers.OAuthClientController, "update", handlerOpts));
+router.delete(pathPrefix + '/v1/oauth-clients/:oauthClientId', handleRequest(Controllers.OAuthClientController, "delete", handlerOpts));
+
 //ResolverController
 router.get(pathPrefix + '/v1/resolver/resolve', handleRequest(Controllers.ResolverController, "resolve", handlerOpts));
 router.get(pathPrefix + '/v1/resolver/actions', handleRequest(Controllers.ResolverController, "actions", handlerOpts));
@@ -41,6 +48,11 @@ export const actionToRouteMap = {
 	"CredentialsController.get": 'get /v1/credentials/:credentialsId',
 	"CredentialsController.update": 'put /v1/credentials/:credentialsId',
 	"CredentialsController.delete": 'delete /v1/credentials/:credentialsId',
+	"OAuthClientController.search": 'get /v1/oauth-clients',
+	"OAuthClientController.create": 'post /v1/oauth-clients',
+	"OAuthClientController.get": 'get /v1/oauth-clients/:oauthClientId',
+	"OAuthClientController.update": 'put /v1/oauth-clients/:oauthClientId',
+	"OAuthClientController.delete": 'delete /v1/oauth-clients/:oauthClientId',
 	"ResolverController.resolve": 'get /v1/resolver/resolve',
 	"ResolverController.actions": 'get /v1/resolver/actions',
 	"ResolverController.models": 'get /v1/resolver/models',

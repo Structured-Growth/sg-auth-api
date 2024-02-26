@@ -27,12 +27,17 @@ const publicCredentialsAttributes = [
 type CredentialsKeys = (typeof publicCredentialsAttributes)[number];
 type PublicCredentialsAttributes = Pick<CredentialsAttributes, CredentialsKeys>;
 
+
 @Route("v1/credentials")
 @Tags("Credentials")
 @autoInjectable()
 export class CredentialsController extends BaseController {
 	/**
-	 * Search Credentials
+	 * Search Credentials.
+	 *
+	 * Account may have different types of credentials:
+	 * - email/password credentials (local provider);
+	 * - provider/provider_id credentials (e.g. Google provider);
 	 */
 	@OperationId("Search")
 	@Get("/")
@@ -46,6 +51,9 @@ export class CredentialsController extends BaseController {
 
 	/**
 	 * Create Credentials.
+	 *
+	 * They will be used for further authentication.
+	 * Account may have the same credentials in different organizations.
 	 */
 	@OperationId("Create")
 	@Post("/")
@@ -65,9 +73,7 @@ export class CredentialsController extends BaseController {
 	@SuccessResponse(201, "Returns credentials info")
 	@DescribeAction("credentials/check")
 	@DescribeResource("Organization", ({ body }) => Number(body.orgId))
-	async check(@Queries() query: {}, @Body() body: CredentialsCheckBodyInterface): Promise<PublicCredentialsAttributes & {
-		jwt: string;
-	}> {
+	async check(@Queries() query: {}, @Body() body: CredentialsCheckBodyInterface): Promise<PublicCredentialsAttributes> {
 		return undefined;
 	}
 
@@ -77,7 +83,7 @@ export class CredentialsController extends BaseController {
 	 */
 	@OperationId("Read")
 	@Get("/:credentialsId")
-	@SuccessResponse(200, "Returns crendentials info")
+	@SuccessResponse(200, "Returns credentials info")
 	@DescribeAction("credentials/read")
 	@DescribeResource("Credentials", ({ params }) => Number(params.credentialsId))
 	async get(@Path() credentialsId: number): Promise<PublicCredentialsAttributes> {
@@ -85,7 +91,9 @@ export class CredentialsController extends BaseController {
 	}
 
 	/**
-	 * Update Credentials
+	 * Update Credentials.
+	 *
+	 * Method may be used for changing password or inactivating auth method.
 	 */
 	@OperationId("Update")
 	@Put("/:credentialsId")

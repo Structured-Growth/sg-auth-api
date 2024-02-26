@@ -30,6 +30,7 @@ export function loadEnvironment() {
 			)
 			.required(),
 		URI_PATH_PREFIX: joi.string().allow(""),
+		ENCRYPTION_KEY: joi.string().required().min(32),
 		LOG_LEVEL: joi.string().valid("debug", "notice", "info", "warning", "error").required(),
 		LOG_DB_REQUESTS: joi.bool().required(),
 		LOG_HTTP_REQUEST_BODY: joi.bool().required(),

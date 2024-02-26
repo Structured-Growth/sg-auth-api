@@ -18,6 +18,7 @@ container.register("isTest", { useValue: process.env.STAGE === "test" });
 container.register("logDbRequests", { useValue: process.env.LOG_DB_REQUESTS === "true" });
 container.register("logRequestBody", { useValue: process.env.LOG_HTTP_REQUEST_BODY === "true" });
 container.register("logResponses", { useValue: process.env.LOG_HTTP_RESPONSES === "true" });
+container.register("encryptionKey", { useValue: process.env.ENCRYPTION_KEY });
 
 // services
 container.register("LogWriter", logWriters[process.env.LOG_WRITER] || "ConsoleLogWriter", {
