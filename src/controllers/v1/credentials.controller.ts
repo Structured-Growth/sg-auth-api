@@ -27,7 +27,6 @@ const publicCredentialsAttributes = [
 type CredentialsKeys = (typeof publicCredentialsAttributes)[number];
 type PublicCredentialsAttributes = Pick<CredentialsAttributes, CredentialsKeys>;
 
-
 @Route("v1/credentials")
 @Tags("Credentials")
 @autoInjectable()
@@ -45,7 +44,9 @@ export class CredentialsController extends BaseController {
 	@DescribeAction("credentials/search")
 	@DescribeResource("Organization", ({ query }) => Number(query.orgId))
 	@DescribeResource("Account", ({ query }) => Number(query.accountId))
-	async search(@Queries() query: CredentialsSearchParamsInterface): Promise<SearchResultInterface<PublicCredentialsAttributes>> {
+	async search(
+		@Queries() query: CredentialsSearchParamsInterface
+	): Promise<SearchResultInterface<PublicCredentialsAttributes>> {
 		return undefined;
 	}
 
@@ -61,7 +62,10 @@ export class CredentialsController extends BaseController {
 	@DescribeAction("credentials/create")
 	@DescribeResource("Organization", ({ body }) => Number(body.orgId))
 	@DescribeResource("Account", ({ body }) => Number(body.accountId))
-	async create(@Queries() query: {}, @Body() body: CredentialsCreateBodyInterface): Promise<PublicCredentialsAttributes> {
+	async create(
+		@Queries() query: {},
+		@Body() body: CredentialsCreateBodyInterface
+	): Promise<PublicCredentialsAttributes> {
 		return undefined;
 	}
 
@@ -76,7 +80,6 @@ export class CredentialsController extends BaseController {
 	async check(@Queries() query: {}, @Body() body: CredentialsCheckBodyInterface): Promise<PublicCredentialsAttributes> {
 		return undefined;
 	}
-
 
 	/**
 	 * Get Credentials
@@ -103,7 +106,7 @@ export class CredentialsController extends BaseController {
 	async update(
 		@Path() credentialsId: number,
 		@Queries() query: {},
-		@Body() body: CredentialsUpdateBodyInterface,
+		@Body() body: CredentialsUpdateBodyInterface
 	): Promise<PublicCredentialsAttributes> {
 		return undefined;
 	}

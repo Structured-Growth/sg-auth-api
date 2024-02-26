@@ -6,9 +6,7 @@ import { CredentialsCheckBodyInterface } from "../../interfaces/credentials-chec
 
 @autoInjectable()
 export class CredentialsService {
-	constructor(
-		@inject("CredentialsRepository") private credentialsRepository: CredentialsRepository,
-	) {}
+	constructor(@inject("CredentialsRepository") private credentialsRepository: CredentialsRepository) {}
 
 	public async create(params: CredentialsCreationAttributes): Promise<Credentials> {
 		const result = await this.credentialsRepository.search({
