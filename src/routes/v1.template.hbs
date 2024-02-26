@@ -14,19 +14,20 @@ const handlerOpts = {
 }
 
 export const router = Router();
+const pathPrefix = process.env.URI_PATH_PREFIX || '';
 {{#each controllers}}
 
 //{{name}}
   {{#each actions}}
-router.{{method}}('{{fullPath}}', handleRequest(Controllers.{{../name}}, "{{name}}", handlerOpts));
+router.{{method}}(pathPrefix + '{{fullPath}}', handleRequest(Controllers.{{../name}}, "{{name}}", handlerOpts));
   {{/each}}
 {{/each}}
 
 // map is required for correct resolving action by route
 export const actionToRouteMap = {
 {{#each controllers}}
-  {{#each actions}}
-  "{{../name}}.{{name}}": '{{method}} {{fullPath}}',
-  {{/each}}
+	{{#each actions}}
+	"{{../name}}.{{name}}": '{{method}} {{fullPath}}',
+	{{/each}}
 {{/each}}
 };

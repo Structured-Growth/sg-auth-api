@@ -3,6 +3,8 @@ import "./load-environment";
 import { App } from "./app";
 import { container, Lifecycle, logWriters, Logger } from "@structured-growth/microservice-sdk";
 import { loadEnvironment } from "./load-environment";
+import { CredentialsService } from "../modules/credentials/credentials.service";
+import { CredentialsRepository } from "../modules/credentials/credentials.repository";
 
 // load and validate env variables
 loadEnvironment();
@@ -23,3 +25,7 @@ container.register("LogWriter", logWriters[process.env.LOG_WRITER] || "ConsoleLo
 });
 container.register("Logger", Logger);
 container.register("App", App, { lifecycle: Lifecycle.Singleton });
+container.register("CredentialsService", CredentialsService);
+
+// repositories
+container.register("CredentialsRepository", CredentialsRepository);

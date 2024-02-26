@@ -1,10 +1,11 @@
-import {joi, ConfigLoader } from "@structured-growth/microservice-sdk";
+import { joi, ConfigLoader } from "@structured-growth/microservice-sdk";
+
 // import * as joi from "joi";
 
 export function loadEnvironment() {
 	const loader = new ConfigLoader();
 	loader.loadAndValidate(process.env.__PATH_TO_ENV_FILE || ".env", {
-		APP_PREFIX: joi.string().required().max(10).min(2),
+		APP_PREFIX: joi.string().required().max(30).min(2),
 		HTTP_PORT: joi.number().positive().required(),
 		STAGE: joi.string().valid("dev", "qual", "prod").required(),
 		REGION: joi
@@ -28,6 +29,7 @@ export function loadEnvironment() {
 				"sa-east-1"
 			)
 			.required(),
+		URI_PATH_PREFIX: joi.string().allow(""),
 		LOG_LEVEL: joi.string().valid("debug", "notice", "info", "warning", "error").required(),
 		LOG_DB_REQUESTS: joi.bool().required(),
 		LOG_HTTP_REQUEST_BODY: joi.bool().required(),
