@@ -1,6 +1,5 @@
 import { genSaltSync, hashSync, compareSync } from "bcrypt";
 import { BeforeCreate, BeforeUpdate, Column, DataType, Model, Table } from "sequelize-typescript";
-import { Optional } from "sequelize";
 import { container, RegionEnum, DefaultModelInterface } from "@structured-growth/microservice-sdk";
 
 export interface CredentialsAttributes extends DefaultModelInterface {
@@ -10,18 +9,20 @@ export interface CredentialsAttributes extends DefaultModelInterface {
 	status: "verification" | "active" | "inactive" | "archived";
 }
 
-export interface CredentialsCreationAttributes extends Optional<CredentialsAttributes, "id" | "arn" | "createdAt" | "updatedAt" | "deletedAt"> {
-}
+export interface CredentialsCreationAttributes
+	extends Omit<CredentialsAttributes, "id" | "arn" | "createdAt" | "updatedAt" | "deletedAt"> {}
 
-export interface CredentialsUpdateAttributes extends Pick<CredentialsAttributes, "status" | "password"> {
-}
+export interface CredentialsUpdateAttributes extends Partial<Pick<CredentialsAttributes, "status" | "password">> {}
 
 @Table({
 	tableName: "credentials",
 	timestamps: true,
 	underscored: true,
 })
-export class Credentials extends Model<CredentialsAttributes, CredentialsCreationAttributes> implements CredentialsAttributes {
+export class Credentials
+	extends Model<CredentialsAttributes, CredentialsCreationAttributes>
+	implements CredentialsAttributes
+{
 	@Column
 	orgId: number;
 
@@ -44,11 +45,15 @@ export class Credentials extends Model<CredentialsAttributes, CredentialsCreatio
 	status: CredentialsAttributes["status"];
 
 	static get arnPattern(): string {
-		return [container.resolve("appPrefix"), "<region>", "<orgId>", "<accountId>", `credentials/<credentialsId>`].join(":");
+		return [container.resolve("appPrefix"), "<region>", "<orgId>", "<accountId>", `credentials/<credentialsId>`].join(
+			":"
+		);
 	}
 
 	get arn(): string {
-		return [container.resolve("appPrefix"), this.region, this.orgId, this.accountId, `credentials/${this.id}`].join(":");
+		return [container.resolve("appPrefix"), this.region, this.orgId, this.accountId, `credentials/${this.id}`].join(
+			":"
+		);
 	}
 
 	@BeforeCreate

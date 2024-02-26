@@ -10,6 +10,7 @@ import Credentials, {
 	CredentialsUpdateAttributes,
 } from "../../../database/models/credentials";
 import { CredentialsSearchParamsInterface } from "../../interfaces/credentials-search-params.interface";
+import { isUndefined, omitBy } from "lodash";
 
 @autoInjectable()
 export class CredentialsRepository
@@ -29,7 +30,7 @@ export class CredentialsRepository
 		params.id && (where["id"] = { [Op.in]: params.id });
 		params.status && (where["status"] = { [Op.in]: params.status });
 
-		// todo seach by ARN with wildcards
+		// todo search by ARN with wildcards
 
 		const { rows, count } = await Credentials.findAndCountAll({
 			where,
@@ -62,17 +63,20 @@ export class CredentialsRepository
 		});
 	}
 
-	public async update(id: number, params: Partial<CredentialsUpdateAttributes>): Promise<Credentials> {
+	public async update(id: number, params: CredentialsUpdateAttributes): Promise<Credentials> {
 		const model = await this.read(id);
 		if (!model) {
 			throw new NotFoundError(`Credentials ${id} not found`);
 		}
-		model.setAttributes(params);
+		model.setAttributes(omitBy(params, isUndefined));
 
 		return model.save();
 	}
 
 	public async delete(id: number): Promise<void> {
-		await Credentials.destroy({ where: { id } });
+		const n = await Credentials.destroy({ where: { id } });
+		if (n === 0) {
+			throw new NotFoundError(`Credentials ${id} not found`);
+		}
 	}
 }
