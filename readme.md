@@ -2,10 +2,10 @@
 
 ## Features
 
-- Store accounts` credentials;
-- SSO;
+- Manage accounts` credentials;
+- Manage OAuth clients.
 
-This repository created from [API service Starter Kit](https://github.com/Structured-Growth/api-service-starter-kit).
+This repository created from [API service Starter Kit](https://github.com/Structured-Growth/sg-auth-api).
 Follow the link to read more about its features.
 
 ## Getting started
@@ -53,7 +53,7 @@ for automated build and push an image to a private docker registry.
 ### Configure GitHub workflow
 
 Firstly create a docker repository with the same name as package. For
-example `<aws_account_id>.dkr.ecr.<region>.amazonaws.com/api-service-starter-kit`
+example `<aws_account_id>.dkr.ecr.<region>.amazonaws.com/sg-auth-api`
 
 In order to create and push new image you have to set GitHub Actions Secrets that provides access to a private registry.
 
@@ -81,9 +81,9 @@ GITHUB_TOKEN=<your-token> npm run build-docker
 
 ```shell
 docker run --rm -it \
-  --env-file ./.env -p 3300:3300 \
+  --env-file ./.env -p 3301:3301 \
   --entrypoint npm \
-  structured-growth/api-service-starter-kit \
+  structured-growth/sg-auth-api \
   start web
 ```
 
@@ -92,7 +92,7 @@ docker run --rm -it \
 ```shell
 docker run --rm -it \
   --env-file ./.env -p 8080:8080 \
-  structured-growth/api-service-starter-kit \
+  structured-growth/sg-auth-api \
   .dist/src/lambda-http.handler
 ```
 
@@ -101,7 +101,7 @@ docker run --rm -it \
 ```shell
 docker run --rm -it \
   --env-file ./.env -p 8080:8080 \
-  structured-growth/api-service-starter-kit \
+  structured-growth/sg-auth-api \
   .dist/src/lambda-eventbridge.handler
 ```
 
@@ -110,7 +110,7 @@ docker run --rm -it \
 ```shell
 docker run --rm -it \
   --env-file ./.env -p 8080:8080 \
-  structured-growth/api-service-starter-kit \
+  structured-growth/sg-auth-api \
   .dist/src/lambda-sqs.handler
 ```
 
