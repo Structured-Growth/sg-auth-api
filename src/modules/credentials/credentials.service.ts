@@ -16,9 +16,7 @@ export class CredentialsService {
 		});
 
 		if (result.total !== 0) {
-			throw new ValidationError({
-				providerId: "Provider ID is already taken",
-			});
+			throw new ValidationError({}, "Provider ID is already taken");
 		}
 
 		return this.credentialsRepository.create({
@@ -37,19 +35,16 @@ export class CredentialsService {
 			orgId: params.orgId,
 			provider: params.provider,
 			providerId: params.providerId,
+			status: ["active"],
 		});
 		const credentials = result.data[0];
 
 		if (!credentials || result.data.length !== 1) {
-			throw new ValidationError({
-				providerId: "Credentials are invalid",
-			});
+			throw new ValidationError({}, "Credentials are invalid");
 		}
 
 		if (credentials.provider === "local" && !credentials.validatePassword(params.password)) {
-			throw new ValidationError({
-				providerId: "Credentials are invalid",
-			});
+			throw new ValidationError({}, "Credentials are invalid");
 		}
 
 		return credentials;

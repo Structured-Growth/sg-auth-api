@@ -59,8 +59,10 @@ export class Credentials
 	@BeforeCreate
 	@BeforeUpdate
 	static hashPassword(model: Credentials): void {
-		const salt = genSaltSync(2);
-		model.password = hashSync(model.password, salt);
+		if (model.password) {
+			const salt = genSaltSync(2);
+			model.password = hashSync(model.password, salt);
+		}
 	}
 
 	/**
