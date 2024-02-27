@@ -102,7 +102,9 @@ export class CredentialsController extends BaseController {
 	}
 
 	/**
-	 * Check if Credentials are valid
+	 * Check if Credentials are valid.
+	 *
+	 * Works only if credentials status is active.
 	 */
 	@OperationId("Check")
 	@Put("/")

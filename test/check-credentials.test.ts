@@ -20,14 +20,14 @@ describe("Check credentials", () => {
 			provider: "local",
 			providerId: `${password}@example.com`,
 			password: password,
-			status: "verification",
+			status: "active",
 		});
 		assert.notEqual(password, model.password);
 		assert.isTrue(model.validatePassword(password));
 		assert.isFalse(model.validatePassword("111111"));
 	});
 
-	it("Should return credentials without password", async () => {
+	it("Should return encrypted password", async () => {
 		const result = await credentialsService.check({
 			orgId: 1,
 			provider: "local",
@@ -35,6 +35,7 @@ describe("Check credentials", () => {
 			password: password,
 		});
 
-		assert.equal(result.status, "verification");
+		assert.equal(result.status, "active");
+		assert.notEqual(result.password, password);
 	});
 });
