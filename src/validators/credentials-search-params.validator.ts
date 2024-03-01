@@ -6,7 +6,10 @@ export const CredentialsSearchParamsValidator = joi.object({
 		.object({
 			provider: joi.string().valid("local", "google").label("Provider"),
 			providerId: joi.string().label("Provider"),
-			status:  joi.array().items(joi.string().valid("verification", "active", "inactive", "archived").required()).label("Status"),
+			status: joi
+				.array()
+				.items(joi.string().valid("verification", "active", "inactive", "archived").required())
+				.label("Status"),
 		})
 		.concat(CommonSearchParamsValidator),
 });
