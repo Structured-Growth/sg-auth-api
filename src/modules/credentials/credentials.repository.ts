@@ -48,6 +48,9 @@ export class CredentialsRepository
 	}
 
 	public async create(params: CredentialsCreationAttributes): Promise<Credentials> {
+		if (params.password) {
+			params.password = Credentials.hashPassword(params.password);
+		}
 		return Credentials.create(params);
 	}
 
@@ -68,6 +71,10 @@ export class CredentialsRepository
 		if (!model) {
 			throw new NotFoundError(`Credentials ${id} not found`);
 		}
+		if (params.password) {
+			params.password = Credentials.hashPassword(params.password);
+		}
+
 		model.setAttributes(omitBy(params, isUndefined));
 
 		return model.save();
