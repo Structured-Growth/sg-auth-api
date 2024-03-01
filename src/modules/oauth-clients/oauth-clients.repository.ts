@@ -25,8 +25,13 @@ export class OauthClientsRepository
 
 		params.orgId && (where["orgId"] = params.orgId);
 		params.accountId && (where["accountId"] = params.accountId);
-		params.title && (where["title"] = { [Op.iLike]: params.title });
 		params.status && (where["status"] = { [Op.in]: params.status });
+
+		if (params.title?.length > 0) {
+			where["title"] = {
+				[Op.or]: params.title.map((str) => ({ [Op.iLike]: str.replace(/\*/g, "%") })),
+			};
+		}
 
 		// todo search by ARN with wildcards
 
