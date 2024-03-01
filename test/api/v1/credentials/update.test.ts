@@ -6,7 +6,7 @@ import { agent } from "supertest";
 import { routes } from "../../../../src/routes";
 import Credentials from "../../../../database/models/credentials";
 
-describe("DELETE /api/v1/credentials/:credentialsId", () => {
+describe("PUT /api/v1/credentials/:credentialsId", () => {
 	const server = agent(webServer(routes));
 	let id;
 
@@ -23,22 +23,24 @@ describe("DELETE /api/v1/credentials/:credentialsId", () => {
 			provider: "local",
 			providerId: "example@test.com",
 			password: "Fld2ZaW4sV@?6k)A",
-			status: "active",
+			status: "inactive",
 		});
 		assert.equal(statusCode, 201);
 		assert.isNumber(body.id);
+		assert.equal(body.status, "inactive");
 		id = body.id;
 	});
 
-	it("Should delete credentials", async () => {
-		const { statusCode, body } = await server.delete(`/v1/credentials/${id}`);
-		assert.equal(statusCode, 204);
+	it("Should update credentials", async () => {
+		const { statusCode, body } = await server.put(`/v1/credentials/${id}`).send({
+			status: "active",
+		});
+		assert.equal(statusCode, 200);
 	});
 
-
-	it("Should return not found error", async () => {
+	it("Should return updated credentials", async () => {
 		const { statusCode, body } = await server.get(`/v1/credentials/${id}`);
-		assert.equal(statusCode, 404);
+		assert.equal(statusCode, 200);
+		assert.equal(body.status, "active");
 	});
-
 });
