@@ -8,6 +8,7 @@ import OAuthClient from "../../../../database/models/oauth-client";
 
 describe("GET /api/v1/oauth-clients", () => {
 	const server = agent(webServer(routes));
+	const context: Record<any, any> = {};
 
 	before(async () => {
 		await container.resolve<App>("App").ready;
@@ -33,11 +34,13 @@ describe("GET /api/v1/oauth-clients", () => {
 		assert.isString(body.createdAt);
 		assert.isString(body.updatedAt);
 		assert.isString(body.arn);
+		context.client = body;
 	});
 
 	it("Should return oauth-clients", async () => {
 		const { statusCode, body } = await server.get("/v1/oauth-clients").query({
 			orgId: 1,
+			clientId: context.client.clientId,
 			"status[0]": ["active"],
 		});
 		assert.equal(statusCode, 200);
@@ -47,7 +50,7 @@ describe("GET /api/v1/oauth-clients", () => {
 		assert.equal(body.data[0].region, "us");
 		assert.equal(body.data[0].accountId, 1);
 		assert.equal(body.data[0].title, "Test client");
-		assert.isString(body.data[0].clientId);
+		assert.equal(body.data[0].clientId, context.client.clientId);
 		assert.isUndefined(body.data[0].clientSecret);
 		assert.equal(body.data[0].status, "active");
 		assert.isString(body.data[0].createdAt);
