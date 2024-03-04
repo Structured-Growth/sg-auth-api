@@ -39,7 +39,7 @@ describe("GET /api/v1/oauth-clients", () => {
 
 	it("Should return oauth-clients", async () => {
 		const { statusCode, body } = await server.get("/v1/oauth-clients").query({
-			orgId: 1,
+			// orgId: 1,
 			clientId: context.client.clientId,
 			"status[0]": ["active"],
 		});
