@@ -4,9 +4,12 @@ import { container, RegionEnum, DefaultModelInterface } from "@structured-growth
 
 export interface OAuthClientAttributes extends DefaultModelInterface {
 	title: string;
+	defaultOrgName: string;
 	clientId: string;
 	clientSecretHash: string;
 	clientSecretHashIv: string;
+	grants: string[];
+	redirectUris: string[];
 	status: "active" | "inactive" | "archived";
 }
 
@@ -16,7 +19,8 @@ export interface OAuthClientCreationAttributes
 		"id" | "arn" | "clientId" | "clientSecretHash" | "clientSecretHashIv" | "createdAt" | "updatedAt" | "deletedAt"
 	> {}
 
-export interface OAuthClientUpdateAttributes extends Partial<Pick<OAuthClientAttributes, "title" | "status">> {}
+export interface OAuthClientUpdateAttributes
+	extends Partial<Pick<OAuthClientAttributes, "title" | "status" | "defaultOrgName" | "grants" | "redirectUris">> {}
 
 @Table({
 	tableName: "oauth_clients",
@@ -39,6 +43,9 @@ export class OAuthClient
 	@Column
 	title: string;
 
+	@Column
+	defaultOrgName: string;
+
 	@Column(DataType.STRING)
 	clientId: OAuthClientAttributes["clientId"];
 
@@ -50,6 +57,12 @@ export class OAuthClient
 
 	@Column(DataType.STRING)
 	status: OAuthClientAttributes["status"];
+
+	@Column(DataType.JSON)
+	grants: string[];
+
+	@Column(DataType.JSON)
+	redirectUris: string[];
 
 	static get arnPattern(): string {
 		return [container.resolve("appPrefix"), "<region>", "<orgId>", "<accountId>", `oauth-client/<credentialsId>`].join(

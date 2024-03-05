@@ -22,6 +22,9 @@ describe("GET /api/v1/oauth-clients/:oauthClientId", () => {
 			accountId: 1,
 			title: "Test client",
 			status: "active",
+			defaultOrgName: "test",
+			grants: ["authorization_code", "refresh_token"],
+			redirectUris: ["http://localhost:3001/api/auth/callback/oauth"],
 		});
 		assert.equal(statusCode, 201);
 		id = body.id;

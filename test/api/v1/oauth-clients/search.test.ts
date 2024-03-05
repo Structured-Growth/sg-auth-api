@@ -22,6 +22,9 @@ describe("GET /api/v1/oauth-clients", () => {
 			accountId: 1,
 			title: "Test client",
 			status: "active",
+			defaultOrgName: "test",
+			grants: ["authorization_code", "refresh_token"],
+			redirectUris: ["http://localhost:3001/api/auth/callback/oauth"],
 		});
 		assert.equal(statusCode, 201);
 		assert.equal(body.orgId, 1);
@@ -56,6 +59,9 @@ describe("GET /api/v1/oauth-clients", () => {
 		assert.isString(body.data[0].createdAt);
 		assert.isString(body.data[0].updatedAt);
 		assert.isString(body.data[0].arn);
+		assert.isString(body.data[0].defaultOrgName);
+		assert.isString(body.data[0].grants[0]);
+		assert.isString(body.data[0].redirectUris[0]);
 		assert.equal(body.total, 1);
 		assert.equal(body.page, 1);
 		assert.equal(body.limit, 20);

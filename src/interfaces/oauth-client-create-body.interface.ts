@@ -4,4 +4,7 @@ import { OAuthClientCreationAttributes } from "../../database/models/oauth-clien
 export interface OAuthClientCreateBodyInterface extends BelongsToAccountInterface, BelongsToOrgInterface {
 	title: OAuthClientCreationAttributes["title"];
 	status?: "active" | "inactive";
+	defaultOrgName?: string;
+	grants: string[];
+	redirectUris: string[];
 }
