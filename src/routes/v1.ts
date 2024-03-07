@@ -16,6 +16,9 @@ const handlerOpts = {
 export const router = Router();
 const pathPrefix = process.env.URI_PATH_PREFIX || '';
 
+//SystemController
+router.post(pathPrefix + '/v1/system/migrate', handleRequest(Controllers.SystemController, "migrate", handlerOpts));
+
 //PingController
 router.get(pathPrefix + '/v1/ping/alive', handleRequest(Controllers.PingController, "pingGet", handlerOpts));
 
@@ -41,6 +44,7 @@ router.get(pathPrefix + '/v1/resolver/models', handleRequest(Controllers.Resolve
 
 // map is required for correct resolving action by route
 export const actionToRouteMap = {
+	"SystemController.migrate": 'post /v1/system/migrate',
 	"PingController.pingGet": 'get /v1/ping/alive',
 	"CredentialsController.search": 'get /v1/credentials',
 	"CredentialsController.create": 'post /v1/credentials',
