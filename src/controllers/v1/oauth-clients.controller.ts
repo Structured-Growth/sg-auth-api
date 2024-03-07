@@ -25,8 +25,11 @@ const publicOAuthClientAttributes = [
 	"region",
 	"accountId",
 	"title",
+	"defaultOrgName",
 	"clientId",
 	"status",
+	"grants",
+	"redirectUris",
 	"createdAt",
 	"updatedAt",
 	"arn",
@@ -92,6 +95,9 @@ export class OAuthClientController extends BaseController {
 			region: body.region,
 			status: body.status,
 			title: body.title,
+			defaultOrgName: body.defaultOrgName,
+			grants: body.grants,
+			redirectUris: body.redirectUris,
 		});
 		this.response.status(201);
 

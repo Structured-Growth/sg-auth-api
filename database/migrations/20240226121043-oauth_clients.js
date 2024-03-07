@@ -16,6 +16,7 @@ module.exports = {
 				type: Sequelize.STRING(100),
 				allowNull: false,
 			},
+			default_org_name: Sequelize.STRING(100),
 			client_id: {
 				type: Sequelize.STRING(100),
 				allowNull: false,
@@ -28,6 +29,8 @@ module.exports = {
 				type: Sequelize.STRING(100),
 				allowNull: false,
 			},
+			grants: Sequelize.JSON,
+			redirect_uris: Sequelize.JSON,
 			status: Sequelize.STRING(15),
 			created_at: Sequelize.DATE,
 			updated_at: Sequelize.DATE,

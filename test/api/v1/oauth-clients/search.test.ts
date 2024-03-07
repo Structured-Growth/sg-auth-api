@@ -8,6 +8,7 @@ import OAuthClient from "../../../../database/models/oauth-client";
 
 describe("GET /api/v1/oauth-clients", () => {
 	const server = agent(webServer(routes));
+	const context: Record<any, any> = {};
 
 	before(async () => {
 		await container.resolve<App>("App").ready;
@@ -21,6 +22,9 @@ describe("GET /api/v1/oauth-clients", () => {
 			accountId: 1,
 			title: "Test client",
 			status: "active",
+			defaultOrgName: "test",
+			grants: ["authorization_code", "refresh_token"],
+			redirectUris: ["http://localhost:3001/api/auth/callback/oauth"],
 		});
 		assert.equal(statusCode, 201);
 		assert.equal(body.orgId, 1);
@@ -33,11 +37,13 @@ describe("GET /api/v1/oauth-clients", () => {
 		assert.isString(body.createdAt);
 		assert.isString(body.updatedAt);
 		assert.isString(body.arn);
+		context.client = body;
 	});
 
 	it("Should return oauth-clients", async () => {
 		const { statusCode, body } = await server.get("/v1/oauth-clients").query({
-			orgId: 1,
+			// orgId: 1,
+			clientId: context.client.clientId,
 			"status[0]": ["active"],
 		});
 		assert.equal(statusCode, 200);
@@ -47,12 +53,15 @@ describe("GET /api/v1/oauth-clients", () => {
 		assert.equal(body.data[0].region, "us");
 		assert.equal(body.data[0].accountId, 1);
 		assert.equal(body.data[0].title, "Test client");
-		assert.isString(body.data[0].clientId);
+		assert.equal(body.data[0].clientId, context.client.clientId);
 		assert.isUndefined(body.data[0].clientSecret);
 		assert.equal(body.data[0].status, "active");
 		assert.isString(body.data[0].createdAt);
 		assert.isString(body.data[0].updatedAt);
 		assert.isString(body.data[0].arn);
+		assert.isString(body.data[0].defaultOrgName);
+		assert.isString(body.data[0].grants[0]);
+		assert.isString(body.data[0].redirectUris[0]);
 		assert.equal(body.total, 1);
 		assert.equal(body.page, 1);
 		assert.equal(body.limit, 20);

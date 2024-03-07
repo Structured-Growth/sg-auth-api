@@ -25,6 +25,7 @@ export class OauthClientsRepository
 
 		params.orgId && (where["orgId"] = params.orgId);
 		params.accountId && (where["accountId"] = params.accountId);
+		params.clientId && (where["clientId"] = params.clientId);
 		params.status && (where["status"] = { [Op.in]: params.status });
 
 		if (params.title?.length > 0) {
