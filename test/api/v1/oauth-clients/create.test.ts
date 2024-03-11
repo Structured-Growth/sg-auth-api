@@ -9,6 +9,7 @@ import OAuthClient from "../../../../database/models/oauth-client";
 describe("POST /api/v1/oauth-clients", () => {
 	const server = agent(webServer(routes));
 	let id;
+	let secret;
 
 	before(async () => {
 		await container.resolve<App>("App").ready;
@@ -41,13 +42,14 @@ describe("POST /api/v1/oauth-clients", () => {
 		assert.isString(body.grants[0]);
 		assert.isString(body.redirectUris[0]);
 		id = body.id;
+		secret = body.clientSecret;
 	});
 
-	it("Should return created oauth-client without clientSecret", async () => {
+	it("Should return created oauth-client with clientSecret", async () => {
 		const { statusCode, body } = await server.get(`/v1/oauth-clients/${id}`);
 		assert.equal(statusCode, 200);
 		assert.equal(body.id, id);
-		assert.isUndefined(body.clientSecret);
+		assert.equal(body.clientSecret, secret);
 	});
 
 	it("Should return validation error", async () => {
