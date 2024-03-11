@@ -71,8 +71,6 @@ export class OAuthClientController extends BaseController {
 
 	/**
 	 * Create OAuth client.
-	 *
-	 * Client secret will be returned once on client creation. You will not be able to read it again.
 	 */
 	@OperationId("Create")
 	@Post("/")
@@ -109,14 +107,20 @@ export class OAuthClientController extends BaseController {
 	}
 
 	/**
-	 * Get OAuth client info
+	 * Get OAuth client info.
+	 *
+	 * Returns client secret as well.
 	 */
 	@OperationId("Read")
 	@Get("/:oauthClientId")
 	@SuccessResponse(200, "Returns client info")
 	@DescribeAction("oauth-client/read")
 	@DescribeResource("OAuthClient", ({ params }) => Number(params.oauthClientId))
-	async get(@Path() oauthClientId: number): Promise<PublicOAuthClientAttributes> {
+	async get(@Path() oauthClientId: number): Promise<
+		PublicOAuthClientAttributes & {
+			clientSecret: string;
+		}
+	> {
 		const model = await this.oauthClientsRepository.read(oauthClientId);
 
 		if (!model) {
@@ -125,6 +129,7 @@ export class OAuthClientController extends BaseController {
 
 		return {
 			...(pick(model.toJSON(), publicOAuthClientAttributes) as PublicOAuthClientAttributes),
+			clientSecret: model.clientSecretString,
 			arn: model.arn,
 		};
 	}

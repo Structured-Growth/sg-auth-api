@@ -9,6 +9,7 @@ import OAuthClient from "../../../../database/models/oauth-client";
 describe("GET /api/v1/oauth-clients/:oauthClientId", () => {
 	const server = agent(webServer(routes));
 	let id;
+	let secret;
 
 	before(async () => {
 		await container.resolve<App>("App").ready;
@@ -27,10 +28,12 @@ describe("GET /api/v1/oauth-clients/:oauthClientId", () => {
 			redirectUris: ["http://localhost:3001/api/auth/callback/oauth"],
 		});
 		assert.equal(statusCode, 201);
+		assert.isString(body.clientSecret);
 		id = body.id;
+		secret = body.clientSecret;
 	});
 
-	it("Should return created oauth-client without clientSecret", async () => {
+	it("Should return created oauth-client with clientSecret", async () => {
 		const { statusCode, body } = await server.get(`/v1/oauth-clients/${id}`);
 		assert.equal(statusCode, 200);
 		assert.equal(body.id, id);
@@ -39,7 +42,7 @@ describe("GET /api/v1/oauth-clients/:oauthClientId", () => {
 		assert.equal(body.region, "us");
 		assert.equal(body.title, "Test client");
 		assert.isString(body.clientId);
-		assert.isUndefined(body.clientSecret);
+		assert.equal(body.clientSecret, secret);
 		assert.equal(body.status, "active");
 		assert.isString(body.createdAt);
 		assert.isString(body.updatedAt);
