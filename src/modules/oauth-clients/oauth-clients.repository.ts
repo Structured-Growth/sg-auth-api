@@ -78,9 +78,18 @@ export class OauthClientsRepository
 	}
 
 	public async delete(id: number): Promise<void> {
-		const n = await OAuthClient.destroy({ where: { id } });
-		if (n === 0) {
-			throw new NotFoundError(`OAuthClient ${id} not found`);
-		}
+		return OAuthClient.sequelize.transaction(async (transaction) => {
+			const client = await OAuthClient.findByPk(id, {
+				attributes: ["id", "clientId"],
+				rejectOnEmpty: false,
+				transaction,
+			});
+			client.clientId = client.clientId + `-deleted-at-${Date.now()}`;
+			await client.save({ transaction });
+			const n = await OAuthClient.destroy({ where: { id }, transaction });
+			if (n === 0) {
+				throw new NotFoundError(`OAuthClient ${id} not found`);
+			}
+		});
 	}
 }

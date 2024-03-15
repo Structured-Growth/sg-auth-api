@@ -10,10 +10,7 @@ describe("GET /api/v1/oauth-clients", () => {
 	const server = agent(webServer(routes));
 	const context: Record<any, any> = {};
 
-	before(async () => {
-		await container.resolve<App>("App").ready;
-		await OAuthClient.truncate({ restartIdentity: true });
-	});
+	before(async () => container.resolve<App>("App").ready);
 
 	it("Should create oauth-clients", async () => {
 		const { statusCode, body } = await server.post("/v1/oauth-clients").send({
@@ -42,7 +39,6 @@ describe("GET /api/v1/oauth-clients", () => {
 
 	it("Should return oauth-clients", async () => {
 		const { statusCode, body } = await server.get("/v1/oauth-clients").query({
-			// orgId: 1,
 			clientId: context.client.clientId,
 			"status[0]": ["active"],
 		});
@@ -70,6 +66,7 @@ describe("GET /api/v1/oauth-clients", () => {
 	it("Should search by title with wildcard", async () => {
 		const { statusCode, body } = await server.get("/v1/oauth-clients").query({
 			orgId: 1,
+			clientId: context.client.clientId,
 			"title[0]": "*est*",
 			"title[1]": "*client",
 		});

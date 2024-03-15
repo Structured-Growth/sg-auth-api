@@ -8,11 +8,9 @@ import Credentials from "../../../../database/models/credentials";
 
 describe("PUT /api/v1/credentials", () => {
 	const server = agent(webServer(routes));
+	const email = `example-${Date.now()}@test.com`;
 
-	before(async () => {
-		await container.resolve<App>("App").ready;
-		await Credentials.truncate({ restartIdentity: true });
-	});
+	before(async () => container.resolve<App>("App").ready);
 
 	it("Should create credentials", async () => {
 		const { statusCode, body } = await server.post("/v1/credentials").send({
@@ -20,7 +18,7 @@ describe("PUT /api/v1/credentials", () => {
 			region: "us",
 			accountId: 1,
 			provider: "local",
-			providerId: "example@test.com",
+			providerId: email,
 			password: "Fld2ZaW4sV@?6k)A",
 			status: "active",
 		});
@@ -34,7 +32,7 @@ describe("PUT /api/v1/credentials", () => {
 		const { statusCode, body } = await server.put("/v1/credentials").send({
 			orgId: 1,
 			provider: "local",
-			providerId: "example@test.com",
+			providerId: email,
 			password: "Fld2ZaW4sV@?6k)A",
 		});
 		assert.equal(statusCode, 200);
@@ -42,7 +40,7 @@ describe("PUT /api/v1/credentials", () => {
 		assert.equal(body.accountId, 1);
 		assert.equal(body.region, "us");
 		assert.equal(body.provider, "local");
-		assert.equal(body.providerId, "example@test.com");
+		assert.equal(body.providerId, email);
 		assert.equal(body.password, undefined);
 		assert.equal(body.status, "active");
 		assert.isUndefined(body.password);
@@ -55,7 +53,7 @@ describe("PUT /api/v1/credentials", () => {
 		const { statusCode, body } = await server.put("/v1/credentials").send({
 			orgId: 1,
 			provider: "local",
-			providerId: "example@test.com",
+			providerId: email,
 			password: "Fld2ZaW4sV@?6k)A---",
 		});
 		assert.equal(statusCode, 422);

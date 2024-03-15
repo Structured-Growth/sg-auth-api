@@ -11,10 +11,7 @@ describe("POST /api/v1/oauth-clients", () => {
 	let id;
 	let secret;
 
-	before(async () => {
-		await container.resolve<App>("App").ready;
-		await OAuthClient.truncate({ restartIdentity: true });
-	});
+	before(async () => container.resolve<App>("App").ready);
 
 	it("Should create oauth-clients", async () => {
 		const { statusCode, body } = await server.post("/v1/oauth-clients").send({

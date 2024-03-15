@@ -81,9 +81,18 @@ export class CredentialsRepository
 	}
 
 	public async delete(id: number): Promise<void> {
-		const n = await Credentials.destroy({ where: { id } });
-		if (n === 0) {
-			throw new NotFoundError(`Credentials ${id} not found`);
-		}
+		return Credentials.sequelize.transaction(async (transaction) => {
+			const credentials = await Credentials.findByPk(id, {
+				attributes: ["id", "providerId"],
+				rejectOnEmpty: false,
+				transaction,
+			});
+			credentials.providerId = credentials.providerId + `-deleted-at-${Date.now()}`;
+			await credentials.save({ transaction });
+			const n = await Credentials.destroy({ where: { id }, transaction });
+			if (n === 0) {
+				throw new NotFoundError(`Credentials ${id} not found`);
+			}
+		});
 	}
 }

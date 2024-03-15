@@ -26,6 +26,7 @@ export interface OAuthClientUpdateAttributes
 	tableName: "oauth_clients",
 	timestamps: true,
 	underscored: true,
+	paranoid: true,
 })
 export class OAuthClient
 	extends Model<OAuthClientAttributes, OAuthClientCreationAttributes>
@@ -77,7 +78,6 @@ export class OAuthClient
 	}
 
 	@BeforeCreate
-	@BeforeUpdate
 	static generateAndEncryptSecrets(model: OAuthClient): void {
 		model.clientId = Buffer.from(randomBytes(16)).toString("hex");
 		const clientSecretHashIv = randomBytes(16);
