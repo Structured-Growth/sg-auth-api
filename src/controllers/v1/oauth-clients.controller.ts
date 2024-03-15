@@ -91,7 +91,7 @@ export class OAuthClientController extends BaseController {
 			accountId: body.accountId,
 			orgId: body.orgId,
 			region: body.region,
-			status: body.status,
+			status: body.status || "active",
 			title: body.title,
 			defaultOrgName: body.defaultOrgName,
 			grants: body.grants,

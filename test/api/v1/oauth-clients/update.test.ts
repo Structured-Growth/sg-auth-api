@@ -10,10 +10,7 @@ describe("PUT /api/v1/oauth-clients/:oauthClientId", () => {
 	const server = agent(webServer(routes));
 	let id;
 
-	before(async () => {
-		await container.resolve<App>("App").ready;
-		await OAuthClient.truncate({ restartIdentity: true });
-	});
+	before(async () => container.resolve<App>("App").ready);
 
 	it("Should create oauth-clients", async () => {
 		const { statusCode, body } = await server.post("/v1/oauth-clients").send({

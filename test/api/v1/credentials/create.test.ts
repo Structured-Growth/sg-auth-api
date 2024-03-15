@@ -8,12 +8,10 @@ import Credentials from "../../../../database/models/credentials";
 
 describe("POST /api/v1/credentials", () => {
 	const server = agent(webServer(routes));
+	const email = `example-${Date.now()}@test.com`;
 	let id;
 
-	before(async () => {
-		await container.resolve<App>("App").ready;
-		await Credentials.truncate({ restartIdentity: true });
-	});
+	before(async () => container.resolve<App>("App").ready);
 
 	it("Should create credentials", async () => {
 		const { statusCode, body } = await server.post("/v1/credentials").send({
@@ -21,7 +19,7 @@ describe("POST /api/v1/credentials", () => {
 			region: "us",
 			accountId: 1,
 			provider: "local",
-			providerId: "example@test.com",
+			providerId: email,
 			status: "verification",
 		});
 		assert.equal(statusCode, 201);
@@ -29,7 +27,7 @@ describe("POST /api/v1/credentials", () => {
 		assert.equal(body.accountId, 1);
 		assert.equal(body.region, "us");
 		assert.equal(body.provider, "local");
-		assert.equal(body.providerId, "example@test.com");
+		assert.equal(body.providerId, email);
 		assert.equal(body.password, undefined);
 		assert.equal(body.status, "verification");
 		assert.isUndefined(body.password);
@@ -46,7 +44,7 @@ describe("POST /api/v1/credentials", () => {
 			region: "us",
 			accountId: 1,
 			provider: "local",
-			providerId: "example@test.com",
+			providerId: email,
 			status: "verification",
 		});
 		assert.equal(statusCode, 422);
@@ -61,7 +59,7 @@ describe("POST /api/v1/credentials", () => {
 		assert.equal(body.accountId, 1);
 		assert.equal(body.region, "us");
 		assert.equal(body.provider, "local");
-		assert.equal(body.providerId, "example@test.com");
+		assert.equal(body.providerId, email);
 		assert.equal(body.password, undefined);
 		assert.equal(body.status, "verification");
 		assert.isUndefined(body.password);

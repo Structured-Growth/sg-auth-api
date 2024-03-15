@@ -18,6 +18,7 @@ export interface CredentialsUpdateAttributes extends Partial<Pick<CredentialsAtt
 	tableName: "credentials",
 	timestamps: true,
 	underscored: true,
+	paranoid: true,
 })
 export class Credentials
 	extends Model<CredentialsAttributes, CredentialsCreationAttributes>

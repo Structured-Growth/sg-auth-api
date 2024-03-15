@@ -8,12 +8,10 @@ import Credentials from "../../../../database/models/credentials";
 
 describe("DELETE /api/v1/credentials", () => {
 	const server = agent(webServer(routes));
+	const email = `example-${Date.now()}@test.com`;
 	let id;
 
-	before(async () => {
-		await container.resolve<App>("App").ready;
-		await Credentials.truncate({ restartIdentity: true });
-	});
+	before(async () => container.resolve<App>("App").ready);
 
 	it("Should create credentials", async () => {
 		const { statusCode, body } = await server.post("/v1/credentials").send({
@@ -21,7 +19,7 @@ describe("DELETE /api/v1/credentials", () => {
 			region: "us",
 			accountId: 1,
 			provider: "local",
-			providerId: "example@test.com",
+			providerId: email,
 			password: "Fld2ZaW4sV@?6k)A",
 			status: "active",
 		});
