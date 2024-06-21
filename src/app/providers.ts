@@ -1,7 +1,16 @@
 import "reflect-metadata";
 import "./load-environment";
 import { App } from "./app";
-import { container, Lifecycle, logWriters, Logger } from "@structured-growth/microservice-sdk";
+import {
+	container,
+	Lifecycle,
+	logWriters,
+	Logger,
+	eventBusProviders,
+	EventbusService,
+	PolicyService,
+	AuthService,
+} from "@structured-growth/microservice-sdk";
 import { loadEnvironment } from "./load-environment";
 import { CredentialsService } from "../modules/credentials/credentials.service";
 import { CredentialsRepository } from "../modules/credentials/credentials.repository";
@@ -28,6 +37,17 @@ container.register("LogWriter", logWriters[process.env.LOG_WRITER] || "ConsoleLo
 container.register("Logger", Logger);
 container.register("App", App, { lifecycle: Lifecycle.Singleton });
 container.register("CredentialsService", CredentialsService);
+
+container.register("eventbusName", { useValue: process.env.EVENTBUS_NAME || "sg-eventbus-dev" });
+container.register("EventbusProvider", eventBusProviders[process.env.EVENTBUS_PROVIDER || "TestEventbusProvider"]);
+container.register("EventbusService", EventbusService);
+
+container.register("authenticationEnabled", { useValue: process.env.AUTHENTICATION_ENABLED === "true" });
+container.register("authorizationEnabled", { useValue: process.env.AUTHORIZATION_ENABLED === "true" });
+container.register("oAuthServiceGetUserUrl", { useValue: process.env.OAUTH_USER_URL });
+container.register("policiesServiceUrl", { useValue: process.env.POLICY_SERVICE_URL });
+container.register("AuthService", AuthService);
+container.register("PolicyService", PolicyService);
 
 // repositories
 container.register("CredentialsRepository", CredentialsRepository);
