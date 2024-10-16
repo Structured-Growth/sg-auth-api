@@ -15,6 +15,6 @@ export const OAuthClientsSearchParamsValidator = joi.object({
 		arn: joi.array().valid(joi.string().required()).label("Entity ARNs"),
 		page: joi.number().positive().label("Page"),
 		limit: joi.number().positive().label("Limit"),
-		sort: joi.array().valid(joi.string().required()).label("Sort"),
+		sort: joi.array().items(joi.string().required()).label("Sort"),
 	}),
 });
