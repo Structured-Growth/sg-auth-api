@@ -20,6 +20,7 @@ import { CredentialsSearchParamsValidator } from "../../validators/credentials-s
 import { CredentialsCreateBodyValidator } from "../../validators/credentials-create-body.validator";
 import { CredentialsCheckBodyValidator } from "../../validators/credentials-check-body.validator";
 import { CredentialsUpdateBodyValidator } from "../../validators/credentials-update-body.validator";
+import { EventMutation } from "@structured-growth/microservice-sdk";
 
 const publicCredentialsAttributes = [
 	"id",
@@ -95,6 +96,10 @@ export class CredentialsController extends BaseController {
 		const model = await this.credentialsService.create(body);
 		this.response.status(201);
 
+		await this.eventBus.publish(
+			new EventMutation(this.principal.arn, model.arn, `${this.appPrefix}:credentials/create`, JSON.stringify(body))
+		);
+
 		return {
 			...(pick(model.toJSON(), publicCredentialsAttributes) as PublicCredentialsAttributes),
 			arn: model.arn,
@@ -160,6 +165,10 @@ export class CredentialsController extends BaseController {
 	): Promise<PublicCredentialsAttributes> {
 		const model = await this.credentialsRepository.update(credentialsId, body);
 
+		await this.eventBus.publish(
+			new EventMutation(this.principal.arn, model.arn, `${this.appPrefix}:credentials/update`, JSON.stringify(body))
+		);
+
 		return {
 			...(pick(model.toJSON(), publicCredentialsAttributes) as PublicCredentialsAttributes),
 			arn: model.arn,
@@ -175,7 +184,18 @@ export class CredentialsController extends BaseController {
 	@DescribeAction("credentials/delete")
 	@DescribeResource("Credentials", ({ params }) => Number(params.credentialsId))
 	async delete(@Path() credentialsId: number): Promise<void> {
+		const model = await this.credentialsRepository.read(credentialsId);
+
+		if (!model) {
+			throw new NotFoundError(`Credential ${credentialsId} not found`);
+		}
+
 		await this.credentialsRepository.delete(credentialsId);
+
+		await this.eventBus.publish(
+			new EventMutation(this.principal.arn, model.arn, `${this.appPrefix}:credentials/delete`, JSON.stringify({}))
+		);
+
 		this.response.status(204);
 	}
 }
