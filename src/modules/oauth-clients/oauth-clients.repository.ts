@@ -23,6 +23,7 @@ export class OauthClientsRepository
 		const where = {};
 		const order = params.sort ? (params.sort.map((item) => item.split(":")) as any) : [["createdAt", "desc"]];
 
+		params.id && (where["id"] = { [Op.in]: params.id });
 		params.orgId && (where["orgId"] = params.orgId);
 		params.accountId && (where["accountId"] = params.accountId);
 		params.clientId && (where["clientId"] = params.clientId);

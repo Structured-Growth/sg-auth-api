@@ -18,6 +18,7 @@ import { pick } from "lodash";
 import { OAuthClientsSearchParamsValidator } from "../../validators/oauth-clients-search-params.validator";
 import { OAuthClientCreateBodyValidator } from "../../validators/oauth-client-create-body.validator";
 import { OAuthClientUpdateBodyValidator } from "../../validators/oauth-client-update-body.validator";
+import { EventMutation } from "@structured-growth/microservice-sdk";
 
 const publicOAuthClientAttributes = [
 	"id",
@@ -99,6 +100,10 @@ export class OAuthClientController extends BaseController {
 		});
 		this.response.status(201);
 
+		await this.eventBus.publish(
+			new EventMutation(this.principal.arn, model.arn, `${this.appPrefix}:oauth-client/create`, JSON.stringify(body))
+		);
+
 		return {
 			...(pick(model.toJSON(), publicOAuthClientAttributes) as PublicOAuthClientAttributes),
 			arn: model.arn,
@@ -150,6 +155,10 @@ export class OAuthClientController extends BaseController {
 	): Promise<PublicOAuthClientAttributes> {
 		const model = await this.oauthClientsRepository.update(oauthClientId, body);
 
+		await this.eventBus.publish(
+			new EventMutation(this.principal.arn, model.arn, `${this.appPrefix}:oauth-client/update`, JSON.stringify(body))
+		);
+
 		return {
 			...(pick(model.toJSON(), publicOAuthClientAttributes) as PublicOAuthClientAttributes),
 			arn: model.arn,
@@ -165,7 +174,18 @@ export class OAuthClientController extends BaseController {
 	@DescribeAction("oauth-client/delete")
 	@DescribeResource("OAuthClient", ({ params }) => Number(params.oauthClientId))
 	async delete(@Path() oauthClientId: number): Promise<void> {
+		const model = await this.oauthClientsRepository.read(oauthClientId);
+
+		if (!model) {
+			throw new NotFoundError(`Oauth client ${oauthClientId} not found`);
+		}
+
 		await this.oauthClientsRepository.delete(oauthClientId);
+
+		await this.eventBus.publish(
+			new EventMutation(this.principal.arn, model.arn, `${this.appPrefix}:oauth-client/delete`, JSON.stringify({}))
+		);
+
 		this.response.status(204);
 	}
 }
