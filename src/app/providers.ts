@@ -15,6 +15,8 @@ import { loadEnvironment } from "./load-environment";
 import { CredentialsService } from "../modules/credentials/credentials.service";
 import { CredentialsRepository } from "../modules/credentials/credentials.repository";
 import { OauthClientsRepository } from "../modules/oauth-clients/oauth-clients.repository";
+import { PermittedOrganizationsRepository } from "../modules/permitted-organizations/permitted-organizations.repository";
+import { PermittedOrganizationsService } from "../modules/permitted-organizations/permitted-organizations.service";
 
 // load and validate env variables
 loadEnvironment();
@@ -37,6 +39,7 @@ container.register("LogWriter", logWriters[process.env.LOG_WRITER] || "ConsoleLo
 container.register("Logger", Logger);
 container.register("App", App, { lifecycle: Lifecycle.Singleton });
 container.register("CredentialsService", CredentialsService);
+container.register("PermittedOrganizationsService", PermittedOrganizationsService);
 
 container.register("eventbusName", { useValue: process.env.EVENTBUS_NAME || "sg-eventbus-dev" });
 container.register("EventbusProvider", eventBusProviders[process.env.EVENTBUS_PROVIDER || "TestEventbusProvider"]);
@@ -57,3 +60,4 @@ container.register("PolicyService", PolicyService);
 // repositories
 container.register("CredentialsRepository", CredentialsRepository);
 container.register("OauthClientsRepository", OauthClientsRepository);
+container.register("PermittedOrganizationsRepository", PermittedOrganizationsRepository);
