@@ -37,6 +37,13 @@ router.get(pathPrefix + '/v1/oauth-clients/:oauthClientId', handleRequest(Contro
 router.put(pathPrefix + '/v1/oauth-clients/:oauthClientId', handleRequest(Controllers.OAuthClientController, "update", handlerOpts));
 router.delete(pathPrefix + '/v1/oauth-clients/:oauthClientId', handleRequest(Controllers.OAuthClientController, "delete", handlerOpts));
 
+//PermittedOrganizationController
+router.get(pathPrefix + '/v1/permitted-organizations', handleRequest(Controllers.PermittedOrganizationController, "search", handlerOpts));
+router.post(pathPrefix + '/v1/permitted-organizations', handleRequest(Controllers.PermittedOrganizationController, "create", handlerOpts));
+router.get(pathPrefix + '/v1/permitted-organizations/:permittedOrganizationId', handleRequest(Controllers.PermittedOrganizationController, "get", handlerOpts));
+router.put(pathPrefix + '/v1/permitted-organizations/:permittedOrganizationId', handleRequest(Controllers.PermittedOrganizationController, "update", handlerOpts));
+router.delete(pathPrefix + '/v1/permitted-organizations/:permittedOrganizationId', handleRequest(Controllers.PermittedOrganizationController, "delete", handlerOpts));
+
 //ResolverController
 router.get(pathPrefix + '/v1/resolver/resolve', handleRequest(Controllers.ResolverController, "resolve", handlerOpts));
 router.get(pathPrefix + '/v1/resolver/actions', handleRequest(Controllers.ResolverController, "actions", handlerOpts));
@@ -57,6 +64,11 @@ export const actionToRouteMap = {
 	"OAuthClientController.get": 'get /v1/oauth-clients/:oauthClientId',
 	"OAuthClientController.update": 'put /v1/oauth-clients/:oauthClientId',
 	"OAuthClientController.delete": 'delete /v1/oauth-clients/:oauthClientId',
+	"PermittedOrganizationController.search": 'get /v1/permitted-organizations',
+	"PermittedOrganizationController.create": 'post /v1/permitted-organizations',
+	"PermittedOrganizationController.get": 'get /v1/permitted-organizations/:permittedOrganizationId',
+	"PermittedOrganizationController.update": 'put /v1/permitted-organizations/:permittedOrganizationId',
+	"PermittedOrganizationController.delete": 'delete /v1/permitted-organizations/:permittedOrganizationId',
 	"ResolverController.resolve": 'get /v1/resolver/resolve',
 	"ResolverController.actions": 'get /v1/resolver/actions',
 	"ResolverController.models": 'get /v1/resolver/models',
