@@ -24,7 +24,7 @@ export class CredentialsRepository
 		const order = params.sort ? (params.sort.map((item) => item.split(":")) as any) : [["createdAt", "desc"]];
 
 		params.orgId && (where["orgId"] = params.orgId);
-		params.accountId && (where["accountId"] = params.accountId);
+		params.accountId && (where["accountId"] = { [Op.in]: params.accountId });
 		params.provider && (where["provider"] = params.provider);
 		params.providerId && (where["providerId"] = params.providerId);
 		params.id && (where["id"] = { [Op.in]: params.id });

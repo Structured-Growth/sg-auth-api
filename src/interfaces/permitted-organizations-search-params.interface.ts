@@ -4,6 +4,6 @@ import { PermittedOrganizationsAttributes } from "../../database/models/permitte
 export interface PermittedOrganizationsSearchParamsInterface
 	extends Omit<DefaultSearchParamsInterface, "orgId" | "accountId"> {
 	orgId?: number;
-	accountId?: number;
+	accountId?: number[];
 	status?: PermittedOrganizationsAttributes["status"][];
 }
