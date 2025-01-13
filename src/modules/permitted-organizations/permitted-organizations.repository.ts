@@ -32,7 +32,7 @@ export class PermittedOrganizationsRepository
 
 		params.id && (where["id"] = { [Op.in]: params.id });
 		params.orgId && (where["orgId"] = params.orgId);
-		params.accountId && (where["accountId"] = params.accountId);
+		params.accountId && (where["accountId"] = { [Op.in]: params.accountId });
 		params.status && (where["status"] = { [Op.in]: params.status });
 
 		const { rows, count } = await PermittedOrganizations.findAndCountAll({

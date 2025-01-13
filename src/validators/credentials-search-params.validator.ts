@@ -9,8 +9,8 @@ export const CredentialsSearchParamsValidator = joi.object({
 			.items(joi.string().valid("verification", "active", "inactive", "archived").required())
 			.label("Status"),
 		orgId: joi.number().positive().label("Organization ID"),
-		accountId: joi.number().positive().label("Account ID"),
-		id: joi.array().valid(joi.number().positive().required()).label("Entity IDs"),
+		accountId: joi.array().items(joi.number().positive().required()).label("Entity Account IDs"),
+		id: joi.array().items(joi.number().positive().required()).label("Entity IDs"),
 		arn: joi.array().valid(joi.string().required()).label("Entity ARNs"),
 		page: joi.number().positive().label("Page"),
 		limit: joi.number().positive().label("Limit"),
