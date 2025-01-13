@@ -2,7 +2,7 @@ import { joi } from "@structured-growth/microservice-sdk";
 
 export const CredentialsSearchParamsValidator = joi.object({
 	query: joi.object({
-		provider: joi.string().valid("local", "google").label("Provider"),
+		provider: joi.string().valid("local", "google", "github").label("Provider"),
 		providerId: joi.string().label("Provider"),
 		status: joi
 			.array()
