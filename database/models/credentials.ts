@@ -3,7 +3,7 @@ import { BeforeCreate, BeforeUpdate, Column, DataType, Model, Table } from "sequ
 import { container, RegionEnum, DefaultModelInterface } from "@structured-growth/microservice-sdk";
 
 export interface CredentialsAttributes extends DefaultModelInterface {
-	provider: "local" | "google";
+	provider: "local" | "google" | "github";
 	providerId: string;
 	password: string;
 	status: "verification" | "active" | "inactive" | "archived";
