@@ -27,7 +27,7 @@ export class SystemController extends BaseController {
 			await sequelize.createSchema(process.env.DB_SCHEMA, {});
 		} catch (e) {
 			if (e.message.includes("already exists")) {
-				this.logger.info("Schema already exists, continue...")
+				this.logger.info("Schema already exists, continue...");
 			} else {
 				throw e;
 			}
