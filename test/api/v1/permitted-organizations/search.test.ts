@@ -31,7 +31,7 @@ describe("GET /api/v1/permitted-organizations", () => {
 		const { statusCode, body } = await server.get("/v1/permitted-organizations").query({
 			"id[0]": context.permittedOrganizationId,
 			orgId: randomOrgId,
-			accountId: randomAccountId,
+			"accountId[0]": randomAccountId,
 			"status[0]": "active",
 		});
 
