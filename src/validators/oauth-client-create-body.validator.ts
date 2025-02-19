@@ -11,7 +11,7 @@ export const OAuthClientCreateBodyValidator = joi.object({
 		defaultOrgName: joi.string().label("Default organization"),
 		grants: joi
 			.array()
-			.items(joi.string().valid("authorization_code", "refresh_token", "client_credentials").required())
+			.items(joi.string().valid("authorization_code", "refresh_token", "client_credentials", "password").required())
 			.label("Grants")
 			.required(),
 		redirectUris: joi.array().items(joi.string().uri()).label("Redirect URIs").required(),
