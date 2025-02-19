@@ -30,7 +30,7 @@ describe("GET /api/v1/credentials", () => {
 	it("Should return credentials", async () => {
 		const { statusCode, body } = await server.get("/v1/credentials").query({
 			orgId: 1,
-			accountId: 1,
+			"accountId[0]": 1,
 			provider: "local",
 			providerId: email,
 			"status[0]": ["active"],
