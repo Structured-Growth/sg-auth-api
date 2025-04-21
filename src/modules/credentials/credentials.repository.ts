@@ -4,6 +4,8 @@ import {
 	RepositoryInterface,
 	SearchResultInterface,
 	NotFoundError,
+	I18nType,
+	inject,
 } from "@structured-growth/microservice-sdk";
 import Credentials, {
 	CredentialsCreationAttributes,
@@ -16,6 +18,10 @@ import { isUndefined, omitBy } from "lodash";
 export class CredentialsRepository
 	implements RepositoryInterface<Credentials, CredentialsSearchParamsInterface, CredentialsCreationAttributes>
 {
+	private i18n: I18nType;
+	constructor(@inject("i18n") private getI18n: () => I18nType) {
+		this.i18n = this.getI18n();
+	}
 	public async search(params: CredentialsSearchParamsInterface): Promise<SearchResultInterface<Credentials>> {
 		const page = params.page || 1;
 		const limit = params.limit || 20;
@@ -69,7 +75,9 @@ export class CredentialsRepository
 	public async update(id: number, params: CredentialsUpdateAttributes): Promise<Credentials> {
 		const model = await this.read(id);
 		if (!model) {
-			throw new NotFoundError(`Credentials ${id} not found`);
+			throw new NotFoundError(
+				`${this.i18n.__("error.credential.name")} ${id} ${this.i18n.__("error.common.not_found")}`
+			);
 		}
 		if (params.password) {
 			params.password = Credentials.hashPassword(params.password);
@@ -91,7 +99,9 @@ export class CredentialsRepository
 			await credentials.save({ transaction });
 			const n = await Credentials.destroy({ where: { id }, transaction });
 			if (n === 0) {
-				throw new NotFoundError(`Credentials ${id} not found`);
+				throw new NotFoundError(
+					`${this.i18n.__("error.credential.name")} ${id} ${this.i18n.__("error.common.not_found")}`
+				);
 			}
 		});
 	}

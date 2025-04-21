@@ -4,7 +4,7 @@ export const CredentialsUpdateBodyValidator = joi.object({
 	credentialsId: joi.number().required(),
 	query: joi.object(),
 	body: joi.object({
-		password: PasswordValidator.label("Password"),
-		status: joi.string().valid("verification", "active", "inactive").label("Status"),
+		password: PasswordValidator.label("validator.credentials.password"),
+		status: joi.string().valid("verification", "active", "inactive").label("validator.credentials.status"),
 	}),
 });

@@ -1,0 +1,60 @@
+{
+  "system": {
+    "ping":  {
+      "am": "I'm",
+      "service": "service"
+    }
+  },
+  "error": {
+    "common": {
+      "not_found": "not found"
+    },
+    "credential": {
+      "name": "Credential",
+      "provider_id": "Provider ID is already taken",
+      "credentials_invalid": "Credentials are invalid"
+    },
+    "oauth_client": {
+      "name": "OAuthClient"
+    },
+    "permitted_organization": {
+      "name": "Permitted organization"
+    }
+  },
+  "validator": {
+    "common": {
+      "id": "Entity IDs",
+      "arn": "Entity ARNs",
+      "page": "Page",
+      "limit": "Limit",
+      "sort": "Sort"
+    },
+    "credentials": {
+      "provider": "Provider",
+      "providerId": "Provider",
+      "status": "Status",
+      "orgId": "Organization Id",
+      "region": "Region",
+      "password": "Password",
+      "accountId": "Account Id"
+    },
+    "oauthClients": {
+      "title": "Title",
+      "clientId": "Client ID",
+      "status": "Status",
+      "orgId": "Organization Id",
+      "region": "Region",
+      "accountId": "Account ID",
+      "defaultOrgName": "Default organization",
+      "grants": "Grants",
+      "redirectUris": "Redirect URIs"
+    },
+    "permittedOrganizations": {
+      "orgId": "Organization Id",
+      "region": "Region",
+      "accountId": "Account Id",
+      "status": "Status",
+      "permittedOrganizationId": "Permitted Organization Id"
+    }
+  }
+}

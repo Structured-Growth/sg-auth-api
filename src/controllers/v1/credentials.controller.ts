@@ -6,6 +6,7 @@ import {
 	DescribeResource,
 	SearchResultInterface,
 	ValidateFuncArgs,
+	I18nType,
 } from "@structured-growth/microservice-sdk";
 import { CredentialsAttributes } from "../../../database/models/credentials";
 import { CredentialsSearchParamsInterface } from "../../interfaces/credentials-search-params.interface";
@@ -41,11 +42,14 @@ type PublicCredentialsAttributes = Pick<CredentialsAttributes, CredentialsKeys>;
 @Tags("Credentials")
 @autoInjectable()
 export class CredentialsController extends BaseController {
+	private i18n: I18nType;
 	constructor(
 		@inject("CredentialsRepository") private credentialsRepository: CredentialsRepository,
-		@inject("CredentialsService") private credentialsService: CredentialsService
+		@inject("CredentialsService") private credentialsService: CredentialsService,
+		@inject("i18n") private getI18n: () => I18nType
 	) {
 		super();
+		this.i18n = this.getI18n();
 	}
 
 	/**
@@ -138,7 +142,9 @@ export class CredentialsController extends BaseController {
 		const model = await this.credentialsRepository.read(credentialsId);
 
 		if (!model) {
-			throw new NotFoundError(`Credentials ${credentialsId} not found`);
+			throw new NotFoundError(
+				`${this.i18n.__("error.credential.name")} ${credentialsId} ${this.i18n.__("error.common.not_found")}`
+			);
 		}
 
 		return {
@@ -187,7 +193,9 @@ export class CredentialsController extends BaseController {
 		const model = await this.credentialsRepository.read(credentialsId);
 
 		if (!model) {
-			throw new NotFoundError(`Credential ${credentialsId} not found`);
+			throw new NotFoundError(
+				`${this.i18n.__("error.credential.name")} ${credentialsId} ${this.i18n.__("error.common.not_found")}`
+			);
 		}
 
 		await this.credentialsRepository.delete(credentialsId);

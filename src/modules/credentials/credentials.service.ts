@@ -1,4 +1,4 @@
-import { autoInjectable, inject, ValidationError } from "@structured-growth/microservice-sdk";
+import { autoInjectable, inject, ValidationError, I18nType } from "@structured-growth/microservice-sdk";
 import Credentials from "../../../database/models/credentials";
 import { CredentialsRepository } from "./credentials.repository";
 import { CredentialsCheckBodyInterface } from "../../interfaces/credentials-check-body.interface";
@@ -6,7 +6,13 @@ import { CredentialsCreateBodyInterface } from "../../interfaces/credentials-cre
 
 @autoInjectable()
 export class CredentialsService {
-	constructor(@inject("CredentialsRepository") private credentialsRepository: CredentialsRepository) {}
+	private i18n: I18nType;
+	constructor(
+		@inject("CredentialsRepository") private credentialsRepository: CredentialsRepository,
+		@inject("i18n") private getI18n: () => I18nType
+	) {
+		this.i18n = this.getI18n();
+	}
 
 	public async create(params: CredentialsCreateBodyInterface): Promise<Credentials> {
 		const result = await this.credentialsRepository.search({
@@ -16,7 +22,7 @@ export class CredentialsService {
 		});
 
 		if (result.total !== 0) {
-			throw new ValidationError({}, "Provider ID is already taken");
+			throw new ValidationError({}, this.i18n.__("error.credential.provider_id"));
 		}
 
 		return this.credentialsRepository.create({
@@ -40,11 +46,11 @@ export class CredentialsService {
 		const credentials = result.data[0];
 
 		if (!credentials || result.data.length !== 1) {
-			throw new ValidationError({}, "Credentials are invalid");
+			throw new ValidationError({}, this.i18n.__("error.credential.credentials_invalid"));
 		}
 
 		if (credentials.provider === "local" && !credentials.validatePassword(params.password)) {
-			throw new ValidationError({}, "Credentials are invalid");
+			throw new ValidationError({}, this.i18n.__("error.credential.credentials_invalid"));
 		}
 
 		return credentials;

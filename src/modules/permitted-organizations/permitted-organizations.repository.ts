@@ -4,6 +4,8 @@ import {
 	RepositoryInterface,
 	SearchResultInterface,
 	NotFoundError,
+	I18nType,
+	inject,
 } from "@structured-growth/microservice-sdk";
 import PermittedOrganizations, {
 	PermittedOrganizationsCreationAttributes,
@@ -21,6 +23,10 @@ export class PermittedOrganizationsRepository
 			PermittedOrganizationsCreationAttributes
 		>
 {
+	private i18n: I18nType;
+	constructor(@inject("i18n") private getI18n: () => I18nType) {
+		this.i18n = this.getI18n();
+	}
 	public async search(
 		params: PermittedOrganizationsSearchParamsInterface
 	): Promise<SearchResultInterface<PermittedOrganizations>> {
@@ -69,7 +75,9 @@ export class PermittedOrganizationsRepository
 	public async update(id: number, params: PermittedOrganizationsUpdateAttributes): Promise<PermittedOrganizations> {
 		const model = await this.read(id);
 		if (!model) {
-			throw new NotFoundError(`Permitted organization ${id} not found`);
+			throw new NotFoundError(
+				`${this.i18n.__("error.permitted_organization.name")} ${id} ${this.i18n.__("error.common.not_found")}`
+			);
 		}
 		model.setAttributes(omitBy(params, isUndefined));
 
@@ -80,7 +88,9 @@ export class PermittedOrganizationsRepository
 		const n = await PermittedOrganizations.destroy({ where: { id } });
 
 		if (n === 0) {
-			throw new NotFoundError(`Permitted organization ${id} not found`);
+			throw new NotFoundError(
+				`${this.i18n.__("error.permitted_organization.name")} ${id} ${this.i18n.__("error.common.not_found")}`
+			);
 		}
 	}
 }
