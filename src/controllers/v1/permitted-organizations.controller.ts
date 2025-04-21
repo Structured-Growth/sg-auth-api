@@ -8,6 +8,7 @@ import {
 	NotFoundError,
 	SearchResultInterface,
 	ValidateFuncArgs,
+	I18nType,
 } from "@structured-growth/microservice-sdk";
 import { PermittedOrganizationsAttributes } from "../../../database/models/permitted-organizations";
 import { PermittedOrganizationsSearchParamsInterface } from "../../interfaces/permitted-organizations-search-params.interface";
@@ -39,11 +40,14 @@ type PublicPermittedOrganizationAttributes = Pick<PermittedOrganizationsAttribut
 @Tags("Permitted Organizations")
 @autoInjectable()
 export class PermittedOrganizationController extends BaseController {
+	private i18n: I18nType;
 	constructor(
 		@inject("PermittedOrganizationsRepository")
-		private permittedOrganizationsRepository: PermittedOrganizationsRepository
+		private permittedOrganizationsRepository: PermittedOrganizationsRepository,
+		@inject("i18n") private getI18n: () => I18nType
 	) {
 		super();
+		this.i18n = this.getI18n();
 	}
 
 	/**
@@ -115,7 +119,11 @@ export class PermittedOrganizationController extends BaseController {
 		const model = await this.permittedOrganizationsRepository.read(permittedOrganizationId);
 
 		if (!model) {
-			throw new NotFoundError(`Permitted organization ${permittedOrganizationId} not found`);
+			throw new NotFoundError(
+				`${this.i18n.__("error.permitted_organization.name")} ${permittedOrganizationId} ${this.i18n.__(
+					"error.common.not_found"
+				)}`
+			);
 		}
 
 		return {
@@ -168,7 +176,11 @@ export class PermittedOrganizationController extends BaseController {
 		const model = await this.permittedOrganizationsRepository.read(permittedOrganizationId);
 
 		if (!model) {
-			throw new NotFoundError(`Permitted organization ${permittedOrganizationId} not found`);
+			throw new NotFoundError(
+				`${this.i18n.__("error.permitted_organization.name")} ${permittedOrganizationId} ${this.i18n.__(
+					"error.common.not_found"
+				)}`
+			);
 		}
 
 		await this.permittedOrganizationsRepository.delete(permittedOrganizationId);
