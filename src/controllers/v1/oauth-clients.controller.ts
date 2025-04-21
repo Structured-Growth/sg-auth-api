@@ -8,6 +8,7 @@ import {
 	NotFoundError,
 	SearchResultInterface,
 	ValidateFuncArgs,
+	I18nType,
 } from "@structured-growth/microservice-sdk";
 import { OAuthClientAttributes } from "../../../database/models/oauth-client";
 import { OAuthClientSearchParamsInterface } from "../../interfaces/oauth-client-search-params.interface";
@@ -42,8 +43,13 @@ type PublicOAuthClientAttributes = Pick<OAuthClientAttributes, OAuthClientKeys>;
 @Tags("OAuth Clients")
 @autoInjectable()
 export class OAuthClientController extends BaseController {
-	constructor(@inject("OauthClientsRepository") private oauthClientsRepository: OauthClientsRepository) {
+	private i18n: I18nType;
+	constructor(
+		@inject("OauthClientsRepository") private oauthClientsRepository: OauthClientsRepository,
+		@inject("i18n") private getI18n: () => I18nType
+	) {
 		super();
+		this.i18n = this.getI18n();
 	}
 
 	/**
@@ -129,7 +135,9 @@ export class OAuthClientController extends BaseController {
 		const model = await this.oauthClientsRepository.read(oauthClientId);
 
 		if (!model) {
-			throw new NotFoundError(`OAuthClient ${oauthClientId} not found`);
+			throw new NotFoundError(
+				`${this.i18n.__("error.oauth_client.name")} ${oauthClientId} ${this.i18n.__("error.common.not_found")}`
+			);
 		}
 
 		return {
@@ -177,7 +185,9 @@ export class OAuthClientController extends BaseController {
 		const model = await this.oauthClientsRepository.read(oauthClientId);
 
 		if (!model) {
-			throw new NotFoundError(`Oauth client ${oauthClientId} not found`);
+			throw new NotFoundError(
+				`${this.i18n.__("error.oauth_client.name")} ${oauthClientId} ${this.i18n.__("error.common.not_found")}`
+			);
 		}
 
 		await this.oauthClientsRepository.delete(oauthClientId);

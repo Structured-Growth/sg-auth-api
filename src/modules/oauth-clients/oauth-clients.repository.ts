@@ -4,6 +4,8 @@ import {
 	RepositoryInterface,
 	SearchResultInterface,
 	NotFoundError,
+	I18nType,
+	inject,
 } from "@structured-growth/microservice-sdk";
 import OAuthClient, {
 	OAuthClientCreationAttributes,
@@ -16,6 +18,10 @@ import { isUndefined, omitBy } from "lodash";
 export class OauthClientsRepository
 	implements RepositoryInterface<OAuthClient, OAuthClientSearchParamsInterface, OAuthClientCreationAttributes>
 {
+	private i18n: I18nType;
+	constructor(@inject("i18n") private getI18n: () => I18nType) {
+		this.i18n = this.getI18n();
+	}
 	public async search(params: OAuthClientSearchParamsInterface): Promise<SearchResultInterface<OAuthClient>> {
 		const page = params.page || 1;
 		const limit = params.limit || 20;
@@ -71,7 +77,9 @@ export class OauthClientsRepository
 	public async update(id: number, params: OAuthClientUpdateAttributes): Promise<OAuthClient> {
 		const model = await this.read(id);
 		if (!model) {
-			throw new NotFoundError(`OAuthClient ${id} not found`);
+			throw new NotFoundError(
+				`${this.i18n.__("error.oauth_client.name")} ${id} ${this.i18n.__("error.common.not_found")}`
+			);
 		}
 		model.setAttributes(omitBy(params, isUndefined));
 
@@ -89,7 +97,9 @@ export class OauthClientsRepository
 			await client.save({ transaction });
 			const n = await OAuthClient.destroy({ where: { id }, transaction });
 			if (n === 0) {
-				throw new NotFoundError(`OAuthClient ${id} not found`);
+				throw new NotFoundError(
+					`${this.i18n.__("error.oauth_client.name")} ${id} ${this.i18n.__("error.common.not_found")}`
+				);
 			}
 		});
 	}
