@@ -2,7 +2,7 @@ import { Column, DataType, Model, Table } from "sequelize-typescript";
 import { container, RegionEnum, DefaultModelInterface } from "@structured-growth/microservice-sdk";
 
 export interface OAuthClientPolicyAttributes extends Omit<DefaultModelInterface, "accountId"> {
-	oauthClientId: number;
+	oauthClientId: string;
 	providerType: "email" | "phoneNumber" | "username" | "oauth";
 	passwordRequired: boolean;
 	twoFaEnabled: boolean;
@@ -31,8 +31,8 @@ export class OauthClientPolicy
 	@Column
 	region: RegionEnum;
 
-	@Column
-	oauthClientId: number;
+	@Column(DataType.STRING)
+	oauthClientId: string;
 
 	@Column(DataType.STRING)
 	providerType: OAuthClientPolicyAttributes["providerType"];

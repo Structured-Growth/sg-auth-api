@@ -18,7 +18,7 @@ module.exports = {
 				},
 				org_id: Sequelize.INTEGER,
 				region: Sequelize.STRING(10),
-				oauth_client_id: Sequelize.INTEGER,
+				oauth_client_id: Sequelize.STRING(100),
 				provider_type: Sequelize.STRING(100),
 				password_required: Sequelize.BOOLEAN,
 				two_fa_enabled: Sequelize.BOOLEAN,

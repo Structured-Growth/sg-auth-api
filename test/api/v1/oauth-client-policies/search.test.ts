@@ -16,7 +16,7 @@ describe("GET /api/v1/oauth-client-policies", () => {
 		const { statusCode, body } = await server.post("/v1/oauth-client-policies").send({
 			orgId: 1,
 			region: "us",
-			oauthClientId: 1,
+			oauthClientId: "6a40337f2064d611d751f19d3344af2d",
 			providerType: "email",
 			passwordRequired: true,
 			twoFaEnabled: true,
@@ -40,7 +40,7 @@ describe("GET /api/v1/oauth-client-policies", () => {
 	it("Should return validation error", async () => {
 		const { statusCode, body } = await server.get("/v1/oauth-client-policies").query({
 			orgId: -1,
-			oauthClientId: "notus",
+			oauthClientId: "",
 			status: "active",
 			providerType: -1,
 		});

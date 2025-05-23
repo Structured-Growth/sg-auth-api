@@ -16,7 +16,7 @@ describe("GET /api/v1/oauth-client-policies/:oauthClientPolicyId", () => {
 		const { statusCode, body } = await server.post("/v1/oauth-client-policies").send({
 			orgId: 1,
 			region: "us",
-			oauthClientId: 1,
+			oauthClientId: "6a40337f2064d611d751f19d3344af2d",
 			providerType: "email",
 			passwordRequired: true,
 			twoFaEnabled: true,
@@ -31,7 +31,7 @@ describe("GET /api/v1/oauth-client-policies/:oauthClientPolicyId", () => {
 		assert.equal(statusCode, 200);
 		assert.equal(body.id, id);
 		assert.equal(body.orgId, 1);
-		assert.equal(body.oauthClientId, 1);
+		assert.equal(body.oauthClientId, "6a40337f2064d611d751f19d3344af2d");
 		assert.equal(body.region, "us");
 		assert.equal(body.providerType, "email");
 		assert.isBoolean(body.passwordRequired);
