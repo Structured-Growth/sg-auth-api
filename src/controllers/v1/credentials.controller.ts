@@ -29,6 +29,7 @@ const publicCredentialsAttributes = [
 	"region",
 	"accountId",
 	"provider",
+	"providerType",
 	"providerId",
 	"status",
 	"createdAt",

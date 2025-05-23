@@ -1,9 +1,10 @@
 import { genSaltSync, hashSync, compareSync } from "bcrypt";
-import { BeforeCreate, BeforeUpdate, Column, DataType, Model, Table } from "sequelize-typescript";
+import { Column, DataType, Model, Table } from "sequelize-typescript";
 import { container, RegionEnum, DefaultModelInterface } from "@structured-growth/microservice-sdk";
 
 export interface CredentialsAttributes extends DefaultModelInterface {
 	provider: "local" | "google" | "github";
+	providerType: "email" | "phoneNumber" | "username" | "oauth";
 	providerId: string;
 	password: string;
 	status: "verification" | "active" | "inactive" | "archived";
@@ -12,7 +13,8 @@ export interface CredentialsAttributes extends DefaultModelInterface {
 export interface CredentialsCreationAttributes
 	extends Omit<CredentialsAttributes, "id" | "arn" | "createdAt" | "updatedAt" | "deletedAt"> {}
 
-export interface CredentialsUpdateAttributes extends Partial<Pick<CredentialsAttributes, "status" | "password">> {}
+export interface CredentialsUpdateAttributes
+	extends Partial<Pick<CredentialsAttributes, "status" | "password" | "providerType">> {}
 
 @Table({
 	tableName: "credentials",
@@ -35,6 +37,9 @@ export class Credentials
 
 	@Column(DataType.STRING)
 	provider: CredentialsAttributes["provider"];
+
+	@Column(DataType.STRING)
+	providerType: CredentialsAttributes["providerType"];
 
 	@Column(DataType.STRING)
 	providerId: CredentialsAttributes["providerId"];

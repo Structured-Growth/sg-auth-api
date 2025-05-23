@@ -21,6 +21,7 @@ describe("PUT /api/v1/credentials/:credentialsId", () => {
 			region: "us",
 			accountId: 1,
 			provider: "local",
+			providerType: "email",
 			providerId: email,
 			password: "Fld2ZaW4sV@?6k)A",
 			status: "inactive",
@@ -36,6 +37,7 @@ describe("PUT /api/v1/credentials/:credentialsId", () => {
 	it("Should update credentials", async () => {
 		const { statusCode, body } = await server.put(`/v1/credentials/${id}`).send({
 			status: "active",
+			providerType: "phoneNumber",
 		});
 		assert.equal(statusCode, 200);
 	});
@@ -44,6 +46,7 @@ describe("PUT /api/v1/credentials/:credentialsId", () => {
 		const { statusCode, body } = await server.get(`/v1/credentials/${id}`);
 		assert.equal(statusCode, 200);
 		assert.equal(body.status, "active");
+		assert.equal(body.providerType, "phoneNumber");
 		assert.equal(body.clientId, clientId);
 		assert.equal(body.clientSecret, clientSecret);
 	});

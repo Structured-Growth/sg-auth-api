@@ -37,6 +37,13 @@ router.get(pathPrefix + '/v1/oauth-clients/:oauthClientId', handleRequest(Contro
 router.put(pathPrefix + '/v1/oauth-clients/:oauthClientId', handleRequest(Controllers.OAuthClientController, "update", handlerOpts));
 router.delete(pathPrefix + '/v1/oauth-clients/:oauthClientId', handleRequest(Controllers.OAuthClientController, "delete", handlerOpts));
 
+//OAuthClientPolicyController
+router.get(pathPrefix + '/v1/oauth-client-policies', handleRequest(Controllers.OAuthClientPolicyController, "search", handlerOpts));
+router.post(pathPrefix + '/v1/oauth-client-policies', handleRequest(Controllers.OAuthClientPolicyController, "create", handlerOpts));
+router.get(pathPrefix + '/v1/oauth-client-policies/:oauthClientPolicyId', handleRequest(Controllers.OAuthClientPolicyController, "get", handlerOpts));
+router.put(pathPrefix + '/v1/oauth-client-policies/:oauthClientPolicyId', handleRequest(Controllers.OAuthClientPolicyController, "update", handlerOpts));
+router.delete(pathPrefix + '/v1/oauth-client-policies/:oauthClientPolicyId', handleRequest(Controllers.OAuthClientPolicyController, "delete", handlerOpts));
+
 //PermittedOrganizationController
 router.get(pathPrefix + '/v1/permitted-organizations', handleRequest(Controllers.PermittedOrganizationController, "search", handlerOpts));
 router.post(pathPrefix + '/v1/permitted-organizations', handleRequest(Controllers.PermittedOrganizationController, "create", handlerOpts));
@@ -64,6 +71,11 @@ export const actionToRouteMap = {
 	"OAuthClientController.get": 'get /v1/oauth-clients/:oauthClientId',
 	"OAuthClientController.update": 'put /v1/oauth-clients/:oauthClientId',
 	"OAuthClientController.delete": 'delete /v1/oauth-clients/:oauthClientId',
+	"OAuthClientPolicyController.search": 'get /v1/oauth-client-policies',
+	"OAuthClientPolicyController.create": 'post /v1/oauth-client-policies',
+	"OAuthClientPolicyController.get": 'get /v1/oauth-client-policies/:oauthClientPolicyId',
+	"OAuthClientPolicyController.update": 'put /v1/oauth-client-policies/:oauthClientPolicyId',
+	"OAuthClientPolicyController.delete": 'delete /v1/oauth-client-policies/:oauthClientPolicyId',
 	"PermittedOrganizationController.search": 'get /v1/permitted-organizations',
 	"PermittedOrganizationController.create": 'post /v1/permitted-organizations',
 	"PermittedOrganizationController.get": 'get /v1/permitted-organizations/:permittedOrganizationId',

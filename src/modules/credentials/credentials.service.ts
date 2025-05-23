@@ -29,6 +29,7 @@ export class CredentialsService {
 			accountId: params.accountId,
 			orgId: params.orgId,
 			provider: params.provider,
+			providerType: params.providerType,
 			providerId: params.providerId,
 			password: params.password,
 			region: params.region,

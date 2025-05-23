@@ -17,6 +17,9 @@
     "oauth_client": {
       "name": "OAuthClient"
     },
+    "oauth_client_policy": {
+      "name": "OAuthClientPolicy"
+    },
     "permitted_organization": {
       "name": "Permitted organization"
     }
@@ -31,7 +34,8 @@
     },
     "credentials": {
       "provider": "Provider",
-      "providerId": "Provider",
+      "providerId": "Provider Id",
+      "providerType": "Provider type",
       "status": "Status",
       "orgId": "Organization Id",
       "region": "Region",
@@ -48,6 +52,15 @@
       "defaultOrgName": "Default organization",
       "grants": "Grants",
       "redirectUris": "Redirect URIs"
+    },
+    "oauthClientPolicies": {
+      "orgId": "Organization Id",
+      "oauthClientId": "Oauth client id",
+      "providerType": "Provider type",
+      "region": "Region",
+      "status": "Status",
+      "passwordRequired": "Password required",
+      "twoFaEnabled": "Two-factor authentication"
     },
     "permittedOrganizations": {
       "orgId": "Organization Id",
