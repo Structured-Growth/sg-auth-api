@@ -3,18 +3,31 @@ import { Column, DataType, Model, Table } from "sequelize-typescript";
 import { container, RegionEnum, DefaultModelInterface } from "@structured-growth/microservice-sdk";
 
 export interface CredentialsAttributes extends DefaultModelInterface {
-	provider: "local" | "google" | "github";
-	providerType: "email" | "phoneNumber" | "username" | "oauth";
+	provider: "local" | "oauth";
+	providerType: "email" | "phoneNumber" | "username" | "google" | "github" | "wechat";
 	providerId: string;
 	password: string;
 	status: "verification" | "active" | "inactive" | "archived";
+	verificationCodeHash?: string | null;
+	verificationCodeSalt?: string | null;
+	verificationCodeExpires?: Date | null;
 }
 
 export interface CredentialsCreationAttributes
 	extends Omit<CredentialsAttributes, "id" | "arn" | "createdAt" | "updatedAt" | "deletedAt"> {}
 
 export interface CredentialsUpdateAttributes
-	extends Partial<Pick<CredentialsAttributes, "status" | "password" | "providerType">> {}
+	extends Partial<
+		Pick<
+			CredentialsAttributes,
+			| "status"
+			| "password"
+			| "providerType"
+			| "verificationCodeHash"
+			| "verificationCodeSalt"
+			| "verificationCodeExpires"
+		>
+	> {}
 
 @Table({
 	tableName: "credentials",
@@ -49,6 +62,15 @@ export class Credentials
 
 	@Column(DataType.STRING)
 	status: CredentialsAttributes["status"];
+
+	@Column({ allowNull: true })
+	verificationCodeHash: string | null;
+
+	@Column({ allowNull: true })
+	verificationCodeSalt: string | null;
+
+	@Column({ allowNull: true })
+	verificationCodeExpires: Date | null;
 
 	static get arnPattern(): string {
 		return [container.resolve("appPrefix"), "<region>", "<orgId>", "<accountId>", `credentials/<credentialsId>`].join(

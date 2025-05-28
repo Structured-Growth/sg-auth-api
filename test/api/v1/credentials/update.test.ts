@@ -35,9 +35,14 @@ describe("PUT /api/v1/credentials/:credentialsId", () => {
 	});
 
 	it("Should update credentials", async () => {
+		const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+
 		const { statusCode, body } = await server.put(`/v1/credentials/${id}`).send({
 			status: "active",
 			providerType: "phoneNumber",
+			verificationCodeHash: "test-hash",
+			verificationCodeSalt: "test-salt",
+			verificationCodeExpires: expiresAt,
 		});
 		assert.equal(statusCode, 200);
 	});
@@ -49,5 +54,8 @@ describe("PUT /api/v1/credentials/:credentialsId", () => {
 		assert.equal(body.providerType, "phoneNumber");
 		assert.equal(body.clientId, clientId);
 		assert.equal(body.clientSecret, clientSecret);
+		assert.equal(body.verificationCodeHash, "test-hash");
+		assert.equal(body.verificationCodeSalt, "test-salt");
+		assert.isString(body.verificationCodeExpires);
 	});
 });

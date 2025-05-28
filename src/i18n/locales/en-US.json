@@ -40,7 +40,10 @@
       "orgId": "Organization Id",
       "region": "Region",
       "password": "Password",
-      "accountId": "Account Id"
+      "accountId": "Account Id",
+      "verificationCodeHash": "Verification Code Hash",
+      "verificationCodeSalt": "Verification Code Salt",
+      "verificationCodeExpires": "Verification Code Expiration"
     },
     "oauthClients": {
       "title": "Title",

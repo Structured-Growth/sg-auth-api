@@ -6,10 +6,10 @@ export const CredentialsCreateBodyValidator = joi.object({
 		orgId: joi.number().positive().required().label("validator.credentials.orgId"),
 		region: joi.string().valid("us").required().label("validator.credentials.region"),
 		accountId: joi.number().positive().required().label("validator.credentials.accountId"),
-		provider: joi.string().valid("local", "google", "github").required().label("validator.credentials.provider"),
+		provider: joi.string().valid("local", "oauth").required().label("validator.credentials.provider"),
 		providerType: joi
 			.string()
-			.valid("email", "phoneNumber", "username", "oauth")
+			.valid("email", "phoneNumber", "username", "google", "github", "wechat")
 			.required()
 			.label("validator.credentials.providerType"),
 		providerId: joi.string().required().min(1).max(100).label("validator.credentials.providerId"),

@@ -21,8 +21,17 @@ module.exports = {
 			UPDATE "${process.env.DB_SCHEMA}"."credentials"
 			SET provider_type = CASE
 				WHEN provider = 'local' THEN 'email'
-				WHEN provider = 'google' THEN 'oauth'
-				ELSE 'local'
+				WHEN provider = 'google' THEN 'google'
+				WHEN provider = 'github' THEN 'github'
+				ELSE 'email'
+			END
+		`);
+
+		await queryInterface.sequelize.query(`
+			UPDATE "${process.env.DB_SCHEMA}"."credentials"
+			SET provider = CASE
+				WHEN provider = 'local' THEN 'local'
+				ELSE 'oauth'
 			END
 		`);
 
