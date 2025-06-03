@@ -3,7 +3,7 @@ import { container, RegionEnum, DefaultModelInterface } from "@structured-growth
 
 export interface OAuthClientPolicyAttributes extends Omit<DefaultModelInterface, "accountId"> {
 	oauthClientId: string;
-	providerType: "email" | "phoneNumber" | "username" | "oauth";
+	providerType: "email" | "phoneNumber" | "username" | "google" | "github" | "wechat";
 	passwordRequired: boolean;
 	twoFaEnabled: boolean;
 	status: "active" | "inactive" | "archived";

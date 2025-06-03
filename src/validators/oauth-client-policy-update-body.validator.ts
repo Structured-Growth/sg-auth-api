@@ -6,7 +6,7 @@ export const OAuthClientPolicyUpdateBodyValidator = joi.object({
 	body: joi.object({
 		providerType: joi
 			.string()
-			.valid("email", "phoneNumber", "username", "oauth")
+			.valid("email", "phoneNumber", "username", "google", "github", "wechat")
 			.label("validator.oauthClientPolicies.providerType"),
 		passwordRequired: joi.boolean().label("validator.oauthClientPolicies.passwordRequired"),
 		twoFaEnabled: joi.boolean().label("validator.oauthClientPolicies.twoFaEnabled"),

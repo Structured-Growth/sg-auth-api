@@ -6,7 +6,7 @@ export const OAuthClientPoliciesSearchParamsValidator = joi.object({
 		oauthClientId: joi.string().max(100).label("validator.oauthClientPolicies.oauthClientId"),
 		providerType: joi
 			.string()
-			.valid("email", "phoneNumber", "username", "oauth")
+			.valid("email", "phoneNumber", "username", "google", "github", "wechat")
 			.label("validator.oauthClients.providerType"),
 		status: joi
 			.array()
