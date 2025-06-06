@@ -31,6 +31,7 @@ export class CredentialsService {
 			provider: params.provider,
 			providerType: params.providerType,
 			providerId: params.providerId,
+			...(params.otpId && { otpId: params.otpId }),
 			password: params.password,
 			region: params.region,
 			status: params.status || "verification",

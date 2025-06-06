@@ -41,9 +41,7 @@
       "region": "Region",
       "password": "Password",
       "accountId": "Account Id",
-      "verificationCodeHash": "Verification Code Hash",
-      "verificationCodeSalt": "Verification Code Salt",
-      "verificationCodeExpires": "Verification Code Expiration"
+      "otpId": "OTP Id"
     },
     "oauthClients": {
       "title": "Title",

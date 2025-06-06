@@ -14,6 +14,7 @@ export const CredentialsSearchParamsValidator = joi.object({
 			.label("validator.credentials.status"),
 		orgId: joi.number().positive().label("validator.credentials.orgId"),
 		accountId: joi.array().items(joi.number().positive().required()).label("validator.credentials.accountId"),
+		otpId: joi.number().positive().label("validator.credentials.otpId"),
 		id: joi.array().items(joi.number().positive().required()).label("validator.common.id"),
 		arn: joi.array().valid(joi.string().required()).label("validator.common.arn"),
 		page: joi.number().positive().label("validator.common.page"),

@@ -35,6 +35,7 @@ export class CredentialsRepository
 		params.providerType && (where["providerType"] = params.providerType);
 		params.providerId && (where["providerId"] = params.providerId);
 		params.id && (where["id"] = { [Op.in]: params.id });
+		params.otpId && (where["otpId"] = params.otpId);
 		params.status && (where["status"] = { [Op.in]: params.status });
 
 		// todo search by ARN with wildcards

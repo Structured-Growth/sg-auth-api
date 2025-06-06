@@ -8,26 +8,14 @@ export interface CredentialsAttributes extends DefaultModelInterface {
 	providerId: string;
 	password: string;
 	status: "verification" | "active" | "inactive" | "archived";
-	verificationCodeHash?: string | null;
-	verificationCodeSalt?: string | null;
-	verificationCodeExpires?: Date | null;
+	otpId?: number | null;
 }
 
 export interface CredentialsCreationAttributes
 	extends Omit<CredentialsAttributes, "id" | "arn" | "createdAt" | "updatedAt" | "deletedAt"> {}
 
 export interface CredentialsUpdateAttributes
-	extends Partial<
-		Pick<
-			CredentialsAttributes,
-			| "status"
-			| "password"
-			| "providerType"
-			| "verificationCodeHash"
-			| "verificationCodeSalt"
-			| "verificationCodeExpires"
-		>
-	> {}
+	extends Partial<Pick<CredentialsAttributes, "status" | "password" | "providerType" | "otpId">> {}
 
 @Table({
 	tableName: "credentials",
@@ -64,13 +52,7 @@ export class Credentials
 	status: CredentialsAttributes["status"];
 
 	@Column({ allowNull: true })
-	verificationCodeHash: string | null;
-
-	@Column({ allowNull: true })
-	verificationCodeSalt: string | null;
-
-	@Column({ allowNull: true })
-	verificationCodeExpires: Date | null;
+	otpId: number | null;
 
 	static get arnPattern(): string {
 		return [container.resolve("appPrefix"), "<region>", "<orgId>", "<accountId>", `credentials/<credentialsId>`].join(

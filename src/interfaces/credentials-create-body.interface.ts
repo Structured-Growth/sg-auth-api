@@ -13,6 +13,7 @@ export interface CredentialsCreateBodyInterface extends BelongsToAccountInterfac
 	 * In case with oauth provider here will be provider id (e.g. Google Account ID).
 	 */
 	providerId: CredentialsAttributes["providerId"];
+	otpId?: number;
 	/**
 	 * Password is required if local (e.g. email/password) provider is used.
 	 */
