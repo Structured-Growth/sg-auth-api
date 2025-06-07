@@ -51,6 +51,14 @@ router.get(pathPrefix + '/v1/permitted-organizations/:permittedOrganizationId', 
 router.put(pathPrefix + '/v1/permitted-organizations/:permittedOrganizationId', handleRequest(Controllers.PermittedOrganizationController, "update", handlerOpts));
 router.delete(pathPrefix + '/v1/permitted-organizations/:permittedOrganizationId', handleRequest(Controllers.PermittedOrganizationController, "delete", handlerOpts));
 
+//OTPsController
+router.get(pathPrefix + '/v1/otps', handleRequest(Controllers.OTPsController, "search", handlerOpts));
+router.post(pathPrefix + '/v1/otps', handleRequest(Controllers.OTPsController, "create", handlerOpts));
+router.put(pathPrefix + '/v1/otps', handleRequest(Controllers.OTPsController, "check", handlerOpts));
+router.get(pathPrefix + '/v1/otps/:otpId', handleRequest(Controllers.OTPsController, "get", handlerOpts));
+router.put(pathPrefix + '/v1/otps/:otpId', handleRequest(Controllers.OTPsController, "update", handlerOpts));
+router.delete(pathPrefix + '/v1/otps/:otpId', handleRequest(Controllers.OTPsController, "delete", handlerOpts));
+
 //ResolverController
 router.get(pathPrefix + '/v1/resolver/resolve', handleRequest(Controllers.ResolverController, "resolve", handlerOpts));
 router.get(pathPrefix + '/v1/resolver/actions', handleRequest(Controllers.ResolverController, "actions", handlerOpts));
@@ -81,6 +89,12 @@ export const actionToRouteMap = {
 	"PermittedOrganizationController.get": 'get /v1/permitted-organizations/:permittedOrganizationId',
 	"PermittedOrganizationController.update": 'put /v1/permitted-organizations/:permittedOrganizationId',
 	"PermittedOrganizationController.delete": 'delete /v1/permitted-organizations/:permittedOrganizationId',
+	"OTPsController.search": 'get /v1/otps',
+	"OTPsController.create": 'post /v1/otps',
+	"OTPsController.check": 'put /v1/otps',
+	"OTPsController.get": 'get /v1/otps/:otpId',
+	"OTPsController.update": 'put /v1/otps/:otpId',
+	"OTPsController.delete": 'delete /v1/otps/:otpId',
 	"ResolverController.resolve": 'get /v1/resolver/resolve',
 	"ResolverController.actions": 'get /v1/resolver/actions',
 	"ResolverController.models": 'get /v1/resolver/models',

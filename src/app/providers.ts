@@ -19,6 +19,8 @@ import { OauthClientsRepository } from "../modules/oauth-clients/oauth-clients.r
 import { OauthClientPoliciesRepository } from "../modules/oauth-client-policies/oauth-client-policies.repository";
 import { PermittedOrganizationsRepository } from "../modules/permitted-organizations/permitted-organizations.repository";
 import { PermittedOrganizationsService } from "../modules/permitted-organizations/permitted-organizations.service";
+import { OTPsRepository } from "../modules/otps/otps.repository";
+import { OTPsService } from "../modules/otps/otps.service";
 
 // load and validate env variables
 loadEnvironment();
@@ -59,9 +61,11 @@ container.register("oAuthServiceGetUserUrl", { useValue: process.env.OAUTH_USER_
 container.register("policiesServiceUrl", { useValue: process.env.POLICY_SERVICE_URL });
 container.register("AuthService", AuthService);
 container.register("PolicyService", PolicyService);
+container.register("OTPsService", OTPsService);
 
 // repositories
 container.register("CredentialsRepository", CredentialsRepository);
 container.register("OauthClientsRepository", OauthClientsRepository);
 container.register("OauthClientPoliciesRepository", OauthClientPoliciesRepository);
 container.register("PermittedOrganizationsRepository", PermittedOrganizationsRepository);
+container.register("OTPsRepository", OTPsRepository);

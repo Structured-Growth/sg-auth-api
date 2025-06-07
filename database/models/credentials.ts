@@ -25,7 +25,7 @@ export interface CredentialsUpdateAttributes
 })
 export class Credentials
 	extends Model<CredentialsAttributes, CredentialsCreationAttributes>
-	implements CredentialsAttributes
+	implements CredentialsAttributes 
 {
 	@Column
 	orgId: number;
@@ -72,7 +72,7 @@ export class Credentials
 	}
 
 	/**
-	 * Compare password wirh encrypted
+	 * Compare password with encrypted
 	 */
 	validatePassword(password: string): boolean {
 		return compareSync(password, this.password);

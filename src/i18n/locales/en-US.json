@@ -22,6 +22,11 @@
     },
     "permitted_organization": {
       "name": "Permitted organization"
+    },
+    "otp": {
+      "name": "OTP",
+      "code_invalid": "Code are invalid",
+      "code_expired": "Code expired"
     }
   },
   "validator": {
@@ -69,6 +74,15 @@
       "accountId": "Account Id",
       "status": "Status",
       "permittedOrganizationId": "Permitted Organization Id"
+    },
+    "otps": {
+      "providerId": "Provider Id",
+      "status": "Status",
+      "orgId": "Organization Id",
+      "region": "Region",
+      "code": "Code",
+      "lifeTime": "Life time",
+      "credentialId": "Credential Id"
     }
   }
 }
