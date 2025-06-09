@@ -15,7 +15,7 @@ describe("GET /api/v1/oauth-clients/:oauthClientId", () => {
 
 	it("Should create oauth-clients", async () => {
 		const { statusCode, body } = await server.post("/v1/oauth-clients").send({
-			orgId: 1,
+			orgId: 25,
 			region: "us",
 			accountId: 1,
 			title: "Test client",
