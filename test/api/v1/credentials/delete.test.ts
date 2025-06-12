@@ -19,6 +19,7 @@ describe("DELETE /api/v1/credentials", () => {
 			region: "us",
 			accountId: 1,
 			provider: "local",
+			providerType: "email",
 			providerId: email,
 			password: "Fld2ZaW4sV@?6k)A",
 			status: "active",

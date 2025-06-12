@@ -17,8 +17,16 @@
     "oauth_client": {
       "name": "OAuthClient"
     },
+    "oauth_client_policy": {
+      "name": "OAuthClientPolicy"
+    },
     "permitted_organization": {
       "name": "Permitted organization"
+    },
+    "otp": {
+      "name": "OTP",
+      "code_invalid": "Code are invalid",
+      "code_expired": "Code expired"
     }
   },
   "validator": {
@@ -31,12 +39,14 @@
     },
     "credentials": {
       "provider": "Provider",
-      "providerId": "Provider",
+      "providerId": "Provider Id",
+      "providerType": "Provider type",
       "status": "Status",
       "orgId": "Organization Id",
       "region": "Region",
       "password": "Password",
-      "accountId": "Account Id"
+      "accountId": "Account Id",
+      "otpId": "OTP Id"
     },
     "oauthClients": {
       "title": "Title",
@@ -49,12 +59,30 @@
       "grants": "Grants",
       "redirectUris": "Redirect URIs"
     },
+    "oauthClientPolicies": {
+      "orgId": "Organization Id",
+      "oauthClientId": "Oauth client id",
+      "providerType": "Provider type",
+      "region": "Region",
+      "status": "Status",
+      "passwordRequired": "Password required",
+      "twoFaEnabled": "Two-factor authentication"
+    },
     "permittedOrganizations": {
       "orgId": "Organization Id",
       "region": "Region",
       "accountId": "Account Id",
       "status": "Status",
       "permittedOrganizationId": "Permitted Organization Id"
+    },
+    "otps": {
+      "providerId": "Provider Id",
+      "status": "Status",
+      "orgId": "Organization Id",
+      "region": "Region",
+      "code": "Code",
+      "lifeTime": "Life time",
+      "credentialId": "Credential Id"
     }
   }
 }
