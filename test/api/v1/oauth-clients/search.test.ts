@@ -24,7 +24,7 @@ describe("GET /api/v1/oauth-clients", () => {
 			redirectUris: ["http://localhost:3001/api/auth/callback/oauth"],
 		});
 		assert.equal(statusCode, 201);
-		assert.equal(body.orgId, 1);
+		assert.equal(body.orgId, 25);
 		assert.equal(body.accountId, 1);
 		assert.equal(body.region, "us");
 		assert.equal(body.title, "Test client");
@@ -45,7 +45,7 @@ describe("GET /api/v1/oauth-clients", () => {
 		assert.equal(statusCode, 200);
 		assert.isArray(body.data);
 		assert.isNumber(body.data[0].id);
-		assert.equal(body.data[0].orgId, 1);
+		assert.equal(body.data[0].orgId, 25);
 		assert.equal(body.data[0].region, "us");
 		assert.equal(body.data[0].accountId, 1);
 		assert.equal(body.data[0].title, "Test client");
@@ -65,7 +65,7 @@ describe("GET /api/v1/oauth-clients", () => {
 
 	it("Should search by title with wildcard", async () => {
 		const { statusCode, body } = await server.get("/v1/oauth-clients").query({
-			orgId: 1,
+			orgId: 25,
 			clientId: context.client.clientId,
 			"title[0]": "*est*",
 			"title[1]": "*client",
