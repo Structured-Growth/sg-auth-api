@@ -19,6 +19,7 @@ describe("GET /api/v1/credentials/:credentialsId", () => {
 			region: "us",
 			accountId: 1,
 			provider: "local",
+			providerType: "email",
 			providerId: email,
 			status: "verification",
 		});
@@ -27,6 +28,7 @@ describe("GET /api/v1/credentials/:credentialsId", () => {
 		assert.equal(body.accountId, 1);
 		assert.equal(body.region, "us");
 		assert.equal(body.provider, "local");
+		assert.equal(body.providerType, "email");
 		assert.equal(body.providerId, email);
 		assert.equal(body.password, undefined);
 		assert.equal(body.status, "verification");
@@ -44,6 +46,7 @@ describe("GET /api/v1/credentials/:credentialsId", () => {
 		assert.equal(body.accountId, 1);
 		assert.equal(body.region, "us");
 		assert.equal(body.provider, "local");
+		assert.equal(body.providerType, "email");
 		assert.equal(body.providerId, email);
 		assert.equal(body.password, undefined);
 		assert.equal(body.status, "verification");

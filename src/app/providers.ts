@@ -13,10 +13,14 @@ import {
 } from "@structured-growth/microservice-sdk";
 import { loadEnvironment } from "./load-environment";
 import { CredentialsService } from "../modules/credentials/credentials.service";
+import { OauthClientPoliciesService } from "../modules/oauth-client-policies/oauth-client-policies.service";
 import { CredentialsRepository } from "../modules/credentials/credentials.repository";
 import { OauthClientsRepository } from "../modules/oauth-clients/oauth-clients.repository";
+import { OauthClientPoliciesRepository } from "../modules/oauth-client-policies/oauth-client-policies.repository";
 import { PermittedOrganizationsRepository } from "../modules/permitted-organizations/permitted-organizations.repository";
 import { PermittedOrganizationsService } from "../modules/permitted-organizations/permitted-organizations.service";
+import { OTPsRepository } from "../modules/otps/otps.repository";
+import { OTPsService } from "../modules/otps/otps.service";
 
 // load and validate env variables
 loadEnvironment();
@@ -40,6 +44,7 @@ container.register("Logger", Logger);
 container.register("App", App, { lifecycle: Lifecycle.Singleton });
 container.register("CredentialsService", CredentialsService);
 container.register("PermittedOrganizationsService", PermittedOrganizationsService);
+container.register("OauthClientPoliciesService", OauthClientPoliciesService);
 
 container.register("eventbusName", { useValue: process.env.EVENTBUS_NAME || "sg-eventbus-dev" });
 container.register("EventbusProvider", eventBusProviders[process.env.EVENTBUS_PROVIDER || "TestEventbusProvider"]);
@@ -56,8 +61,11 @@ container.register("oAuthServiceGetUserUrl", { useValue: process.env.OAUTH_USER_
 container.register("policiesServiceUrl", { useValue: process.env.POLICY_SERVICE_URL });
 container.register("AuthService", AuthService);
 container.register("PolicyService", PolicyService);
+container.register("OTPsService", OTPsService);
 
 // repositories
 container.register("CredentialsRepository", CredentialsRepository);
 container.register("OauthClientsRepository", OauthClientsRepository);
+container.register("OauthClientPoliciesRepository", OauthClientPoliciesRepository);
 container.register("PermittedOrganizationsRepository", PermittedOrganizationsRepository);
+container.register("OTPsRepository", OTPsRepository);
