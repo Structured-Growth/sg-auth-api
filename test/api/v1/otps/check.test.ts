@@ -17,6 +17,7 @@ describe("PUT /api/v1/otps", () => {
 			orgId: 1,
 			region: "us",
 			providerId: email,
+			providerType: "email",
 			code: "123456",
 			lifeTime: 10,
 			status: "active",
@@ -29,15 +30,17 @@ describe("PUT /api/v1/otps", () => {
 		const { statusCode, body } = await server.put("/v1/otps").send({
 			orgId: 1,
 			providerId: email,
+			providerType: "email",
 			code: "123456",
 		});
 		assert.equal(statusCode, 200);
 		assert.equal(body.orgId, 1);
 		assert.equal(body.region, "us");
 		assert.equal(body.providerId, email);
+		assert.equal(body.providerType, "email");
 		assert.equal(body.code, undefined);
 		assert.equal(body.lifeTime, 10);
-		assert.equal(body.status, "active");
+		assert.equal(body.status, "archived");
 		assert.isUndefined(body.code);
 		assert.isString(body.createdAt);
 		assert.isString(body.updatedAt);
@@ -48,6 +51,7 @@ describe("PUT /api/v1/otps", () => {
 		const { statusCode, body } = await server.put("/v1/otps").send({
 			orgId: 1,
 			providerId: email,
+			providerType: "test",
 			code: "1234567",
 		});
 		assert.equal(statusCode, 422);

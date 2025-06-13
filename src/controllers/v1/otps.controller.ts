@@ -29,6 +29,7 @@ const publicOTPsAttributes = [
 	"region",
 	"credentialId",
 	"providerId",
+	"providerType",
 	"lifeTime",
 	"status",
 	"createdAt",
