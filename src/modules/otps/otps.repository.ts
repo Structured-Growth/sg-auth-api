@@ -26,6 +26,7 @@ export class OTPsRepository implements RepositoryInterface<OTPs, OTPsSearchParam
 
 		params.orgId && (where["orgId"] = params.orgId);
 		params.providerId && (where["providerId"] = params.providerId);
+		params.providerType && (where["providerType"] = params.providerType);
 		params.credentialId && (where["credentialId"] = params.credentialId);
 		params.id && (where["id"] = { [Op.in]: params.id });
 		params.status && (where["status"] = { [Op.in]: params.status });

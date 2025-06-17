@@ -18,6 +18,7 @@ describe("POST /api/v1/otps", () => {
 			orgId: 1,
 			region: "us",
 			providerId: email,
+			providerType: "email",
 			code: "123456",
 			lifeTime: 10,
 			status: "active",
@@ -26,6 +27,7 @@ describe("POST /api/v1/otps", () => {
 		assert.equal(body.orgId, 1);
 		assert.equal(body.region, "us");
 		assert.equal(body.providerId, email);
+		assert.equal(body.providerType, "email");
 		assert.equal(body.code, undefined);
 		assert.equal(body.lifeTime, 10);
 		assert.equal(body.status, "active");
@@ -41,6 +43,7 @@ describe("POST /api/v1/otps", () => {
 			orgId: -1,
 			region: "usa",
 			providerId: -1,
+			providerType: "test",
 			code: false,
 			lifeTime: "test",
 			status: 0,
@@ -50,6 +53,7 @@ describe("POST /api/v1/otps", () => {
 		assert.isString(body.validation.body.orgId[0]);
 		assert.isString(body.validation.body.region[0]);
 		assert.isString(body.validation.body.providerId[0]);
+		assert.isString(body.validation.body.providerType[0]);
 		assert.isString(body.validation.body.code[0]);
 		assert.isString(body.validation.body.lifeTime[0]);
 		assert.isString(body.validation.body.status[0]);
@@ -60,6 +64,7 @@ describe("POST /api/v1/otps", () => {
 			orgId: 2,
 			region: "us",
 			providerId: email,
+			providerType: "email",
 			code: "000000",
 			lifeTime: 5,
 			status: "active",
@@ -71,6 +76,7 @@ describe("POST /api/v1/otps", () => {
 			orgId: 2,
 			region: "us",
 			providerId: email,
+			providerType: "email",
 			code: "111111",
 			lifeTime: 5,
 			status: "active",

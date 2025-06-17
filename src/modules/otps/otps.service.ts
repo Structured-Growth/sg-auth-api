@@ -17,6 +17,7 @@ export class OTPsService {
 	public async create(params: OTPsCreateBodyInterface): Promise<OTPs> {
 		const result = await this.otpsRepository.search({
 			orgId: params.orgId,
+			providerType: params.providerType,
 			providerId: params.providerId,
 		});
 
@@ -29,6 +30,7 @@ export class OTPsService {
 			region: params.region,
 			...(params.credentialId && { credentialId: params.credentialId }),
 			providerId: params.providerId,
+			providerType: params.providerType,
 			code: params.code,
 			lifeTime: params.lifeTime,
 			status: params.status,
@@ -39,6 +41,7 @@ export class OTPsService {
 		const result = await this.otpsRepository.search({
 			orgId: params.orgId,
 			providerId: params.providerId,
+			providerType: params.providerType,
 			status: ["active"],
 		});
 		const otp = result.data[0];
@@ -59,6 +62,8 @@ export class OTPsService {
 			throw new ValidationError({}, this.i18n.__("error.otp.code_invalid"));
 		}
 
-		return otp;
+		return await this.otpsRepository.update(otp.id, {
+			status: "archived",
+		});
 	}
 }

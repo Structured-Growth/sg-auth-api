@@ -10,6 +10,7 @@ import { compareSync, genSaltSync, hashSync } from "bcrypt";
 export interface OTPsAttributes extends Omit<DefaultModelInterface, keyof BelongsToAccountInterface> {
 	credentialId?: number;
 	providerId: string;
+	providerType: "email" | "phoneNumber" | "username" | "google" | "github" | "wechat";
 	code: string;
 	lifeTime: number;
 	status: "active" | "inactive" | "archived";
@@ -40,6 +41,9 @@ export class OTPs extends Model<OTPsAttributes, OTPsCreationAttributes> implemen
 	providerId: string;
 
 	@Column(DataType.STRING)
+	providerType: OTPsAttributes["providerType"];
+
+	@Column(DataType.STRING)
 	code: string;
 
 	@Column
@@ -49,11 +53,11 @@ export class OTPs extends Model<OTPsAttributes, OTPsCreationAttributes> implemen
 	status: OTPsAttributes["status"];
 
 	static get arnPattern(): string {
-		return [container.resolve("appPrefix"), "<region>", "<orgId>", `otps/<otpId>`].join(":");
+		return [container.resolve("appPrefix"), "<region>", "<orgId>", "<accountId>", `otps/<otpId>`].join(":");
 	}
 
 	get arn(): string {
-		return [container.resolve("appPrefix"), this.region, this.orgId, `otps/${this.id}`].join(":");
+		return [container.resolve("appPrefix"), this.region, this.orgId, "-", `otps/${this.id}`].join(":");
 	}
 
 	static hashCode(code: string): string {

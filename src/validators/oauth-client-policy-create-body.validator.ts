@@ -5,7 +5,7 @@ export const OAuthClientPolicyCreateBodyValidator = joi.object({
 	body: joi.object({
 		orgId: joi.number().positive().required().label("validator.oauthClientPolicies.orgId"),
 		region: joi.string().required().label("validator.oauthClientPolicies.region"),
-		oauthClientId: joi.string().max(100).required().label("validator.oauthClients.oauthClientId"),
+		oauthClientId: joi.number().required().label("validator.oauthClients.oauthClientId"),
 		providerType: joi
 			.string()
 			.valid("email", "phoneNumber", "username", "google", "github", "wechat")

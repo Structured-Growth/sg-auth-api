@@ -18,6 +18,7 @@ describe("DELETE /api/v1/otps", () => {
 			orgId: 1,
 			region: "us",
 			providerId: email,
+			providerType: "email",
 			code: "123456",
 			lifeTime: 10,
 			status: "active",

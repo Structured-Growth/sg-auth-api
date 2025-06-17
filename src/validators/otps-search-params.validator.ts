@@ -3,6 +3,10 @@ import { joi } from "@structured-growth/microservice-sdk";
 export const OTPsSearchParamsValidator = joi.object({
 	query: joi.object({
 		providerId: joi.string().label("validator.otps.providerId"),
+		providerType: joi
+			.string()
+			.valid("email", "phoneNumber", "username", "google", "github", "wechat")
+			.label("validator.otps.providerType"),
 		status: joi
 			.array()
 			.items(joi.string().valid("active", "inactive", "archived").required())
