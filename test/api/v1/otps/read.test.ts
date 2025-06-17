@@ -18,6 +18,7 @@ describe("GET /api/v1/otps/:otpId", () => {
 			orgId: 1,
 			region: "us",
 			providerId: email,
+			providerType: "email",
 			code: "123456",
 			lifeTime: 10,
 			status: "active",
@@ -33,6 +34,7 @@ describe("GET /api/v1/otps/:otpId", () => {
 		assert.equal(body.orgId, 1);
 		assert.equal(body.region, "us");
 		assert.equal(body.providerId, email);
+		assert.equal(body.providerType, "email");
 		assert.equal(body.code, undefined);
 		assert.equal(body.lifeTime, 10);
 		assert.equal(body.status, "active");

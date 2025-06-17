@@ -25,7 +25,7 @@ export interface CredentialsUpdateAttributes
 })
 export class Credentials
 	extends Model<CredentialsAttributes, CredentialsCreationAttributes>
-	implements CredentialsAttributes 
+	implements CredentialsAttributes
 {
 	@Column
 	orgId: number;

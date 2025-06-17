@@ -3,7 +3,7 @@ import { joi } from "@structured-growth/microservice-sdk";
 export const OAuthClientPoliciesSearchParamsValidator = joi.object({
 	query: joi.object({
 		orgId: joi.number().positive().label("validator.oauthClientPolicies.orgId"),
-		oauthClientId: joi.string().max(100).label("validator.oauthClientPolicies.oauthClientId"),
+		oauthClientId: joi.number().label("validator.oauthClientPolicies.oauthClientId"),
 		providerType: joi
 			.string()
 			.valid("email", "phoneNumber", "username", "google", "github", "wechat")

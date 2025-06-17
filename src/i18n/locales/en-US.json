@@ -77,6 +77,7 @@
     },
     "otps": {
       "providerId": "Provider Id",
+      "providerType": "Provider type",
       "status": "Status",
       "orgId": "Organization Id",
       "region": "Region",
