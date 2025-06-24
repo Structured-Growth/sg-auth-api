@@ -15,7 +15,7 @@ describe("POST /api/v1/oauth-clients", () => {
 
 	it("Should create oauth-clients", async () => {
 		const { statusCode, body } = await server.post("/v1/oauth-clients").send({
-			orgId: 1,
+			orgId: 25,
 			region: "us",
 			accountId: 1,
 			title: "Test client",
@@ -25,7 +25,7 @@ describe("POST /api/v1/oauth-clients", () => {
 			redirectUris: ["http://localhost:3001/api/auth/callback/oauth"],
 		});
 		assert.equal(statusCode, 201);
-		assert.equal(body.orgId, 1);
+		assert.equal(body.orgId, 25);
 		assert.equal(body.accountId, 1);
 		assert.equal(body.region, "us");
 		assert.equal(body.title, "Test client");

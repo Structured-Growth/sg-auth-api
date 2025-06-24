@@ -19,6 +19,7 @@ describe("POST /api/v1/credentials", () => {
 			region: "us",
 			accountId: 1,
 			provider: "local",
+			providerType: "email",
 			providerId: email,
 			status: "verification",
 		});
@@ -27,6 +28,7 @@ describe("POST /api/v1/credentials", () => {
 		assert.equal(body.accountId, 1);
 		assert.equal(body.region, "us");
 		assert.equal(body.provider, "local");
+		assert.equal(body.providerType, "email");
 		assert.equal(body.providerId, email);
 		assert.equal(body.password, undefined);
 		assert.equal(body.status, "verification");
@@ -36,7 +38,6 @@ describe("POST /api/v1/credentials", () => {
 		assert.isString(body.arn);
 		id = body.id;
 	});
-
 
 	it("Should return error if providerIs is already taken", async () => {
 		const { statusCode, body } = await server.post("/v1/credentials").send({
@@ -59,6 +60,7 @@ describe("POST /api/v1/credentials", () => {
 		assert.equal(body.accountId, 1);
 		assert.equal(body.region, "us");
 		assert.equal(body.provider, "local");
+		assert.equal(body.providerType, "email");
 		assert.equal(body.providerId, email);
 		assert.equal(body.password, undefined);
 		assert.equal(body.status, "verification");
@@ -74,6 +76,7 @@ describe("POST /api/v1/credentials", () => {
 			region: "usa",
 			accountId: -1,
 			provider: "locale",
+			providerType: "test",
 			providerId: false,
 			status: 0,
 		});
@@ -83,6 +86,7 @@ describe("POST /api/v1/credentials", () => {
 		assert.isString(body.validation.body.region[0]);
 		assert.isString(body.validation.body.accountId[0]);
 		assert.isString(body.validation.body.provider[0]);
+		assert.isString(body.validation.body.providerType[0]);
 		assert.isString(body.validation.body.providerId[0]);
 		assert.isString(body.validation.body.status[0]);
 	});

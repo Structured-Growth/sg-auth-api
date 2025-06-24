@@ -18,6 +18,7 @@ describe("Check credentials", () => {
 			region: RegionEnum.US,
 			accountId: 1,
 			provider: "local",
+			providerType: "email",
 			providerId: `${password}@example.com`,
 			password: password,
 			status: "active",

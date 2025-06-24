@@ -18,6 +18,7 @@ describe("PUT /api/v1/credentials", () => {
 			region: "us",
 			accountId: 1,
 			provider: "local",
+			providerType: "email",
 			providerId: email,
 			password: "Fld2ZaW4sV@?6k)A",
 			status: "active",
@@ -40,6 +41,7 @@ describe("PUT /api/v1/credentials", () => {
 		assert.equal(body.accountId, 1);
 		assert.equal(body.region, "us");
 		assert.equal(body.provider, "local");
+		assert.equal(body.providerType, "email");
 		assert.equal(body.providerId, email);
 		assert.equal(body.password, undefined);
 		assert.equal(body.status, "active");

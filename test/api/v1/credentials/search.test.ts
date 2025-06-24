@@ -18,7 +18,9 @@ describe("GET /api/v1/credentials", () => {
 			region: "us",
 			accountId: 1,
 			provider: "local",
+			providerType: "email",
 			providerId: email,
+			otpId: 25,
 			status: "active",
 		});
 		assert.equal(statusCode, 201);
@@ -32,6 +34,7 @@ describe("GET /api/v1/credentials", () => {
 			orgId: 1,
 			"accountId[0]": 1,
 			provider: "local",
+			providerType: "email",
 			providerId: email,
 			"status[0]": ["active"],
 			"status[1]": ["inactive"],
@@ -43,7 +46,9 @@ describe("GET /api/v1/credentials", () => {
 		assert.equal(body.data[0].region, "us");
 		assert.equal(body.data[0].accountId, 1);
 		assert.equal(body.data[0].provider, "local");
+		assert.equal(body.data[0].providerType, "email");
 		assert.equal(body.data[0].providerId, email);
+		assert.equal(body.data[0].otpId, 25);
 		assert.equal(body.data[0].status, "active");
 		assert.isUndefined(body.data[0].password);
 		assert.isString(body.data[0].createdAt);
@@ -60,7 +65,9 @@ describe("GET /api/v1/credentials", () => {
 			region: "notus",
 			accountId: -1,
 			provider: "localize",
+			providerType: "",
 			providerId: "",
+			otpId: "text",
 			status: "active",
 		});
 		assert.equal(statusCode, 422);
@@ -69,7 +76,9 @@ describe("GET /api/v1/credentials", () => {
 		assert.isString(body.validation.query.region[0]);
 		assert.isString(body.validation.query.accountId[0]);
 		assert.isString(body.validation.query.provider[0]);
+		assert.isString(body.validation.query.providerType[0]);
 		assert.isString(body.validation.query.providerId[0]);
+		assert.isString(body.validation.query.otpId[0]);
 		assert.isString(body.validation.query.status[0]);
 	});
 });

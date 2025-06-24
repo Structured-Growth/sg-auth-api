@@ -15,7 +15,7 @@ describe("GET /api/v1/oauth-clients/:oauthClientId", () => {
 
 	it("Should create oauth-clients", async () => {
 		const { statusCode, body } = await server.post("/v1/oauth-clients").send({
-			orgId: 1,
+			orgId: 25,
 			region: "us",
 			accountId: 1,
 			title: "Test client",
@@ -34,7 +34,7 @@ describe("GET /api/v1/oauth-clients/:oauthClientId", () => {
 		const { statusCode, body } = await server.get(`/v1/oauth-clients/${id}`);
 		assert.equal(statusCode, 200);
 		assert.equal(body.id, id);
-		assert.equal(body.orgId, 1);
+		assert.equal(body.orgId, 25);
 		assert.equal(body.accountId, 1);
 		assert.equal(body.region, "us");
 		assert.equal(body.title, "Test client");

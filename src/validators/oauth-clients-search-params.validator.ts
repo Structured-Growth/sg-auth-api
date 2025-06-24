@@ -1,5 +1,4 @@
 import { joi } from "@structured-growth/microservice-sdk";
-import { CommonSearchParamsValidator } from "./common-search-params.validator";
 
 export const OAuthClientsSearchParamsValidator = joi.object({
 	query: joi.object({
