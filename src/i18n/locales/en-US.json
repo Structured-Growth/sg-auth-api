@@ -12,7 +12,8 @@
     "credential": {
       "name": "Credential",
       "provider_id": "Provider ID is already taken",
-      "credentials_invalid": "Credentials are invalid"
+      "credentials_invalid": "Credentials are invalid",
+      "old_password_invalid": "Old password are invalid"
     },
     "oauth_client": {
       "name": "OAuthClient"
@@ -45,6 +46,8 @@
       "orgId": "Organization Id",
       "region": "Region",
       "password": "Password",
+      "oldPassword": "Old password",
+      "newPassword": "New password",
       "accountId": "Account Id",
       "otpId": "OTP Id"
     },
