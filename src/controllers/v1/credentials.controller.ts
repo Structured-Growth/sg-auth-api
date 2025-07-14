@@ -13,6 +13,7 @@ import { CredentialsSearchParamsInterface } from "../../interfaces/credentials-s
 import { CredentialsCreateBodyInterface } from "../../interfaces/credentials-create-body.interface";
 import { CredentialsUpdateBodyInterface } from "../../interfaces/credentials-update-body.interface";
 import { CredentialsCheckBodyInterface } from "../../interfaces/credentials-check-body.interface";
+import { CredentialsChangePasswordBodyInterface } from "../../interfaces/credentials-change-password-body.interface";
 import { inject, NotFoundError } from "@structured-growth/microservice-sdk";
 import { CredentialsRepository } from "../../modules/credentials/credentials.repository";
 import { CredentialsService } from "../../modules/credentials/credentials.service";
@@ -21,6 +22,7 @@ import { CredentialsSearchParamsValidator } from "../../validators/credentials-s
 import { CredentialsCreateBodyValidator } from "../../validators/credentials-create-body.validator";
 import { CredentialsCheckBodyValidator } from "../../validators/credentials-check-body.validator";
 import { CredentialsUpdateBodyValidator } from "../../validators/credentials-update-body.validator";
+import { CredentialsChangePasswordBodyValidator } from "../../validators/credentials-change-password-body.validator";
 import { EventMutation } from "@structured-growth/microservice-sdk";
 
 const publicCredentialsAttributes = [
@@ -38,7 +40,9 @@ const publicCredentialsAttributes = [
 	"arn",
 ] as const;
 type CredentialsKeys = (typeof publicCredentialsAttributes)[number];
-type PublicCredentialsAttributes = Pick<CredentialsAttributes, CredentialsKeys>;
+type PublicCredentialsAttributes = Pick<CredentialsAttributes, CredentialsKeys> & {
+	hasPassword: boolean;
+};
 
 @Route("v1/credentials")
 @Tags("Credentials")
@@ -77,6 +81,7 @@ export class CredentialsController extends BaseController {
 			data: data.map((model) => ({
 				...(pick(model.toJSON(), publicCredentialsAttributes) as PublicCredentialsAttributes),
 				arn: model.arn,
+				hasPassword: model.password !== null,
 			})),
 			...result,
 		};
@@ -109,6 +114,7 @@ export class CredentialsController extends BaseController {
 		return {
 			...(pick(model.toJSON(), publicCredentialsAttributes) as PublicCredentialsAttributes),
 			arn: model.arn,
+			hasPassword: model.password !== null,
 		};
 	}
 
@@ -133,6 +139,40 @@ export class CredentialsController extends BaseController {
 	}
 
 	/**
+	 * Change Password.
+	 */
+	@OperationId("ChangePassword")
+	@Post("/change-password/:credentialsId")
+	@SuccessResponse(201, "Returns credential info")
+	@DescribeAction("credentials/change-password")
+	@DescribeResource("Organization", ({ body }) => Number(body.orgId))
+	@DescribeResource("Account", ({ body }) => Number(body.accountId))
+	@ValidateFuncArgs(CredentialsChangePasswordBodyValidator)
+	async changePassword(
+		@Path() credentialsId: number,
+		@Queries() query: {},
+		@Body() body: CredentialsChangePasswordBodyInterface
+	): Promise<PublicCredentialsAttributes> {
+		const model = await this.credentialsService.changePassword(credentialsId, body);
+		this.response.status(201);
+
+		await this.eventBus.publish(
+			new EventMutation(
+				this.principal.arn,
+				model.arn,
+				`${this.appPrefix}:credentials/changePassword`,
+				JSON.stringify(body)
+			)
+		);
+
+		return {
+			...(pick(model.toJSON(), publicCredentialsAttributes) as PublicCredentialsAttributes),
+			arn: model.arn,
+			hasPassword: model.password !== null,
+		};
+	}
+
+	/**
 	 * Get Credentials
 	 */
 	@OperationId("Read")
@@ -152,6 +192,7 @@ export class CredentialsController extends BaseController {
 		return {
 			...(pick(model.toJSON(), publicCredentialsAttributes) as PublicCredentialsAttributes),
 			arn: model.arn,
+			hasPassword: model.password !== null,
 		};
 	}
 
@@ -180,6 +221,7 @@ export class CredentialsController extends BaseController {
 		return {
 			...(pick(model.toJSON(), publicCredentialsAttributes) as PublicCredentialsAttributes),
 			arn: model.arn,
+			hasPassword: model.password !== null,
 		};
 	}
 

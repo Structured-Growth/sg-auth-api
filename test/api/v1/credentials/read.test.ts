@@ -36,6 +36,7 @@ describe("GET /api/v1/credentials/:credentialsId", () => {
 		assert.isString(body.createdAt);
 		assert.isString(body.updatedAt);
 		assert.isString(body.arn);
+		assert.isBoolean(body.hasPassword);
 		id = body.id;
 	});
 
@@ -54,5 +55,6 @@ describe("GET /api/v1/credentials/:credentialsId", () => {
 		assert.isString(body.createdAt);
 		assert.isString(body.updatedAt);
 		assert.isString(body.arn);
+		assert.isBoolean(body.hasPassword);
 	});
 });

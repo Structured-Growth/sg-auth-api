@@ -3,6 +3,7 @@ import Credentials from "../../../database/models/credentials";
 import { CredentialsRepository } from "./credentials.repository";
 import { CredentialsCheckBodyInterface } from "../../interfaces/credentials-check-body.interface";
 import { CredentialsCreateBodyInterface } from "../../interfaces/credentials-create-body.interface";
+import { CredentialsChangePasswordBodyInterface } from "../../interfaces/credentials-change-password-body.interface";
 
 @autoInjectable()
 export class CredentialsService {
@@ -56,5 +57,30 @@ export class CredentialsService {
 		}
 
 		return credentials;
+	}
+
+	public async changePassword(id: number, params: CredentialsChangePasswordBodyInterface): Promise<Credentials> {
+		const credential = await this.credentialsRepository.read(id);
+		console.log("Credential: ", credential);
+
+		if (!credential) {
+			throw new ValidationError({}, this.i18n.__("error.credential.credentials_invalid"));
+		}
+
+		if (credential.password) {
+			if (!params.oldPassword) {
+				throw new ValidationError({}, this.i18n.__("error.credential.credentials_invalid"));
+			}
+
+			console.log("validatePassword: ", credential.validatePassword(params.oldPassword));
+
+			if (!credential.validatePassword(params.oldPassword)) {
+				throw new ValidationError({}, this.i18n.__("error.credential.old_password_invalid"));
+			}
+		}
+
+		await this.credentialsRepository.update(id, { password: params.newPassword });
+
+		return credential;
 	}
 }

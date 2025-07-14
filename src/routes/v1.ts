@@ -26,6 +26,7 @@ router.get(pathPrefix + '/v1/ping/alive', handleRequest(Controllers.PingControll
 router.get(pathPrefix + '/v1/credentials', handleRequest(Controllers.CredentialsController, "search", handlerOpts));
 router.post(pathPrefix + '/v1/credentials', handleRequest(Controllers.CredentialsController, "create", handlerOpts));
 router.put(pathPrefix + '/v1/credentials', handleRequest(Controllers.CredentialsController, "check", handlerOpts));
+router.post(pathPrefix + '/v1/credentials/change-password/:credentialsId', handleRequest(Controllers.CredentialsController, "changePassword", handlerOpts));
 router.get(pathPrefix + '/v1/credentials/:credentialsId', handleRequest(Controllers.CredentialsController, "get", handlerOpts));
 router.put(pathPrefix + '/v1/credentials/:credentialsId', handleRequest(Controllers.CredentialsController, "update", handlerOpts));
 router.delete(pathPrefix + '/v1/credentials/:credentialsId', handleRequest(Controllers.CredentialsController, "delete", handlerOpts));
@@ -71,6 +72,7 @@ export const actionToRouteMap = {
 	"CredentialsController.search": 'get /v1/credentials',
 	"CredentialsController.create": 'post /v1/credentials',
 	"CredentialsController.check": 'put /v1/credentials',
+	"CredentialsController.changePassword": 'post /v1/credentials/change-password/:credentialsId',
 	"CredentialsController.get": 'get /v1/credentials/:credentialsId',
 	"CredentialsController.update": 'put /v1/credentials/:credentialsId',
 	"CredentialsController.delete": 'delete /v1/credentials/:credentialsId',

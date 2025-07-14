@@ -53,5 +53,6 @@ describe("PUT /api/v1/credentials/:credentialsId", () => {
 		assert.equal(body.clientId, clientId);
 		assert.equal(body.clientSecret, clientSecret);
 		assert.equal(body.otpId, 25);
+		assert.isBoolean(body.hasPassword);
 	});
 });
