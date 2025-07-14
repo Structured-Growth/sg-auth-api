@@ -36,6 +36,7 @@ describe("POST /api/v1/credentials", () => {
 		assert.isString(body.createdAt);
 		assert.isString(body.updatedAt);
 		assert.isString(body.arn);
+		assert.isBoolean(body.hasPassword);
 		id = body.id;
 	});
 
@@ -68,6 +69,7 @@ describe("POST /api/v1/credentials", () => {
 		assert.isString(body.createdAt);
 		assert.isString(body.updatedAt);
 		assert.isString(body.arn);
+		assert.isBoolean(body.hasPassword);
 	});
 
 	it("Should return validation error", async () => {

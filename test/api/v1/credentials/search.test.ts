@@ -54,6 +54,7 @@ describe("GET /api/v1/credentials", () => {
 		assert.isString(body.data[0].createdAt);
 		assert.isString(body.data[0].updatedAt);
 		assert.isString(body.data[0].arn);
+		assert.isBoolean(body.data[0].hasPassword);
 		assert.equal(body.total, 1);
 		assert.equal(body.page, 1);
 		assert.equal(body.limit, 20);
