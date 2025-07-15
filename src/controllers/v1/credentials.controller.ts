@@ -145,8 +145,7 @@ export class CredentialsController extends BaseController {
 	@Post("/change-password/:credentialsId")
 	@SuccessResponse(201, "Returns credential info")
 	@DescribeAction("credentials/change-password")
-	@DescribeResource("Organization", ({ body }) => Number(body.orgId))
-	@DescribeResource("Account", ({ body }) => Number(body.accountId))
+	@DescribeResource("Credentials", ({ params }) => Number(params.credentialsId))
 	@ValidateFuncArgs(CredentialsChangePasswordBodyValidator)
 	async changePassword(
 		@Path() credentialsId: number,
