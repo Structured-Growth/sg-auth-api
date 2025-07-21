@@ -61,7 +61,6 @@ export class CredentialsService {
 
 	public async changePassword(id: number, params: CredentialsChangePasswordBodyInterface): Promise<Credentials> {
 		const credential = await this.credentialsRepository.read(id);
-		console.log("Credential: ", credential);
 
 		if (!credential) {
 			throw new ValidationError({}, this.i18n.__("error.credential.credentials_invalid"));
@@ -71,8 +70,6 @@ export class CredentialsService {
 			if (!params.oldPassword) {
 				throw new ValidationError({}, this.i18n.__("error.credential.credentials_invalid"));
 			}
-
-			console.log("validatePassword: ", credential.validatePassword(params.oldPassword));
 
 			if (!credential.validatePassword(params.oldPassword)) {
 				throw new ValidationError({}, this.i18n.__("error.credential.old_password_invalid"));
