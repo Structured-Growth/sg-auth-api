@@ -7,6 +7,8 @@ import {
 	SearchResultInterface,
 	ValidateFuncArgs,
 	I18nType,
+	HashFields,
+	MaskFields,
 } from "@structured-growth/microservice-sdk";
 import { CredentialsAttributes } from "../../../database/models/credentials";
 import { CredentialsSearchParamsInterface } from "../../interfaces/credentials-search-params.interface";
@@ -71,6 +73,7 @@ export class CredentialsController extends BaseController {
 	@DescribeAction("credentials/search")
 	@DescribeResource("Organization", ({ query }) => Number(query.orgId))
 	@DescribeResource("Account", ({ query }) => Number(query.accountId))
+	@HashFields(["providerId", "providerType"])
 	@ValidateFuncArgs(CredentialsSearchParamsValidator)
 	async search(
 		@Queries() query: CredentialsSearchParamsInterface
@@ -99,6 +102,8 @@ export class CredentialsController extends BaseController {
 	@DescribeAction("credentials/create")
 	@DescribeResource("Organization", ({ body }) => Number(body.orgId))
 	@DescribeResource("Account", ({ body }) => Number(body.accountId))
+	@HashFields(["providerId", "providerType"])
+	@MaskFields(["password"])
 	@ValidateFuncArgs(CredentialsCreateBodyValidator)
 	async create(
 		@Queries() query: {},
@@ -128,6 +133,8 @@ export class CredentialsController extends BaseController {
 	@SuccessResponse(201, "Returns credentials info")
 	@DescribeAction("credentials/check")
 	@DescribeResource("Organization", ({ body }) => Number(body.orgId))
+	@HashFields(["providerId", "providerType"])
+	@MaskFields(["password"])
 	@ValidateFuncArgs(CredentialsCheckBodyValidator)
 	async check(@Queries() query: {}, @Body() body: CredentialsCheckBodyInterface): Promise<PublicCredentialsAttributes> {
 		const model = await this.credentialsService.check(body);
@@ -146,6 +153,8 @@ export class CredentialsController extends BaseController {
 	@SuccessResponse(201, "Returns credential info")
 	@DescribeAction("credentials/change-password")
 	@DescribeResource("Credentials", ({ params }) => Number(params.credentialsId))
+	@HashFields(["providerId", "providerType"])
+	@MaskFields(["oldPassword", "newPassword"])
 	@ValidateFuncArgs(CredentialsChangePasswordBodyValidator)
 	async changePassword(
 		@Path() credentialsId: number,
@@ -179,6 +188,7 @@ export class CredentialsController extends BaseController {
 	@SuccessResponse(200, "Returns credentials info")
 	@DescribeAction("credentials/read")
 	@DescribeResource("Credentials", ({ params }) => Number(params.credentialsId))
+	@HashFields(["providerId", "providerType"])
 	async get(@Path() credentialsId: number): Promise<PublicCredentialsAttributes> {
 		const model = await this.credentialsRepository.read(credentialsId);
 
@@ -205,6 +215,8 @@ export class CredentialsController extends BaseController {
 	@SuccessResponse(200, "Returns updated credentials")
 	@DescribeAction("credentials/update")
 	@DescribeResource("Credentials", ({ params }) => Number(params.credentialsId))
+	@HashFields(["providerId", "providerType"])
+	@MaskFields(["password"])
 	@ValidateFuncArgs(CredentialsUpdateBodyValidator)
 	async update(
 		@Path() credentialsId: number,

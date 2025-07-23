@@ -9,6 +9,7 @@ import {
 	SearchResultInterface,
 	ValidateFuncArgs,
 	I18nType,
+	HashFields,
 } from "@structured-growth/microservice-sdk";
 import { OAuthClientPolicyAttributes } from "../../../database/models/oauth-client-policy";
 import { OAuthClientPoliciesSearchParamsInterface } from "../../interfaces/oauth-client-policies-search-params.interface";
@@ -59,6 +60,7 @@ export class OAuthClientPolicyController extends BaseController {
 	@DescribeAction("oauth-client-policies/search")
 	@DescribeResource("Organization", ({ query }) => Number(query.orgId))
 	@DescribeResource("OauthClient", ({ query }) => Number(query.oauthClientId))
+	@HashFields(["providerType"])
 	@ValidateFuncArgs(OAuthClientPoliciesSearchParamsValidator)
 	async search(
 		@Queries() query: OAuthClientPoliciesSearchParamsInterface
@@ -83,6 +85,7 @@ export class OAuthClientPolicyController extends BaseController {
 	@DescribeAction("oauth-client-policies/create")
 	@DescribeResource("Organization", ({ body }) => Number(body.orgId))
 	@DescribeResource("OauthClient", ({ body }) => Number(body.oauthClientId))
+	@HashFields(["providerType"])
 	@ValidateFuncArgs(OAuthClientPolicyCreateBodyValidator)
 	async create(
 		@Queries() query: {},
@@ -122,6 +125,7 @@ export class OAuthClientPolicyController extends BaseController {
 	@SuccessResponse(200, "Returns client policy info")
 	@DescribeAction("oauth-client-policies/read")
 	@DescribeResource("OAuthClientPolicy", ({ params }) => Number(params.oauthClientPolicyId))
+	@HashFields(["providerType"])
 	async get(@Path() oauthClientPolicyId: number): Promise<PublicOAuthClientPolicyAttributes> {
 		const model = await this.oauthClientPoliciesRepository.read(oauthClientPolicyId);
 
@@ -147,6 +151,7 @@ export class OAuthClientPolicyController extends BaseController {
 	@SuccessResponse(200, "Returns updated OAuth client policy")
 	@DescribeAction("oauth-client-policies/update")
 	@DescribeResource("OAuthClientPolicy", ({ params }) => Number(params.oauthClientPolicyId))
+	@HashFields(["providerType"])
 	@ValidateFuncArgs(OAuthClientPolicyUpdateBodyValidator)
 	async update(
 		@Path() oauthClientPolicyId: number,

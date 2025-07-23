@@ -7,6 +7,8 @@ import {
 	SearchResultInterface,
 	ValidateFuncArgs,
 	I18nType,
+	HashFields,
+	MaskFields,
 } from "@structured-growth/microservice-sdk";
 import { OTPsAttributes } from "../../../database/models/otps";
 import { OTPsSearchParamsInterface } from "../../interfaces/otps-search-params.interface";
@@ -61,6 +63,7 @@ export class OTPsController extends BaseController {
 	@SuccessResponse(200, "Returns list of OTPs")
 	@DescribeAction("otps/search")
 	@DescribeResource("Organization", ({ query }) => Number(query.orgId))
+	@HashFields(["providerId", "providerType"])
 	@ValidateFuncArgs(OTPsSearchParamsValidator)
 	async search(@Queries() query: OTPsSearchParamsInterface): Promise<SearchResultInterface<PublicOTPsAttributes>> {
 		const { data, ...result } = await this.otpsRepository.search(query);
@@ -82,6 +85,8 @@ export class OTPsController extends BaseController {
 	@SuccessResponse(201, "Returns created OTP")
 	@DescribeAction("otps/create")
 	@DescribeResource("Organization", ({ body }) => Number(body.orgId))
+	@HashFields(["providerId", "providerType"])
+	@MaskFields(["code"])
 	@ValidateFuncArgs(OTPsCreateBodyValidator)
 	async create(@Queries() query: {}, @Body() body: OTPsCreateBodyInterface): Promise<PublicOTPsAttributes> {
 		const model = await this.otpsService.create(body);
@@ -105,6 +110,8 @@ export class OTPsController extends BaseController {
 	@SuccessResponse(201, "Returns OTP info")
 	@DescribeAction("otps/check")
 	@DescribeResource("Organization", ({ body }) => Number(body.orgId))
+	@HashFields(["providerId", "providerType"])
+	@MaskFields(["code"])
 	@ValidateFuncArgs(OTPsCheckBodyValidator)
 	async check(@Queries() query: {}, @Body() body: OTPsCheckBodyInterface): Promise<PublicOTPsAttributes> {
 		const model = await this.otpsService.check(body);
@@ -123,6 +130,7 @@ export class OTPsController extends BaseController {
 	@SuccessResponse(200, "Returns OTP info")
 	@DescribeAction("otps/read")
 	@DescribeResource("OTP", ({ params }) => Number(params.otpId))
+	@HashFields(["providerId", "providerType"])
 	async get(@Path() otpId: number): Promise<PublicOTPsAttributes> {
 		const model = await this.otpsRepository.read(otpId);
 
@@ -144,6 +152,7 @@ export class OTPsController extends BaseController {
 	@SuccessResponse(200, "Returns updated OTP")
 	@DescribeAction("otps/update")
 	@DescribeResource("OTP", ({ params }) => Number(params.otpId))
+	@HashFields(["providerId", "providerType"])
 	@ValidateFuncArgs(OTPsUpdateBodyValidator)
 	async update(
 		@Path() otpId: number,
