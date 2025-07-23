@@ -9,6 +9,7 @@ import {
 	SearchResultInterface,
 	ValidateFuncArgs,
 	I18nType,
+	HashFields,
 } from "@structured-growth/microservice-sdk";
 import { OAuthClientAttributes } from "../../../database/models/oauth-client";
 import { OAuthClientSearchParamsInterface } from "../../interfaces/oauth-client-search-params.interface";
@@ -61,6 +62,7 @@ export class OAuthClientController extends BaseController {
 	@DescribeAction("oauth-client/search")
 	@DescribeResource("Organization", ({ query }) => Number(query.orgId))
 	@DescribeResource("Account", ({ query }) => Number(query.accountId))
+	@HashFields(["title", "defaultOrgName", "redirectUris"])
 	@ValidateFuncArgs(OAuthClientsSearchParamsValidator)
 	async search(
 		@Queries() query: OAuthClientSearchParamsInterface
@@ -85,6 +87,7 @@ export class OAuthClientController extends BaseController {
 	@DescribeAction("oauth-client/create")
 	@DescribeResource("Organization", ({ body }) => Number(body.orgId))
 	@DescribeResource("Account", ({ body }) => Number(body.accountId))
+	@HashFields(["title", "defaultOrgName", "redirectUris"])
 	@ValidateFuncArgs(OAuthClientCreateBodyValidator)
 	async create(
 		@Queries() query: {},
@@ -127,6 +130,7 @@ export class OAuthClientController extends BaseController {
 	@SuccessResponse(200, "Returns client info")
 	@DescribeAction("oauth-client/read")
 	@DescribeResource("OAuthClient", ({ params }) => Number(params.oauthClientId))
+	@HashFields(["title", "defaultOrgName", "redirectUris"])
 	async get(@Path() oauthClientId: number): Promise<
 		PublicOAuthClientAttributes & {
 			clientSecret: string;
@@ -155,6 +159,7 @@ export class OAuthClientController extends BaseController {
 	@SuccessResponse(200, "Returns updated OAuth client")
 	@DescribeAction("oauth-client/update")
 	@DescribeResource("OAuthClient", ({ params }) => Number(params.oauthClientId))
+	@HashFields(["title", "defaultOrgName", "redirectUris"])
 	@ValidateFuncArgs(OAuthClientUpdateBodyValidator)
 	async update(
 		@Path() oauthClientId: number,
