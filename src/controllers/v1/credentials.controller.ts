@@ -27,6 +27,7 @@ import { CredentialsUpdateBodyValidator } from "../../validators/credentials-upd
 import { CredentialsChangePasswordBodyValidator } from "../../validators/credentials-change-password-body.validator";
 import { EventMutation } from "@structured-growth/microservice-sdk";
 
+// For devops
 const publicCredentialsAttributes = [
 	"id",
 	"orgId",
