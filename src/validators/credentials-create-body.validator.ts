@@ -4,7 +4,7 @@ export const CredentialsCreateBodyValidator = joi.object({
 	query: joi.object(),
 	body: joi.object({
 		orgId: joi.number().positive().required().label("validator.credentials.orgId"),
-		region: joi.string().valid("us").required().label("validator.credentials.region"),
+		region: joi.string().min(2).required().label("validator.credentials.region"),
 		accountId: joi.number().positive().required().label("validator.credentials.accountId"),
 		otpId: joi.number().positive().label("validator.credentials.otpId"),
 		provider: joi.string().valid("local", "oauth").required().label("validator.credentials.provider"),

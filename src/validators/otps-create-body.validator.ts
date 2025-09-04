@@ -4,7 +4,7 @@ export const OTPsCreateBodyValidator = joi.object({
 	query: joi.object(),
 	body: joi.object({
 		orgId: joi.number().positive().required().label("validator.otps.orgId"),
-		region: joi.string().valid("us").required().label("validator.otps.region"),
+		region: joi.string().min(2).required().label("validator.otps.region"),
 		credentialId: joi.number().positive().label("validator.otps.credentialId"),
 		providerId: joi.string().required().label("validator.otps.providerId"),
 		providerType: joi

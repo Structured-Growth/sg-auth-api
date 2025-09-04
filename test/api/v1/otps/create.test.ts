@@ -41,7 +41,7 @@ describe("POST /api/v1/otps", () => {
 	it("Should return validation error", async () => {
 		const { statusCode, body } = await server.post("/v1/otps").send({
 			orgId: -1,
-			region: "usa",
+			region: "u",
 			providerId: -1,
 			providerType: "test",
 			code: false,
