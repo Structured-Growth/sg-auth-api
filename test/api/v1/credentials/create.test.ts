@@ -75,7 +75,7 @@ describe("POST /api/v1/credentials", () => {
 	it("Should return validation error", async () => {
 		const { statusCode, body } = await server.post("/v1/credentials").send({
 			orgId: -1,
-			region: "usa",
+			region: "u",
 			accountId: -1,
 			provider: "locale",
 			providerType: "test",
