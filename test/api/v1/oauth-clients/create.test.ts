@@ -52,7 +52,7 @@ describe("POST /api/v1/oauth-clients", () => {
 	it("Should return validation error", async () => {
 		const { statusCode, body } = await server.post("/v1/oauth-clients").send({
 			orgId: -1,
-			region: "notus",
+			region: "n",
 			accountId: -1,
 			title: 1,
 			status: "activated",

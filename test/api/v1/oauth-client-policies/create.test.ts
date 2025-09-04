@@ -54,7 +54,7 @@ describe("POST /api/v1/oauth-client-policies", () => {
 	it("Should return validation error", async () => {
 		const { statusCode, body } = await server.post("/v1/oauth-clients").send({
 			orgId: -1,
-			region: "notus",
+			region: "n",
 			oauthClientId: -1,
 			providerType: 1,
 			passwordRequired: 21,
