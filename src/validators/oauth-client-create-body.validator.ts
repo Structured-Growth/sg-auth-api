@@ -4,7 +4,7 @@ export const OAuthClientCreateBodyValidator = joi.object({
 	query: joi.object(),
 	body: joi.object({
 		orgId: joi.number().positive().required().label("validator.oauthClients.orgId"),
-		region: joi.string().valid("us").required().label("validator.oauthClients.region"),
+		region: joi.string().min(2).required().label("validator.oauthClients.region"),
 		accountId: joi.number().positive().required().label("validator.oauthClients.accountId"),
 		title: joi.string().min(3).max(100).required().label("validator.oauthClients.title"),
 		status: joi.string().valid("active", "inactive").label("validator.oauthClients.status"),
