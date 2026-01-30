@@ -62,7 +62,7 @@ export class OTPsController extends BaseController {
 	@Get("/")
 	@SuccessResponse(200, "Returns list of OTPs")
 	@DescribeAction("otps/search")
-	@DescribeResource("Organization", ({ query }) => Number(query.orgId))
+	@DescribeResource("Organization", ({ query }) => [Number(query.orgId)])
 	@HashFields(["providerId", "providerType"])
 	@ValidateFuncArgs(OTPsSearchParamsValidator)
 	async search(@Queries() query: OTPsSearchParamsInterface): Promise<SearchResultInterface<PublicOTPsAttributes>> {
@@ -84,7 +84,7 @@ export class OTPsController extends BaseController {
 	@Post("/")
 	@SuccessResponse(201, "Returns created OTP")
 	@DescribeAction("otps/create")
-	@DescribeResource("Organization", ({ body }) => Number(body.orgId))
+	@DescribeResource("Organization", ({ body }) => [Number(body.orgId)])
 	@HashFields(["providerId", "providerType"])
 	@MaskFields(["code"])
 	@ValidateFuncArgs(OTPsCreateBodyValidator)
@@ -109,7 +109,7 @@ export class OTPsController extends BaseController {
 	@Put("/")
 	@SuccessResponse(201, "Returns OTP info")
 	@DescribeAction("otps/check")
-	@DescribeResource("Organization", ({ body }) => Number(body.orgId))
+	@DescribeResource("Organization", ({ body }) => [Number(body.orgId)])
 	@HashFields(["providerId", "providerType"])
 	@MaskFields(["code"])
 	@ValidateFuncArgs(OTPsCheckBodyValidator)
@@ -129,7 +129,7 @@ export class OTPsController extends BaseController {
 	@Get("/:otpId")
 	@SuccessResponse(200, "Returns OTP info")
 	@DescribeAction("otps/read")
-	@DescribeResource("OTP", ({ params }) => Number(params.otpId))
+	@DescribeResource("OTP", ({ params }) => [Number(params.otpId)])
 	@HashFields(["providerId", "providerType"])
 	async get(@Path() otpId: number): Promise<PublicOTPsAttributes> {
 		const model = await this.otpsRepository.read(otpId);
@@ -151,7 +151,7 @@ export class OTPsController extends BaseController {
 	@Put("/:otpId")
 	@SuccessResponse(200, "Returns updated OTP")
 	@DescribeAction("otps/update")
-	@DescribeResource("OTP", ({ params }) => Number(params.otpId))
+	@DescribeResource("OTP", ({ params }) => [Number(params.otpId)])
 	@HashFields(["providerId", "providerType"])
 	@ValidateFuncArgs(OTPsUpdateBodyValidator)
 	async update(
@@ -178,7 +178,7 @@ export class OTPsController extends BaseController {
 	@Delete("/:otpId")
 	@SuccessResponse(204, "Returns nothing")
 	@DescribeAction("otps/delete")
-	@DescribeResource("OTP", ({ params }) => Number(params.otpId))
+	@DescribeResource("OTP", ({ params }) => [Number(params.otpId)])
 	async delete(@Path() otpId: number): Promise<void> {
 		const model = await this.otpsRepository.read(otpId);
 

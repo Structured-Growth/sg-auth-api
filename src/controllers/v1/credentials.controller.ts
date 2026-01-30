@@ -72,8 +72,8 @@ export class CredentialsController extends BaseController {
 	@Get("/")
 	@SuccessResponse(200, "Returns list of account credentials")
 	@DescribeAction("credentials/search")
-	@DescribeResource("Organization", ({ query }) => Number(query.orgId))
-	@DescribeResource("Account", ({ query }) => Number(query.accountId))
+	@DescribeResource("Organization", ({ query }) => [Number(query.orgId)])
+	@DescribeResource("Account", ({ query }) => query.accountId?.map(Number))
 	@HashFields(["providerId", "providerType"])
 	@ValidateFuncArgs(CredentialsSearchParamsValidator)
 	async search(
@@ -101,8 +101,8 @@ export class CredentialsController extends BaseController {
 	@Post("/")
 	@SuccessResponse(201, "Returns created credentials")
 	@DescribeAction("credentials/create")
-	@DescribeResource("Organization", ({ body }) => Number(body.orgId))
-	@DescribeResource("Account", ({ body }) => Number(body.accountId))
+	@DescribeResource("Organization", ({ body }) => [Number(body.orgId)])
+	@DescribeResource("Account", ({ body }) => [Number(body.accountId)])
 	@HashFields(["providerId", "providerType"])
 	@MaskFields(["password"])
 	@ValidateFuncArgs(CredentialsCreateBodyValidator)
@@ -133,7 +133,7 @@ export class CredentialsController extends BaseController {
 	@Put("/")
 	@SuccessResponse(201, "Returns credentials info")
 	@DescribeAction("credentials/check")
-	@DescribeResource("Organization", ({ body }) => Number(body.orgId))
+	@DescribeResource("Organization", ({ body }) => [Number(body.orgId)])
 	@HashFields(["providerId", "providerType"])
 	@MaskFields(["password"])
 	@ValidateFuncArgs(CredentialsCheckBodyValidator)
@@ -153,7 +153,7 @@ export class CredentialsController extends BaseController {
 	@Post("/change-password/:credentialsId")
 	@SuccessResponse(201, "Returns credential info")
 	@DescribeAction("credentials/change-password")
-	@DescribeResource("Credentials", ({ params }) => Number(params.credentialsId))
+	@DescribeResource("Credentials", ({ params }) => [Number(params.credentialsId)])
 	@HashFields(["providerId", "providerType"])
 	@MaskFields(["oldPassword", "newPassword"])
 	@ValidateFuncArgs(CredentialsChangePasswordBodyValidator)
@@ -188,7 +188,7 @@ export class CredentialsController extends BaseController {
 	@Get("/:credentialsId")
 	@SuccessResponse(200, "Returns credentials info")
 	@DescribeAction("credentials/read")
-	@DescribeResource("Credentials", ({ params }) => Number(params.credentialsId))
+	@DescribeResource("Credentials", ({ params }) => [Number(params.credentialsId)])
 	@HashFields(["providerId", "providerType"])
 	async get(@Path() credentialsId: number): Promise<PublicCredentialsAttributes> {
 		const model = await this.credentialsRepository.read(credentialsId);
@@ -215,7 +215,7 @@ export class CredentialsController extends BaseController {
 	@Put("/:credentialsId")
 	@SuccessResponse(200, "Returns updated credentials")
 	@DescribeAction("credentials/update")
-	@DescribeResource("Credentials", ({ params }) => Number(params.credentialsId))
+	@DescribeResource("Credentials", ({ params }) => [Number(params.credentialsId)])
 	@HashFields(["providerId", "providerType"])
 	@MaskFields(["password"])
 	@ValidateFuncArgs(CredentialsUpdateBodyValidator)
@@ -244,7 +244,7 @@ export class CredentialsController extends BaseController {
 	@Delete("/:credentialsId")
 	@SuccessResponse(204, "Returns nothing")
 	@DescribeAction("credentials/delete")
-	@DescribeResource("Credentials", ({ params }) => Number(params.credentialsId))
+	@DescribeResource("Credentials", ({ params }) => [Number(params.credentialsId)])
 	async delete(@Path() credentialsId: number): Promise<void> {
 		const model = await this.credentialsRepository.read(credentialsId);
 

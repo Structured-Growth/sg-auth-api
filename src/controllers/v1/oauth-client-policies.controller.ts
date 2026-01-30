@@ -58,8 +58,8 @@ export class OAuthClientPolicyController extends BaseController {
 	@Get("/")
 	@SuccessResponse(200, "Returns list of OAuth client policies")
 	@DescribeAction("oauth-client-policies/search")
-	@DescribeResource("Organization", ({ query }) => Number(query.orgId))
-	@DescribeResource("OauthClient", ({ query }) => Number(query.oauthClientId))
+	@DescribeResource("Organization", ({ query }) => [Number(query.orgId)])
+	@DescribeResource("OauthClient", ({ query }) => [Number(query.oauthClientId)])
 	@HashFields(["providerType"])
 	@ValidateFuncArgs(OAuthClientPoliciesSearchParamsValidator)
 	async search(
@@ -83,8 +83,8 @@ export class OAuthClientPolicyController extends BaseController {
 	@Post("/")
 	@SuccessResponse(201, "Returns created OAuth client")
 	@DescribeAction("oauth-client-policies/create")
-	@DescribeResource("Organization", ({ body }) => Number(body.orgId))
-	@DescribeResource("OauthClient", ({ body }) => Number(body.oauthClientId))
+	@DescribeResource("Organization", ({ body }) => [Number(body.orgId)])
+	@DescribeResource("OauthClient", ({ body }) => [Number(body.oauthClientId)])
 	@HashFields(["providerType"])
 	@ValidateFuncArgs(OAuthClientPolicyCreateBodyValidator)
 	async create(
@@ -124,7 +124,7 @@ export class OAuthClientPolicyController extends BaseController {
 	@Get("/:oauthClientPolicyId")
 	@SuccessResponse(200, "Returns client policy info")
 	@DescribeAction("oauth-client-policies/read")
-	@DescribeResource("OAuthClientPolicy", ({ params }) => Number(params.oauthClientPolicyId))
+	@DescribeResource("OAuthClientPolicy", ({ params }) => [Number(params.oauthClientPolicyId)])
 	@HashFields(["providerType"])
 	async get(@Path() oauthClientPolicyId: number): Promise<PublicOAuthClientPolicyAttributes> {
 		const model = await this.oauthClientPoliciesRepository.read(oauthClientPolicyId);
@@ -150,7 +150,7 @@ export class OAuthClientPolicyController extends BaseController {
 	@Put("/:oauthClientPolicyId")
 	@SuccessResponse(200, "Returns updated OAuth client policy")
 	@DescribeAction("oauth-client-policies/update")
-	@DescribeResource("OAuthClientPolicy", ({ params }) => Number(params.oauthClientPolicyId))
+	@DescribeResource("OAuthClientPolicy", ({ params }) => [Number(params.oauthClientPolicyId)])
 	@HashFields(["providerType"])
 	@ValidateFuncArgs(OAuthClientPolicyUpdateBodyValidator)
 	async update(
@@ -182,7 +182,7 @@ export class OAuthClientPolicyController extends BaseController {
 	@Delete("/:oauthClientPolicyId")
 	@SuccessResponse(204, "Returns nothing")
 	@DescribeAction("oauth-client-policies/delete")
-	@DescribeResource("OAuthClientPolicy", ({ params }) => Number(params.oauthClientPolicyId))
+	@DescribeResource("OAuthClientPolicy", ({ params }) => [Number(params.oauthClientPolicyId)])
 	async delete(@Path() oauthClientPolicyId: number): Promise<void> {
 		const model = await this.oauthClientPoliciesRepository.read(oauthClientPolicyId);
 

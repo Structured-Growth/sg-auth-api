@@ -60,8 +60,8 @@ export class OAuthClientController extends BaseController {
 	@Get("/")
 	@SuccessResponse(200, "Returns list of OAuth clients")
 	@DescribeAction("oauth-client/search")
-	@DescribeResource("Organization", ({ query }) => Number(query.orgId))
-	@DescribeResource("Account", ({ query }) => Number(query.accountId))
+	@DescribeResource("Organization", ({ query }) => [Number(query.orgId)])
+	@DescribeResource("Account", ({ query }) => [Number(query.accountId)])
 	@HashFields(["title", "defaultOrgName", "redirectUris"])
 	@ValidateFuncArgs(OAuthClientsSearchParamsValidator)
 	async search(
@@ -85,8 +85,8 @@ export class OAuthClientController extends BaseController {
 	@Post("/")
 	@SuccessResponse(201, "Returns created OAuth client")
 	@DescribeAction("oauth-client/create")
-	@DescribeResource("Organization", ({ body }) => Number(body.orgId))
-	@DescribeResource("Account", ({ body }) => Number(body.accountId))
+	@DescribeResource("Organization", ({ body }) => [Number(body.orgId)])
+	@DescribeResource("Account", ({ body }) => [Number(body.accountId)])
 	@HashFields(["title", "defaultOrgName", "redirectUris"])
 	@ValidateFuncArgs(OAuthClientCreateBodyValidator)
 	async create(
@@ -129,7 +129,7 @@ export class OAuthClientController extends BaseController {
 	@Get("/:oauthClientId")
 	@SuccessResponse(200, "Returns client info")
 	@DescribeAction("oauth-client/read")
-	@DescribeResource("OAuthClient", ({ params }) => Number(params.oauthClientId))
+	@DescribeResource("OAuthClient", ({ params }) => [Number(params.oauthClientId)])
 	@HashFields(["title", "defaultOrgName", "redirectUris"])
 	async get(@Path() oauthClientId: number): Promise<
 		PublicOAuthClientAttributes & {
@@ -158,7 +158,7 @@ export class OAuthClientController extends BaseController {
 	@Put("/:oauthClientId")
 	@SuccessResponse(200, "Returns updated OAuth client")
 	@DescribeAction("oauth-client/update")
-	@DescribeResource("OAuthClient", ({ params }) => Number(params.oauthClientId))
+	@DescribeResource("OAuthClient", ({ params }) => [Number(params.oauthClientId)])
 	@HashFields(["title", "defaultOrgName", "redirectUris"])
 	@ValidateFuncArgs(OAuthClientUpdateBodyValidator)
 	async update(
@@ -185,7 +185,7 @@ export class OAuthClientController extends BaseController {
 	@Delete("/:oauthClientId")
 	@SuccessResponse(204, "Returns nothing")
 	@DescribeAction("oauth-client/delete")
-	@DescribeResource("OAuthClient", ({ params }) => Number(params.oauthClientId))
+	@DescribeResource("OAuthClient", ({ params }) => [Number(params.oauthClientId)])
 	async delete(@Path() oauthClientId: number): Promise<void> {
 		const model = await this.oauthClientsRepository.read(oauthClientId);
 
