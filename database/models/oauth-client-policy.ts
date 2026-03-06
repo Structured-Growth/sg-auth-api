@@ -21,7 +21,7 @@ export interface OAuthClientPolicyUpdateAttributes
 	underscored: true,
 	paranoid: true,
 })
-export class OauthClientPolicy
+export class OAuthClientPolicy
 	extends Model<OAuthClientPolicyAttributes, OAuthClientPolicyCreationAttributes>
 	implements OAuthClientPolicyAttributes
 {
@@ -69,4 +69,4 @@ export class OauthClientPolicy
 	}
 }
 
-export default OauthClientPolicy;
+export default OAuthClientPolicy;
