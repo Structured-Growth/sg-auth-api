@@ -59,7 +59,7 @@ export class OAuthClientPolicyController extends BaseController {
 	@SuccessResponse(200, "Returns list of OAuth client policies")
 	@DescribeAction("oauth-client-policies/search")
 	@DescribeResource("Organization", ({ query }) => [Number(query.orgId)])
-	@DescribeResource("OauthClient", ({ query }) => [Number(query.oauthClientId)])
+	@DescribeResource("OAuthClient", ({ query }) => [Number(query.oauthClientId)])
 	@HashFields(["providerType"])
 	@ValidateFuncArgs(OAuthClientPoliciesSearchParamsValidator)
 	async search(
@@ -84,7 +84,7 @@ export class OAuthClientPolicyController extends BaseController {
 	@SuccessResponse(201, "Returns created OAuth client")
 	@DescribeAction("oauth-client-policies/create")
 	@DescribeResource("Organization", ({ body }) => [Number(body.orgId)])
-	@DescribeResource("OauthClient", ({ body }) => [Number(body.oauthClientId)])
+	@DescribeResource("OAuthClient", ({ body }) => [Number(body.oauthClientId)])
 	@HashFields(["providerType"])
 	@ValidateFuncArgs(OAuthClientPolicyCreateBodyValidator)
 	async create(
