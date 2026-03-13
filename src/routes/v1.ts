@@ -61,6 +61,9 @@ router.get(pathPrefix + '/v1/otps/:otpId', handleRequest(Controllers.OTPsControl
 router.put(pathPrefix + '/v1/otps/:otpId', handleRequest(Controllers.OTPsController, "update", handlerOpts));
 router.delete(pathPrefix + '/v1/otps/:otpId', handleRequest(Controllers.OTPsController, "delete", handlerOpts));
 
+//DocsController
+router.get(pathPrefix + '/v1/docs/swagger.json', handleRequest(Controllers.DocsController, "getSwagger", handlerOpts));
+
 //ResolverController
 router.get(pathPrefix + '/v1/resolver/resolve', handleRequest(Controllers.ResolverController, "resolve", handlerOpts));
 router.get(pathPrefix + '/v1/resolver/actions', handleRequest(Controllers.ResolverController, "actions", handlerOpts));
@@ -99,6 +102,7 @@ export const actionToRouteMap = {
 	"OTPsController.get": 'get /v1/otps/:otpId',
 	"OTPsController.update": 'put /v1/otps/:otpId',
 	"OTPsController.delete": 'delete /v1/otps/:otpId',
+	"DocsController.getSwagger": 'get /v1/docs/swagger.json',
 	"ResolverController.resolve": 'get /v1/resolver/resolve',
 	"ResolverController.actions": 'get /v1/resolver/actions',
 	"ResolverController.models": 'get /v1/resolver/models',

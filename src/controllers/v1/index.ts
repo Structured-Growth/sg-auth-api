@@ -6,3 +6,4 @@ export { OAuthClientPolicyController } from "./oauth-client-policies.controller"
 export { PermittedOrganizationController } from "./permitted-organizations.controller";
 export { OTPsController } from "./otps.controller";
 export { SystemController } from "./system.controller";
+export { DocsController } from "./docs.controller";
