@@ -5,17 +5,20 @@ import { container, webServer } from "@structured-growth/microservice-sdk";
 import { agent } from "supertest";
 import { routes } from "../../../../src/routes";
 import OAuthClient from "../../../../database/models/oauth-client";
+import { seedCustomField } from "../../../common/seed-custom-fields";
 
 describe("POST /api/v1/oauth-clients", () => {
 	const server = agent(webServer(routes));
+	const orgId = 25;
 	let id;
 	let secret;
 
 	before(async () => container.resolve<App>("App").ready);
+	beforeEach(() => seedCustomField(orgId, "OAuthClient"));
 
 	it("Should create oauth-clients", async () => {
 		const { statusCode, body } = await server.post("/v1/oauth-clients").send({
-			orgId: 25,
+			orgId,
 			region: "us",
 			accountId: 1,
 			title: "Test client",
@@ -23,9 +26,12 @@ describe("POST /api/v1/oauth-clients", () => {
 			defaultOrgName: "test",
 			grants: ["authorization_code", "refresh_token"],
 			redirectUris: ["http://localhost:3001/api/auth/callback/oauth"],
+			metadata: {
+				externalRef: "OC-01",
+			},
 		});
 		assert.equal(statusCode, 201);
-		assert.equal(body.orgId, 25);
+		assert.equal(body.orgId, orgId);
 		assert.equal(body.accountId, 1);
 		assert.equal(body.region, "us");
 		assert.equal(body.title, "Test client");
@@ -38,6 +44,7 @@ describe("POST /api/v1/oauth-clients", () => {
 		assert.isString(body.defaultOrgName);
 		assert.isString(body.grants[0]);
 		assert.isString(body.redirectUris[0]);
+		assert.equal(body.metadata.externalRef, "OC-01");
 		id = body.id;
 		secret = body.clientSecret;
 	});
@@ -68,5 +75,24 @@ describe("POST /api/v1/oauth-clients", () => {
 		assert.isString(body.validation.body.defaultOrgName[0]);
 		assert.isString(body.validation.body.grants[0]);
 		assert.isString(body.validation.body.redirectUris[0]);
+	});
+
+	it("Should return custom fields validation error", async () => {
+		const { statusCode, body } = await server.post("/v1/oauth-clients").send({
+			orgId,
+			region: "us",
+			accountId: 2,
+			title: "Client invalid metadata",
+			status: "active",
+			defaultOrgName: "test",
+			grants: ["authorization_code"],
+			redirectUris: ["http://localhost:3001/api/auth/callback/oauth"],
+			metadata: {
+				externalRef: "O",
+			},
+		});
+		assert.equal(statusCode, 422);
+		assert.equal(body.name, "ValidationError");
+		assert.isString(body.validation.body.metadata.externalRef[0]);
 	});
 });

@@ -6,6 +6,7 @@ export interface OAuthClientPolicyAttributes extends Omit<DefaultModelInterface,
 	providerType: "email" | "phoneNumber" | "username" | "google" | "github" | "wechat";
 	passwordRequired: boolean;
 	twoFaEnabled: boolean;
+	metadata?: Record<string, unknown> | null;
 	status: "active" | "inactive" | "archived";
 }
 
@@ -13,7 +14,10 @@ export interface OAuthClientPolicyCreationAttributes
 	extends Omit<OAuthClientPolicyAttributes, "id" | "arn" | "createdAt" | "updatedAt" | "deletedAt"> {}
 
 export interface OAuthClientPolicyUpdateAttributes
-	extends Partial<Pick<OAuthClientPolicyAttributes, "providerType" | "passwordRequired" | "twoFaEnabled" | "status">> {}
+	extends
+		Partial<
+			Pick<OAuthClientPolicyAttributes, "providerType" | "passwordRequired" | "twoFaEnabled" | "status" | "metadata">
+		> {}
 
 @Table({
 	tableName: "oauth_client_policies",
@@ -42,6 +46,9 @@ export class OAuthClientPolicy
 
 	@Column
 	twoFaEnabled: boolean;
+
+	@Column(DataType.JSONB)
+	metadata: OAuthClientPolicyAttributes["metadata"];
 
 	@Column(DataType.STRING)
 	status: OAuthClientPolicyAttributes["status"];

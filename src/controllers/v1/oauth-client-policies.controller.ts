@@ -16,6 +16,7 @@ import { OAuthClientPoliciesSearchParamsInterface } from "../../interfaces/oauth
 import { OAuthClientPolicyCreateBodyInterface } from "../../interfaces/oauth-client-policy-create-body.interface";
 import { OAuthClientPolicyUpdateBodyInterface } from "../../interfaces/oauth-client-policy-update-body.interface";
 import { OauthClientPoliciesRepository } from "../../modules/oauth-client-policies/oauth-client-policies.repository";
+import { OauthClientPoliciesService } from "../../modules/oauth-client-policies/oauth-client-policies.service";
 import { pick } from "lodash";
 import { OAuthClientPoliciesSearchParamsValidator } from "../../validators/oauth-client-policies-search-params.validator";
 import { OAuthClientPolicyCreateBodyValidator } from "../../validators/oauth-client-policy-create-body.validator";
@@ -30,6 +31,7 @@ const publicOAuthClientPolicyAttributes = [
 	"providerType",
 	"passwordRequired",
 	"twoFaEnabled",
+	"metadata",
 	"status",
 	"createdAt",
 	"updatedAt",
@@ -45,6 +47,7 @@ export class OAuthClientPolicyController extends BaseController {
 	private i18n: I18nType;
 	constructor(
 		@inject("OauthClientPoliciesRepository") private oauthClientPoliciesRepository: OauthClientPoliciesRepository,
+		@inject("OauthClientPoliciesService") private oauthClientPoliciesService: OauthClientPoliciesService,
 		@inject("i18n") private getI18n: () => I18nType
 	) {
 		super();
@@ -91,15 +94,10 @@ export class OAuthClientPolicyController extends BaseController {
 		@Queries() query: {},
 		@Body() body: OAuthClientPolicyCreateBodyInterface
 	): Promise<PublicOAuthClientPolicyAttributes> {
-		const model = await this.oauthClientPoliciesRepository.create({
-			orgId: body.orgId,
-			region: body.region,
-			oauthClientId: body.oauthClientId,
-			providerType: body.providerType,
-			passwordRequired: body.passwordRequired,
-			twoFaEnabled: body.twoFaEnabled,
-			status: body.status || "active",
-		});
+		const model = await this.oauthClientPoliciesService.create(
+			body,
+			"orgIds" in this.principal && Array.isArray(this.principal.orgIds) ? this.principal.orgIds : []
+		);
 		this.response.status(201);
 
 		await this.eventBus.publish(
@@ -158,7 +156,11 @@ export class OAuthClientPolicyController extends BaseController {
 		@Queries() query: {},
 		@Body() body: OAuthClientPolicyUpdateBodyInterface
 	): Promise<PublicOAuthClientPolicyAttributes> {
-		const model = await this.oauthClientPoliciesRepository.update(oauthClientPolicyId, body);
+		const model = await this.oauthClientPoliciesService.update(
+			oauthClientPolicyId,
+			body,
+			"orgIds" in this.principal && Array.isArray(this.principal.orgIds) ? this.principal.orgIds : []
+		);
 
 		await this.eventBus.publish(
 			new EventMutation(

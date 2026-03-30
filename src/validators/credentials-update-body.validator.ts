@@ -11,5 +11,6 @@ export const CredentialsUpdateBodyValidator = joi.object({
 			.label("validator.credentials.providerType"),
 		status: joi.string().valid("verification", "active", "inactive").label("validator.credentials.status"),
 		otpId: joi.number().positive().label("validator.credentials.otpId"),
+		metadata: joi.object().allow(null).label("validator.credentials.metadata"),
 	}),
 });

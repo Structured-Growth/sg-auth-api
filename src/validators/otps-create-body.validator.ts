@@ -14,6 +14,7 @@ export const OTPsCreateBodyValidator = joi.object({
 			.label("validator.otps.providerType"),
 		code: joi.string().required().label("validator.otps.code"),
 		lifeTime: joi.number().positive().required().label("validator.otps.lifeTime"),
+		metadata: joi.object().allow(null).label("validator.otps.metadata"),
 		status: joi.string().valid("active", "inactive").required().label("validator.otps.status"),
 	}),
 });

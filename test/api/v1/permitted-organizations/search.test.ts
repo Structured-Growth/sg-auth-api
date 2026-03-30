@@ -1,11 +1,13 @@
 import "../../../../src/app/providers";
 import { assert } from "chai";
 import { initTest } from "../../../common/init-test";
+import { seedCustomField } from "../../../common/seed-custom-fields";
 
 describe("GET /api/v1/permitted-organizations", () => {
 	const { server, context } = initTest();
 	const randomOrgId = Math.floor(Math.random() * 10000);
 	const randomAccountId = Math.floor(Math.random() * 10000);
+	beforeEach(() => seedCustomField(randomOrgId, "PermittedOrganization"));
 
 	it("Should create permitted organization", async () => {
 		const { statusCode, body } = await server.post("/v1/permitted-organizations").send({
@@ -13,6 +15,9 @@ describe("GET /api/v1/permitted-organizations", () => {
 			region: "us",
 			accountId: randomAccountId,
 			status: "active",
+			metadata: {
+				externalRef: "PO-11",
+			},
 		});
 		assert.equal(statusCode, 201);
 		assert.isNumber(body.id);
@@ -33,6 +38,7 @@ describe("GET /api/v1/permitted-organizations", () => {
 			orgId: randomOrgId,
 			"accountId[0]": randomAccountId,
 			"status[0]": "active",
+			metadata: JSON.stringify({ externalRef: "PO-11" }),
 		});
 
 		assert.equal(statusCode, 200);
@@ -43,6 +49,7 @@ describe("GET /api/v1/permitted-organizations", () => {
 		assert.isNotNaN(new Date(body.data[0].updatedAt).getTime());
 		assert.isString(body.data[0].status);
 		assert.isString(body.data[0].arn);
+		assert.equal(body.data[0].metadata.externalRef, "PO-11");
 		assert.equal(body.page, 1);
 		assert.equal(body.limit, 20);
 		assert.equal(body.total, 1);
@@ -57,6 +64,7 @@ describe("GET /api/v1/permitted-organizations", () => {
 			limit: false,
 			sort: "createdAt:asc",
 			status: "deleted",
+			metadata: "x".repeat(2001),
 		});
 		assert.equal(statusCode, 422);
 		assert.equal(body.name, "ValidationError");
@@ -65,5 +73,6 @@ describe("GET /api/v1/permitted-organizations", () => {
 		assert.isString(body.validation.query.orgId[0]);
 		assert.isString(body.validation.query.accountId[0]);
 		assert.isString(body.validation.query.status[0]);
+		assert.isString(body.validation.query.metadata[0]);
 	});
 });

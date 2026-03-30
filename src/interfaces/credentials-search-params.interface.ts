@@ -9,4 +9,5 @@ export interface CredentialsSearchParamsInterface extends Omit<DefaultSearchPara
 	providerType?: CredentialsAttributes["providerType"];
 	status?: CredentialsAttributes["status"][];
 	otpId?: number;
+	metadata?: string | null;
 }

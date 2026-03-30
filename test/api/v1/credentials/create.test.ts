@@ -5,26 +5,32 @@ import { container, webServer } from "@structured-growth/microservice-sdk";
 import { agent } from "supertest";
 import { routes } from "../../../../src/routes";
 import Credentials from "../../../../database/models/credentials";
+import { seedCustomField } from "../../../common/seed-custom-fields";
 
 describe("POST /api/v1/credentials", () => {
 	const server = agent(webServer(routes));
+	const orgId = 1;
 	const email = `example-${Date.now()}@test.com`;
 	let id;
 
 	before(async () => container.resolve<App>("App").ready);
+	beforeEach(() => seedCustomField(orgId, "Credentials"));
 
 	it("Should create credentials", async () => {
 		const { statusCode, body } = await server.post("/v1/credentials").send({
-			orgId: 1,
+			orgId,
 			region: "us",
 			accountId: 1,
 			provider: "local",
 			providerType: "email",
 			providerId: email,
 			status: "verification",
+			metadata: {
+				externalRef: "AA-11",
+			},
 		});
 		assert.equal(statusCode, 201);
-		assert.equal(body.orgId, 1);
+		assert.equal(body.orgId, orgId);
 		assert.equal(body.accountId, 1);
 		assert.equal(body.region, "us");
 		assert.equal(body.provider, "local");
@@ -37,6 +43,7 @@ describe("POST /api/v1/credentials", () => {
 		assert.isString(body.updatedAt);
 		assert.isString(body.arn);
 		assert.isBoolean(body.hasPassword);
+		assert.equal(body.metadata.externalRef, "AA-11");
 		id = body.id;
 	});
 
@@ -91,5 +98,23 @@ describe("POST /api/v1/credentials", () => {
 		assert.isString(body.validation.body.providerType[0]);
 		assert.isString(body.validation.body.providerId[0]);
 		assert.isString(body.validation.body.status[0]);
+	});
+
+	it("Should return custom fields validation error", async () => {
+		const { statusCode, body } = await server.post("/v1/credentials").send({
+			orgId,
+			region: "us",
+			accountId: 2,
+			provider: "local",
+			providerType: "email",
+			providerId: `meta-${Date.now()}@test.com`,
+			status: "verification",
+			metadata: {
+				externalRef: "A",
+			},
+		});
+		assert.equal(statusCode, 422);
+		assert.equal(body.name, "ValidationError");
+		assert.isString(body.validation.body.metadata.externalRef[0]);
 	});
 });

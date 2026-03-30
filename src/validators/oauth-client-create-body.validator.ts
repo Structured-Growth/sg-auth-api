@@ -15,5 +15,6 @@ export const OAuthClientCreateBodyValidator = joi.object({
 			.label("validator.oauthClients.grants")
 			.required(),
 		redirectUris: joi.array().items(joi.string().uri()).label("validator.oauthClients.redirectUris").required(),
+		metadata: joi.object().allow(null).label("validator.oauthClients.metadata"),
 	}),
 });

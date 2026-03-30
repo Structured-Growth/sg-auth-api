@@ -5,16 +5,19 @@ import { container, webServer } from "@structured-growth/microservice-sdk";
 import { agent } from "supertest";
 import { routes } from "../../../../src/routes";
 import OAuthClient from "../../../../database/models/oauth-client";
+import { seedCustomField } from "../../../common/seed-custom-fields";
 
 describe("GET /api/v1/oauth-clients", () => {
 	const server = agent(webServer(routes));
 	const context: Record<any, any> = {};
+	const orgId = 25;
 
 	before(async () => container.resolve<App>("App").ready);
+	beforeEach(() => seedCustomField(orgId, "OAuthClient"));
 
 	it("Should create oauth-clients", async () => {
 		const { statusCode, body } = await server.post("/v1/oauth-clients").send({
-			orgId: 25,
+			orgId,
 			region: "us",
 			accountId: 1,
 			title: "Test client",
@@ -22,9 +25,12 @@ describe("GET /api/v1/oauth-clients", () => {
 			defaultOrgName: "test",
 			grants: ["authorization_code", "refresh_token"],
 			redirectUris: ["http://localhost:3001/api/auth/callback/oauth"],
+			metadata: {
+				externalRef: "OC-11",
+			},
 		});
 		assert.equal(statusCode, 201);
-		assert.equal(body.orgId, 25);
+		assert.equal(body.orgId, orgId);
 		assert.equal(body.accountId, 1);
 		assert.equal(body.region, "us");
 		assert.equal(body.title, "Test client");
@@ -40,12 +46,13 @@ describe("GET /api/v1/oauth-clients", () => {
 	it("Should return oauth-clients", async () => {
 		const { statusCode, body } = await server.get("/v1/oauth-clients").query({
 			clientId: context.client.clientId,
+			metadata: JSON.stringify({ externalRef: "OC-11" }),
 			"status[0]": ["active"],
 		});
 		assert.equal(statusCode, 200);
 		assert.isArray(body.data);
 		assert.isNumber(body.data[0].id);
-		assert.equal(body.data[0].orgId, 25);
+		assert.equal(body.data[0].orgId, orgId);
 		assert.equal(body.data[0].region, "us");
 		assert.equal(body.data[0].accountId, 1);
 		assert.equal(body.data[0].title, "Test client");
@@ -58,6 +65,7 @@ describe("GET /api/v1/oauth-clients", () => {
 		assert.isString(body.data[0].defaultOrgName);
 		assert.isString(body.data[0].grants[0]);
 		assert.isString(body.data[0].redirectUris[0]);
+		assert.equal(body.data[0].metadata.externalRef, "OC-11");
 		assert.equal(body.total, 1);
 		assert.equal(body.page, 1);
 		assert.equal(body.limit, 20);
@@ -65,7 +73,7 @@ describe("GET /api/v1/oauth-clients", () => {
 
 	it("Should search by title with wildcard", async () => {
 		const { statusCode, body } = await server.get("/v1/oauth-clients").query({
-			orgId: 25,
+			orgId,
 			clientId: context.client.clientId,
 			"title[0]": "*est*",
 			"title[1]": "*client",
@@ -77,17 +85,17 @@ describe("GET /api/v1/oauth-clients", () => {
 	it("Should return validation error", async () => {
 		const { statusCode, body } = await server.get("/v1/oauth-clients").query({
 			orgId: -1,
-			region: "notus",
 			accountId: -1,
-			title: 1,
-			status: "active",
+			"title[0]": "",
+			"status[0]": "wrong",
+			metadata: "x".repeat(2001),
 		});
 		assert.equal(statusCode, 422);
 		assert.equal(body.name, "ValidationError");
 		assert.isString(body.validation.query.orgId[0]);
-		assert.isString(body.validation.query.region[0]);
 		assert.isString(body.validation.query.accountId[0]);
-		assert.isString(body.validation.query.title[0]);
-		assert.isString(body.validation.query.status[0]);
+		assert.isString(body.validation.query.title[0][0]);
+		assert.isString(body.validation.query.status[0][0]);
+		assert.isString(body.validation.query.metadata[0]);
 	});
 });

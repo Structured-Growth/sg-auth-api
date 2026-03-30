@@ -27,7 +27,6 @@ import { CredentialsUpdateBodyValidator } from "../../validators/credentials-upd
 import { CredentialsChangePasswordBodyValidator } from "../../validators/credentials-change-password-body.validator";
 import { EventMutation } from "@structured-growth/microservice-sdk";
 
-// For devops
 const publicCredentialsAttributes = [
 	"id",
 	"orgId",
@@ -38,6 +37,7 @@ const publicCredentialsAttributes = [
 	"providerId",
 	"status",
 	"otpId",
+	"metadata",
 	"createdAt",
 	"updatedAt",
 	"arn",
@@ -110,7 +110,10 @@ export class CredentialsController extends BaseController {
 		@Queries() query: {},
 		@Body() body: CredentialsCreateBodyInterface
 	): Promise<PublicCredentialsAttributes> {
-		const model = await this.credentialsService.create(body);
+		const model = await this.credentialsService.create(
+			body,
+			"orgIds" in this.principal && Array.isArray(this.principal.orgIds) ? this.principal.orgIds : []
+		);
 		this.response.status(201);
 
 		await this.eventBus.publish(
@@ -224,7 +227,11 @@ export class CredentialsController extends BaseController {
 		@Queries() query: {},
 		@Body() body: CredentialsUpdateBodyInterface
 	): Promise<PublicCredentialsAttributes> {
-		const model = await this.credentialsRepository.update(credentialsId, body);
+		const model = await this.credentialsService.update(
+			credentialsId,
+			body,
+			"orgIds" in this.principal && Array.isArray(this.principal.orgIds) ? this.principal.orgIds : []
+		);
 
 		await this.eventBus.publish(
 			new EventMutation(this.principal.arn, model.arn, `${this.appPrefix}:credentials/update`, JSON.stringify(body))

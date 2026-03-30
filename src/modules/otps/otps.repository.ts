@@ -1,4 +1,4 @@
-import { Op } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 import {
 	autoInjectable,
 	RepositoryInterface,
@@ -30,6 +30,37 @@ export class OTPsRepository implements RepositoryInterface<OTPs, OTPsSearchParam
 		params.credentialId && (where["credentialId"] = params.credentialId);
 		params.id && (where["id"] = { [Op.in]: params.id });
 		params.status && (where["status"] = { [Op.in]: params.status });
+
+		if (params.metadata === null) {
+			where["metadata"] = { [Op.is]: null };
+		} else {
+			const metadataObj =
+				typeof params.metadata === "string"
+					? this.parseMetadata(params.metadata)
+					: params.metadata && typeof params.metadata === "object" && !Array.isArray(params.metadata)
+						? params.metadata
+						: null;
+
+			if (metadataObj) {
+				const and = [];
+
+				for (const [keyRaw, valRaw] of Object.entries(metadataObj)) {
+					const key = String(keyRaw).replace(/'/g, "''");
+					const left = Sequelize.literal(`("metadata"->>'${key}')`);
+
+					if (valRaw === null) {
+						and.push(Sequelize.where(left, { [Op.is]: null }));
+						continue;
+					}
+
+					and.push(Sequelize.where(left, String(valRaw)));
+				}
+
+				if (and.length > 0) {
+					where[Op.and] = and;
+				}
+			}
+		}
 
 		// todo search by ARN with wildcards
 
@@ -92,5 +123,20 @@ export class OTPsRepository implements RepositoryInterface<OTPs, OTPsSearchParam
 				throw new NotFoundError(`${this.i18n.__("error.otp.name")} ${id} ${this.i18n.__("error.common.not_found")}`);
 			}
 		});
+	}
+
+	private parseMetadata(metadata: string): Record<string, unknown> | null {
+		const value = metadata.trim();
+
+		if (!value) {
+			return null;
+		}
+
+		try {
+			const parsed = JSON.parse(value);
+			return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : null;
+		} catch {
+			return null;
+		}
 	}
 }

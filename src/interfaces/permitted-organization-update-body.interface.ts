@@ -2,4 +2,5 @@ import { PermittedOrganizationsAttributes } from "../../database/models/permitte
 
 export interface PermittedOrganizationUpdateBodyInterface {
 	status?: PermittedOrganizationsAttributes["status"];
+	metadata?: Record<string, unknown> | null;
 }

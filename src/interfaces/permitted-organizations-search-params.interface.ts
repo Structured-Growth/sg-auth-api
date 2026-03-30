@@ -6,4 +6,5 @@ export interface PermittedOrganizationsSearchParamsInterface
 	orgId?: number;
 	accountId?: number[];
 	status?: PermittedOrganizationsAttributes["status"][];
+	metadata?: string | null;
 }

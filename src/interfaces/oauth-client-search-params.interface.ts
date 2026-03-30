@@ -7,4 +7,5 @@ export interface OAuthClientSearchParamsInterface extends Omit<DefaultSearchPara
 	clientId?: string;
 	title?: OAuthClientAttributes["title"][];
 	status?: OAuthClientAttributes["status"][];
+	metadata?: string | null;
 }

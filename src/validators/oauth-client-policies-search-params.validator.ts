@@ -12,6 +12,10 @@ export const OAuthClientPoliciesSearchParamsValidator = joi.object({
 			.array()
 			.items(joi.string().valid("active", "inactive", "archived").required())
 			.label("validator.oauthClients.status"),
+		metadata: joi
+			.alternatives()
+			.try(joi.string().max(2000), joi.valid(null))
+			.label("validator.oauthClientPolicies.metadata"),
 		id: joi.array().items(joi.number().positive().required()).label("validator.common.id"),
 		arn: joi.array().valid(joi.string().required()).label("validator.common.arn"),
 		page: joi.number().positive().label("validator.common.page"),

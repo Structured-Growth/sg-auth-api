@@ -5,26 +5,32 @@ import { container, webServer } from "@structured-growth/microservice-sdk";
 import { agent } from "supertest";
 import { routes } from "../../../../src/routes";
 import Credentials from "../../../../database/models/credentials";
+import { seedCustomField } from "../../../common/seed-custom-fields";
 
 describe("POST /api/v1/otps", () => {
 	const server = agent(webServer(routes));
+	const orgId = 1;
 	const email = `example-${Date.now()}@test.com`;
 	let id;
 
 	before(async () => container.resolve<App>("App").ready);
+	beforeEach(() => seedCustomField(orgId, "OTP"));
 
 	it("Should create OTP", async () => {
 		const { statusCode, body } = await server.post("/v1/otps").send({
-			orgId: 1,
+			orgId,
 			region: "us",
 			providerId: email,
 			providerType: "email",
 			code: "123456",
 			lifeTime: 10,
 			status: "active",
+			metadata: {
+				externalRef: "OTP-01",
+			},
 		});
 		assert.equal(statusCode, 201);
-		assert.equal(body.orgId, 1);
+		assert.equal(body.orgId, orgId);
 		assert.equal(body.region, "us");
 		assert.equal(body.providerId, email);
 		assert.equal(body.providerType, "email");
@@ -35,6 +41,7 @@ describe("POST /api/v1/otps", () => {
 		assert.isString(body.createdAt);
 		assert.isString(body.updatedAt);
 		assert.isString(body.arn);
+		assert.equal(body.metadata.externalRef, "OTP-01");
 		id = body.id;
 	});
 
@@ -57,6 +64,24 @@ describe("POST /api/v1/otps", () => {
 		assert.isString(body.validation.body.code[0]);
 		assert.isString(body.validation.body.lifeTime[0]);
 		assert.isString(body.validation.body.status[0]);
+	});
+
+	it("Should return custom fields validation error", async () => {
+		const { statusCode, body } = await server.post("/v1/otps").send({
+			orgId,
+			region: "us",
+			providerId: `otp-meta-${Date.now()}@test.com`,
+			providerType: "email",
+			code: "123456",
+			lifeTime: 10,
+			status: "active",
+			metadata: {
+				externalRef: "O",
+			},
+		});
+		assert.equal(statusCode, 422);
+		assert.equal(body.name, "ValidationError");
+		assert.isString(body.validation.body.metadata.externalRef[0]);
 	});
 
 	it("Should archive previous OTPs with the same providerId and orgId", async () => {
