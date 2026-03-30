@@ -45,7 +45,11 @@ export class CredentialsService {
 		});
 	}
 
-	public async update(id: number, params: CredentialsUpdateBodyInterface, inheritedOrgIds: number[] = []): Promise<Credentials> {
+	public async update(
+		id: number,
+		params: CredentialsUpdateBodyInterface,
+		inheritedOrgIds: number[] = []
+	): Promise<Credentials> {
 		const credential = await this.credentialsRepository.read(id);
 
 		if (!credential) {

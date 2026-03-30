@@ -33,7 +33,11 @@ export class OauthClientsService {
 		});
 	}
 
-	public async update(id: number, params: OAuthClientUpdateBodyInterface, inheritedOrgIds: number[] = []): Promise<OAuthClient> {
+	public async update(
+		id: number,
+		params: OAuthClientUpdateBodyInterface,
+		inheritedOrgIds: number[] = []
+	): Promise<OAuthClient> {
 		const model = await this.oauthClientsRepository.read(id);
 
 		if (!model) {

@@ -42,8 +42,8 @@ export class OauthClientsRepository
 				typeof params.metadata === "string"
 					? this.parseMetadata(params.metadata)
 					: params.metadata && typeof params.metadata === "object" && !Array.isArray(params.metadata)
-						? params.metadata
-						: null;
+					? params.metadata
+					: null;
 
 			if (metadataObj) {
 				const and = [];
