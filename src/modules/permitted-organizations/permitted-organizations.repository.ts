@@ -28,7 +28,7 @@ export class PermittedOrganizationsRepository
 		this.i18n = this.getI18n();
 	}
 	public async search(
-		params: PermittedOrganizationsSearchParamsInterface
+		params: PermittedOrganizationsSearchParamsInterface & { metadata?: Record<string, unknown> }
 	): Promise<SearchResultInterface<PermittedOrganizations>> {
 		const page = params.page || 1;
 		const limit = params.limit || 20;
@@ -41,33 +41,24 @@ export class PermittedOrganizationsRepository
 		params.accountId && (where["accountId"] = { [Op.in]: params.accountId });
 		params.status && (where["status"] = { [Op.in]: params.status });
 
-		if (params.metadata === null) {
-			where["metadata"] = { [Op.is]: null };
-		} else {
-			const metadataObj =
-				typeof params.metadata === "string"
-					? this.parseMetadata(params.metadata)
-					: params.metadata && typeof params.metadata === "object" && !Array.isArray(params.metadata)
-					? params.metadata
-					: null;
+		if (params.metadata && typeof params.metadata === "object") {
+			where[Op.and] = where[Op.and] ?? [];
 
-			if (metadataObj) {
-				const and = [];
+			for (const [keyRaw, valRaw] of Object.entries(params.metadata)) {
+				if (valRaw === null || valRaw === undefined) continue;
 
-				for (const [keyRaw, valRaw] of Object.entries(metadataObj)) {
-					const key = String(keyRaw).replace(/'/g, "''");
-					const left = Sequelize.literal(`("metadata"->>'${key}')`);
+				const key = String(keyRaw).replace(/[^a-zA-Z0-9_-]/g, "");
+				if (!key) continue;
 
-					if (valRaw === null) {
-						and.push(Sequelize.where(left, { [Op.is]: null }));
-						continue;
-					}
+				const value = String(valRaw).trim();
+				if (!value) continue;
 
-					and.push(Sequelize.where(left, String(valRaw)));
-				}
+				const left = Sequelize.literal(`("metadata"->>'${key}')`);
 
-				if (and.length > 0) {
-					where[Op.and] = and;
+				if (value.includes("*")) {
+					where[Op.and].push(Sequelize.where(left, { [Op.iLike]: value.replace(/\*/g, "%") }));
+				} else {
+					where[Op.and].push(Sequelize.where(left, { [Op.eq]: value }));
 				}
 			}
 		}
@@ -122,21 +113,6 @@ export class PermittedOrganizationsRepository
 			throw new NotFoundError(
 				`${this.i18n.__("error.permitted_organization.name")} ${id} ${this.i18n.__("error.common.not_found")}`
 			);
-		}
-	}
-
-	private parseMetadata(metadata: string): Record<string, unknown> | null {
-		const value = metadata.trim();
-
-		if (!value) {
-			return null;
-		}
-
-		try {
-			const parsed = JSON.parse(value);
-			return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : null;
-		} catch {
-			return null;
 		}
 	}
 }

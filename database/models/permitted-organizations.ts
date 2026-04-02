@@ -2,12 +2,14 @@ import { Column, DataType, Model, Table } from "sequelize-typescript";
 import { container, RegionEnum, DefaultModelInterface } from "@structured-growth/microservice-sdk";
 
 export interface PermittedOrganizationsAttributes extends DefaultModelInterface {
-	metadata?: Record<string, unknown> | null;
+	metadata: Record<string, unknown>;
 	status: "active" | "inactive" | "archived";
 }
 
 export interface PermittedOrganizationsCreationAttributes
-	extends Omit<PermittedOrganizationsAttributes, "id" | "arn" | "createdAt" | "updatedAt" | "deletedAt"> {}
+	extends Omit<PermittedOrganizationsAttributes, "id" | "arn" | "createdAt" | "updatedAt" | "deletedAt" | "metadata"> {
+	metadata?: Record<string, unknown>;
+}
 
 export interface PermittedOrganizationsUpdateAttributes
 	extends Partial<Pick<PermittedOrganizationsAttributes, "status" | "metadata">> {}
@@ -32,7 +34,7 @@ export class PermittedOrganizations
 	accountId: number;
 
 	@Column(DataType.JSONB)
-	metadata: PermittedOrganizationsAttributes["metadata"];
+	metadata: Record<string, unknown>;
 
 	@Column(DataType.STRING)
 	status: PermittedOrganizationsAttributes["status"];

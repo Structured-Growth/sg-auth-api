@@ -5,5 +5,5 @@ export interface CredentialsUpdateBodyInterface {
 	providerType?: CredentialsAttributes["providerType"];
 	status?: CredentialsAttributes["status"];
 	otpId?: number;
-	metadata?: Record<string, unknown> | null;
+	metadata?: Record<string, unknown>;
 }

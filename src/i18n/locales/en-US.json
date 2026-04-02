@@ -16,7 +16,8 @@
       "old_password_invalid": "Old password are invalid"
     },
     "custom_field": {
-      "name": "CustomField"
+      "name": "Custom Field",
+      "custom_field_created": "A custom field with this orgId, entity and name has already been created."
     },
     "oauth_client": {
       "name": "OAuthClient"

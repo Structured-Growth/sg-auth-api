@@ -21,7 +21,7 @@ export class OauthClientPoliciesService {
 		params: OAuthClientPolicyCreateBodyInterface,
 		inheritedOrgIds: number[] = []
 	): Promise<OauthClientPolicy> {
-		await this.customFieldService.validate("OAuthClientPolicy", params.metadata, params.orgId, inheritedOrgIds);
+		await this.customFieldService.validate("OAuthClientPolicy", params.metadata, [params.orgId, ...inheritedOrgIds]);
 
 		return this.oauthClientPoliciesRepository.create({
 			orgId: params.orgId,
@@ -30,7 +30,7 @@ export class OauthClientPoliciesService {
 			providerType: params.providerType,
 			passwordRequired: params.passwordRequired,
 			twoFaEnabled: params.twoFaEnabled,
-			metadata: params.metadata ?? null,
+			metadata: params.metadata ?? {},
 			status: params.status || "active",
 		});
 	}
@@ -48,13 +48,11 @@ export class OauthClientPoliciesService {
 			);
 		}
 
-		const nextPolicy = {
-			...model.toJSON(),
-			...params,
-			metadata: params.metadata !== undefined ? params.metadata : model.metadata,
-		};
-
-		await this.customFieldService.validate("OAuthClientPolicy", nextPolicy.metadata, model.orgId, inheritedOrgIds);
+		await this.customFieldService.validate(
+			"OAuthClientPolicy",
+			params.metadata !== undefined ? params.metadata : model.metadata,
+			[model.orgId, ...inheritedOrgIds]
+		);
 
 		return this.oauthClientPoliciesRepository.update(id, params);
 	}

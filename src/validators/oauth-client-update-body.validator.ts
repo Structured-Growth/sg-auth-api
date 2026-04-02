@@ -11,6 +11,6 @@ export const OAuthClientUpdateBodyValidator = joi.object({
 			.items(joi.string().valid("authorization_code", "refresh_token", "client_credentials", "password").required())
 			.label("validator.oauthClients.grants"),
 		redirectUris: joi.array().items(joi.string().uri().required()).label("validator.oauthClients.redirectUris"),
-		metadata: joi.object().allow(null).label("validator.oauthClients.metadata"),
+		metadata: joi.object().label("validator.oauthClients.metadata"),
 	}),
 });

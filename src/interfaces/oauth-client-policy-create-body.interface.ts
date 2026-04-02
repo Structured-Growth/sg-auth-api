@@ -6,6 +6,6 @@ export interface OAuthClientPolicyCreateBodyInterface extends BelongsToOrgInterf
 	providerType: OAuthClientPolicyAttributes["providerType"];
 	passwordRequired: boolean;
 	twoFaEnabled: boolean;
-	metadata?: Record<string, unknown> | null;
+	metadata?: Record<string, unknown>;
 	status: "active" | "inactive";
 }

@@ -4,7 +4,6 @@ import { App } from "../../../../src/app/app";
 import { container, webServer } from "@structured-growth/microservice-sdk";
 import { agent } from "supertest";
 import { routes } from "../../../../src/routes";
-import Credentials from "../../../../database/models/credentials";
 import { seedCustomField } from "../../../common/seed-custom-fields";
 
 describe("PUT /api/v1/otps/:otpId", () => {
@@ -48,7 +47,30 @@ describe("PUT /api/v1/otps/:otpId", () => {
 	it("Should return updated credentials", async () => {
 		const { statusCode, body } = await server.get(`/v1/otps/${id}`);
 		assert.equal(statusCode, 200);
+		assert.equal(body.id, id);
 		assert.equal(body.status, "archived");
 		assert.equal(body.metadata.externalRef, "OTP-11");
+	});
+
+	it("Should return validation error", async () => {
+		const { statusCode, body } = await server.put(`/v1/otps/${id}`).send({
+			status: "deleted",
+			metadata: "bad",
+		});
+		assert.equal(statusCode, 422);
+		assert.equal(body.name, "ValidationError");
+		assert.isString(body.validation.body.status[0]);
+		assert.isString(body.validation.body.metadata[0]);
+	});
+
+	it("Should return custom fields validation error", async () => {
+		const { statusCode, body } = await server.put(`/v1/otps/${id}`).send({
+			metadata: {
+				externalRef: "O",
+			},
+		});
+		assert.equal(statusCode, 422);
+		assert.equal(body.name, "ValidationError");
+		assert.isString(body.validation.body.metadata.externalRef[0]);
 	});
 });

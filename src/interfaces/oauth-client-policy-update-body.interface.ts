@@ -4,6 +4,6 @@ export interface OAuthClientPolicyUpdateBodyInterface {
 	providerType: OAuthClientPolicyAttributes["providerType"];
 	passwordRequired: boolean;
 	twoFaEnabled: boolean;
-	metadata?: Record<string, unknown> | null;
+	metadata?: Record<string, unknown>;
 	status: "active" | "inactive" | "archived";
 }

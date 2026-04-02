@@ -15,7 +15,7 @@ export const CredentialsCreateBodyValidator = joi.object({
 			.label("validator.credentials.providerType"),
 		providerId: joi.string().required().min(1).max(100).label("validator.credentials.providerId"),
 		password: PasswordValidator.label("validator.credentials.password"),
-		metadata: joi.object().allow(null).label("validator.credentials.metadata"),
+		metadata: joi.object().label("validator.credentials.metadata"),
 		status: joi.string().valid("verification", "active", "inactive").required().label("validator.credentials.status"),
 	}),
 });

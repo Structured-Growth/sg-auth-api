@@ -4,7 +4,6 @@ import { App } from "../../../../src/app/app";
 import { container, webServer } from "@structured-growth/microservice-sdk";
 import { agent } from "supertest";
 import { routes } from "../../../../src/routes";
-import OAuthClient from "../../../../database/models/oauth-client";
 import { seedCustomField } from "../../../common/seed-custom-fields";
 
 describe("GET /api/v1/oauth-clients", () => {
@@ -46,7 +45,9 @@ describe("GET /api/v1/oauth-clients", () => {
 	it("Should return oauth-clients", async () => {
 		const { statusCode, body } = await server.get("/v1/oauth-clients").query({
 			clientId: context.client.clientId,
-			metadata: JSON.stringify({ externalRef: "OC-11" }),
+			metadata: {
+				externalRef: "OC-11",
+			},
 			"status[0]": ["active"],
 		});
 		assert.equal(statusCode, 200);
@@ -88,7 +89,7 @@ describe("GET /api/v1/oauth-clients", () => {
 			accountId: -1,
 			"title[0]": "",
 			"status[0]": "wrong",
-			metadata: "x".repeat(2001),
+			metadata: "bad",
 		});
 		assert.equal(statusCode, 422);
 		assert.equal(body.name, "ValidationError");

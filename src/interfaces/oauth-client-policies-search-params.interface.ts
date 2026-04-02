@@ -6,5 +6,9 @@ export interface OAuthClientPoliciesSearchParamsInterface extends Omit<DefaultSe
 	oauthClientId?: number;
 	providerType?: OAuthClientPolicyAttributes["providerType"];
 	status?: OAuthClientPolicyAttributes["status"][];
-	metadata?: string | null;
+	/**
+	 * Search by custom entity fields.
+	 * Example: metadata[externalRef]=PL-21
+	 */
+	"metadata[customFieldName]"?: string;
 }

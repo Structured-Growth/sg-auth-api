@@ -28,7 +28,7 @@ export class OTPsService {
 			await Promise.all(result.data.map((otp) => this.otpsRepository.update(otp.id, { status: "archived" })));
 		}
 
-		await this.customFieldService.validate("OTP", params.metadata, params.orgId, inheritedOrgIds);
+		await this.customFieldService.validate("OTP", params.metadata, [params.orgId, ...inheritedOrgIds]);
 
 		return this.otpsRepository.create({
 			orgId: params.orgId,
@@ -38,7 +38,7 @@ export class OTPsService {
 			providerType: params.providerType,
 			code: params.code,
 			lifeTime: params.lifeTime,
-			metadata: params.metadata ?? null,
+			metadata: params.metadata ?? {},
 			status: params.status,
 		});
 	}
@@ -50,13 +50,10 @@ export class OTPsService {
 			throw new ValidationError({}, this.i18n.__("error.otp.code_invalid"));
 		}
 
-		const nextOtp = {
-			...otp.toJSON(),
-			...params,
-			metadata: params.metadata !== undefined ? params.metadata : otp.metadata,
-		};
-
-		await this.customFieldService.validate("OTP", nextOtp.metadata, otp.orgId, inheritedOrgIds);
+		await this.customFieldService.validate("OTP", params.metadata !== undefined ? params.metadata : otp.metadata, [
+			otp.orgId,
+			...inheritedOrgIds,
+		]);
 
 		return this.otpsRepository.update(id, params);
 	}

@@ -90,10 +90,7 @@ export class OTPsController extends BaseController {
 	@MaskFields(["code"])
 	@ValidateFuncArgs(OTPsCreateBodyValidator)
 	async create(@Queries() query: {}, @Body() body: OTPsCreateBodyInterface): Promise<PublicOTPsAttributes> {
-		const model = await this.otpsService.create(
-			body,
-			"orgIds" in this.principal && Array.isArray(this.principal.orgIds) ? this.principal.orgIds : []
-		);
+		const model = await this.otpsService.create(body, this.principal.parentOrgIds ?? []);
 		this.response.status(201);
 
 		await this.eventBus.publish(
@@ -163,11 +160,7 @@ export class OTPsController extends BaseController {
 		@Queries() query: {},
 		@Body() body: OTPsUpdateBodyInterface
 	): Promise<PublicOTPsAttributes> {
-		const model = await this.otpsService.update(
-			otpId,
-			body,
-			"orgIds" in this.principal && Array.isArray(this.principal.orgIds) ? this.principal.orgIds : []
-		);
+		const model = await this.otpsService.update(otpId, body, this.principal.parentOrgIds ?? []);
 
 		await this.eventBus.publish(
 			new EventMutation(this.principal.arn, model.arn, `${this.appPrefix}:otps/update`, JSON.stringify(body))

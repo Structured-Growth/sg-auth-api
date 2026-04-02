@@ -38,7 +38,9 @@ describe("GET /api/v1/permitted-organizations", () => {
 			orgId: randomOrgId,
 			"accountId[0]": randomAccountId,
 			"status[0]": "active",
-			metadata: JSON.stringify({ externalRef: "PO-11" }),
+			metadata: {
+				externalRef: "PO-11",
+			},
 		});
 
 		assert.equal(statusCode, 200);
@@ -64,7 +66,7 @@ describe("GET /api/v1/permitted-organizations", () => {
 			limit: false,
 			sort: "createdAt:asc",
 			status: "deleted",
-			metadata: "x".repeat(2001),
+			metadata: "bad",
 		});
 		assert.equal(statusCode, 422);
 		assert.equal(body.name, "ValidationError");

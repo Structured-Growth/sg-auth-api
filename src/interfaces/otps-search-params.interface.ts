@@ -7,5 +7,9 @@ export interface OTPsSearchParamsInterface extends Omit<DefaultSearchParamsInter
 	providerType?: OTPsAttributes["providerType"];
 	credentialId?: number;
 	status?: OTPsAttributes["status"][];
-	metadata?: string | null;
+	/**
+	 * Search by custom entity fields.
+	 * Example: metadata[externalRef]=OTP-21
+	 */
+	"metadata[customFieldName]"?: string;
 }

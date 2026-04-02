@@ -22,11 +22,14 @@ export class PermittedOrganizationsService {
 		params: PermittedOrganizationCreateBodyInterface,
 		inheritedOrgIds: number[] = []
 	): Promise<PermittedOrganizations> {
-		await this.customFieldService.validate("PermittedOrganization", params.metadata, params.orgId, inheritedOrgIds);
+		await this.customFieldService.validate("PermittedOrganization", params.metadata, [
+			params.orgId,
+			...inheritedOrgIds,
+		]);
 
 		return this.permittedOrganizationsRepository.create({
 			...params,
-			metadata: params.metadata ?? null,
+			metadata: params.metadata ?? {},
 		});
 	}
 
@@ -43,17 +46,10 @@ export class PermittedOrganizationsService {
 			);
 		}
 
-		const nextPermittedOrganization = {
-			...model.toJSON(),
-			...params,
-			metadata: params.metadata !== undefined ? params.metadata : model.metadata,
-		};
-
 		await this.customFieldService.validate(
 			"PermittedOrganization",
-			nextPermittedOrganization.metadata,
-			model.orgId,
-			inheritedOrgIds
+			params.metadata !== undefined ? params.metadata : model.metadata,
+			[model.orgId, ...inheritedOrgIds]
 		);
 
 		return this.permittedOrganizationsRepository.update(id, params);

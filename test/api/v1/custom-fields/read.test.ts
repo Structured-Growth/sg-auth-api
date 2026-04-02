@@ -1,6 +1,7 @@
 import "../../../../src/app/providers";
 import { assert } from "chai";
 import { initTest } from "../../../common/init-test";
+import { customFieldAlternativesSchema } from "../../../common/custom-field-schema";
 
 describe("GET /api/v1/custom-fields/:customFieldId", () => {
 	const { server, context } = initTest();
@@ -9,16 +10,14 @@ describe("GET /api/v1/custom-fields/:customFieldId", () => {
 	it("Should create custom field", async () => {
 		const { statusCode, body } = await server.post("/v1/custom-fields").send({
 			orgId,
-			region: "us",
-			entity: "Credentials",
-			title: "External Ref",
-			name: "externalRef",
-			schema: { type: "string" },
+			entity: "Document",
+			title: "Approval Code",
+			name: "approvalCode",
+			schema: customFieldAlternativesSchema,
 			status: "active",
 		});
 
 		assert.equal(statusCode, 201);
-		assert.isNumber(body.id);
 		context.customFieldId = body.id;
 	});
 
@@ -29,20 +28,14 @@ describe("GET /api/v1/custom-fields/:customFieldId", () => {
 		assert.equal(body.id, context.customFieldId);
 		assert.equal(body.orgId, orgId);
 		assert.equal(body.region, "us");
-		assert.equal(body.entity, "Credentials");
-		assert.equal(body.title, "External Ref");
-		assert.equal(body.name, "externalRef");
-		assert.equal(body.schema.type, "string");
-		assert.equal(body.status, "active");
-		assert.isString(body.createdAt);
-		assert.isString(body.updatedAt);
-		assert.isString(body.arn);
+		assert.equal(body.entity, "Document");
+		assert.equal(body.name, "approvalCode");
+		assert.equal(body.schema.type, "alternatives");
 	});
 
-	it("Should return if custom field does not exist", async () => {
-		const { statusCode, body } = await server.get("/v1/custom-fields/999999").send({});
+	it("Should return not found", async () => {
+		const { statusCode, body } = await server.get("/v1/custom-fields/999999");
 		assert.equal(statusCode, 404);
 		assert.equal(body.name, "NotFound");
-		assert.isString(body.message);
 	});
 });

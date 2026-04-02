@@ -29,7 +29,7 @@ export class CredentialsService {
 			throw new ValidationError({}, this.i18n.__("error.credential.provider_id"));
 		}
 
-		await this.customFieldService.validate("Credentials", params.metadata, params.orgId, inheritedOrgIds);
+		await this.customFieldService.validate("Credentials", params.metadata, [params.orgId, ...inheritedOrgIds]);
 
 		return this.credentialsRepository.create({
 			accountId: params.accountId,
@@ -39,7 +39,7 @@ export class CredentialsService {
 			providerId: params.providerId,
 			...(params.otpId && { otpId: params.otpId }),
 			password: params.password,
-			metadata: params.metadata ?? null,
+			metadata: params.metadata ?? {},
 			region: params.region,
 			status: params.status || "verification",
 		});
@@ -56,13 +56,11 @@ export class CredentialsService {
 			throw new ValidationError({}, this.i18n.__("error.credential.credentials_invalid"));
 		}
 
-		const nextCredential = {
-			...credential.toJSON(),
-			...params,
-			metadata: params.metadata !== undefined ? params.metadata : credential.metadata,
-		};
-
-		await this.customFieldService.validate("Credentials", nextCredential.metadata, credential.orgId, inheritedOrgIds);
+		await this.customFieldService.validate(
+			"Credentials",
+			params.metadata !== undefined ? params.metadata : credential.metadata,
+			[credential.orgId, ...inheritedOrgIds]
+		);
 
 		return this.credentialsRepository.update(id, params);
 	}

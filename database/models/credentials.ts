@@ -7,13 +7,15 @@ export interface CredentialsAttributes extends DefaultModelInterface {
 	providerType: "email" | "phoneNumber" | "username" | "google" | "github" | "wechat";
 	providerId: string;
 	password: string;
-	metadata?: Record<string, unknown> | null;
+	metadata: Record<string, unknown>;
 	status: "verification" | "active" | "inactive" | "archived";
 	otpId?: number | null;
 }
 
 export interface CredentialsCreationAttributes
-	extends Omit<CredentialsAttributes, "id" | "arn" | "createdAt" | "updatedAt" | "deletedAt"> {}
+	extends Omit<CredentialsAttributes, "id" | "arn" | "createdAt" | "updatedAt" | "deletedAt" | "metadata"> {
+	metadata?: Record<string, unknown>;
+}
 
 export interface CredentialsUpdateAttributes
 	extends Partial<Pick<CredentialsAttributes, "status" | "password" | "providerType" | "otpId" | "metadata">> {}
@@ -50,7 +52,7 @@ export class Credentials
 	password: CredentialsAttributes["password"];
 
 	@Column(DataType.JSONB)
-	metadata: CredentialsAttributes["metadata"];
+	metadata: Record<string, unknown>;
 
 	@Column(DataType.STRING)
 	status: CredentialsAttributes["status"];

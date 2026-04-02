@@ -100,10 +100,7 @@ export class OAuthClientController extends BaseController {
 			clientSecret: string;
 		}
 	> {
-		const model = await this.oauthClientsService.create(
-			body,
-			"orgIds" in this.principal && Array.isArray(this.principal.orgIds) ? this.principal.orgIds : []
-		);
+		const model = await this.oauthClientsService.create(body, this.principal.parentOrgIds ?? []);
 		this.response.status(201);
 
 		await this.eventBus.publish(
@@ -163,11 +160,7 @@ export class OAuthClientController extends BaseController {
 		@Queries() query: {},
 		@Body() body: OAuthClientUpdateBodyInterface
 	): Promise<PublicOAuthClientAttributes> {
-		const model = await this.oauthClientsService.update(
-			oauthClientId,
-			body,
-			"orgIds" in this.principal && Array.isArray(this.principal.orgIds) ? this.principal.orgIds : []
-		);
+		const model = await this.oauthClientsService.update(oauthClientId, body, this.principal.parentOrgIds ?? []);
 
 		await this.eventBus.publish(
 			new EventMutation(this.principal.arn, model.arn, `${this.appPrefix}:oauth-client/update`, JSON.stringify(body))

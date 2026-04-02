@@ -4,7 +4,6 @@ import { App } from "../../../../src/app/app";
 import { container, webServer } from "@structured-growth/microservice-sdk";
 import { agent } from "supertest";
 import { routes } from "../../../../src/routes";
-import Credentials from "../../../../database/models/credentials";
 import { seedCustomField } from "../../../common/seed-custom-fields";
 
 describe("GET /api/v1/credentials", () => {
@@ -42,7 +41,9 @@ describe("GET /api/v1/credentials", () => {
 			provider: "local",
 			providerType: "email",
 			providerId: email,
-			metadata: JSON.stringify({ externalRef: "AA-22" }),
+			metadata: {
+				externalRef: "AA-22",
+			},
 			"status[0]": ["active"],
 			"status[1]": ["inactive"],
 		});
@@ -77,7 +78,7 @@ describe("GET /api/v1/credentials", () => {
 			providerId: "",
 			otpId: "text",
 			"status[0]": "wrong",
-			metadata: "x".repeat(2001),
+			metadata: "bad",
 		});
 		assert.equal(statusCode, 422);
 		assert.equal(body.name, "ValidationError");

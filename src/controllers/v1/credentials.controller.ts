@@ -110,10 +110,7 @@ export class CredentialsController extends BaseController {
 		@Queries() query: {},
 		@Body() body: CredentialsCreateBodyInterface
 	): Promise<PublicCredentialsAttributes> {
-		const model = await this.credentialsService.create(
-			body,
-			"orgIds" in this.principal && Array.isArray(this.principal.orgIds) ? this.principal.orgIds : []
-		);
+		const model = await this.credentialsService.create(body, this.principal.parentOrgIds ?? []);
 		this.response.status(201);
 
 		await this.eventBus.publish(
@@ -227,11 +224,7 @@ export class CredentialsController extends BaseController {
 		@Queries() query: {},
 		@Body() body: CredentialsUpdateBodyInterface
 	): Promise<PublicCredentialsAttributes> {
-		const model = await this.credentialsService.update(
-			credentialsId,
-			body,
-			"orgIds" in this.principal && Array.isArray(this.principal.orgIds) ? this.principal.orgIds : []
-		);
+		const model = await this.credentialsService.update(credentialsId, body, this.principal.parentOrgIds ?? []);
 
 		await this.eventBus.publish(
 			new EventMutation(this.principal.arn, model.arn, `${this.appPrefix}:credentials/update`, JSON.stringify(body))

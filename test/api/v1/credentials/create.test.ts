@@ -87,6 +87,7 @@ describe("POST /api/v1/credentials", () => {
 			provider: "locale",
 			providerType: "test",
 			providerId: false,
+			metadata: "bad",
 			status: 0,
 		});
 		assert.equal(statusCode, 422);
@@ -97,6 +98,7 @@ describe("POST /api/v1/credentials", () => {
 		assert.isString(body.validation.body.provider[0]);
 		assert.isString(body.validation.body.providerType[0]);
 		assert.isString(body.validation.body.providerId[0]);
+		assert.isString(body.validation.body.metadata[0]);
 		assert.isString(body.validation.body.status[0]);
 	});
 

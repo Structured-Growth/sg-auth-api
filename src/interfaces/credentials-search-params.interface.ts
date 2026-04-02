@@ -9,5 +9,9 @@ export interface CredentialsSearchParamsInterface extends Omit<DefaultSearchPara
 	providerType?: CredentialsAttributes["providerType"];
 	status?: CredentialsAttributes["status"][];
 	otpId?: number;
-	metadata?: string | null;
+	/**
+	 * Search by custom entity fields.
+	 * Example: metadata[externalRef]=AA-22
+	 */
+	"metadata[customFieldName]"?: string;
 }

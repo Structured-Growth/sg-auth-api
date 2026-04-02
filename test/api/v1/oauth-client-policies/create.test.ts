@@ -66,6 +66,7 @@ describe("POST /api/v1/oauth-client-policies", () => {
 			providerType: 1,
 			passwordRequired: 21,
 			twoFaEnabled: 22,
+			metadata: "bad",
 			status: "activated",
 		});
 		assert.equal(statusCode, 422);
@@ -75,6 +76,7 @@ describe("POST /api/v1/oauth-client-policies", () => {
 		assert.isString(body.validation.body.providerType[0]);
 		assert.isString(body.validation.body.passwordRequired[0]);
 		assert.isString(body.validation.body.twoFaEnabled[0]);
+		assert.isString(body.validation.body.metadata[0]);
 		assert.isString(body.validation.body.status[0]);
 	});
 

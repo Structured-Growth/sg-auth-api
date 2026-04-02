@@ -5,5 +5,5 @@ export interface OAuthClientUpdateBodyInterface {
 	defaultOrgName?: string;
 	grants?: string[];
 	redirectUris?: string[];
-	metadata?: Record<string, unknown> | null;
+	metadata?: Record<string, unknown>;
 }

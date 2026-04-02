@@ -35,6 +35,7 @@ describe("POST /api/v1/permitted-organizations", () => {
 			orgId: -1,
 			region: 25,
 			accountId: "us",
+			metadata: "bad",
 			status: "super",
 		});
 		assert.equal(statusCode, 422);
@@ -45,6 +46,7 @@ describe("POST /api/v1/permitted-organizations", () => {
 		assert.isString(body.validation.body.orgId[0]);
 		assert.isString(body.validation.body.region[0]);
 		assert.isString(body.validation.body.accountId[0]);
+		assert.isString(body.validation.body.metadata[0]);
 	});
 
 	it("Should return custom fields validation error", async () => {

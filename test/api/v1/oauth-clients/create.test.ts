@@ -4,7 +4,6 @@ import { App } from "../../../../src/app/app";
 import { container, webServer } from "@structured-growth/microservice-sdk";
 import { agent } from "supertest";
 import { routes } from "../../../../src/routes";
-import OAuthClient from "../../../../database/models/oauth-client";
 import { seedCustomField } from "../../../common/seed-custom-fields";
 
 describe("POST /api/v1/oauth-clients", () => {
@@ -64,6 +63,7 @@ describe("POST /api/v1/oauth-clients", () => {
 			title: 1,
 			status: "activated",
 			defaultOrgName: false,
+			metadata: "bad",
 		});
 		assert.equal(statusCode, 422);
 		assert.equal(body.name, "ValidationError");
@@ -75,6 +75,7 @@ describe("POST /api/v1/oauth-clients", () => {
 		assert.isString(body.validation.body.defaultOrgName[0]);
 		assert.isString(body.validation.body.grants[0]);
 		assert.isString(body.validation.body.redirectUris[0]);
+		assert.isString(body.validation.body.metadata[0]);
 	});
 
 	it("Should return custom fields validation error", async () => {

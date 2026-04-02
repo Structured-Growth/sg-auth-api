@@ -92,10 +92,7 @@ export class PermittedOrganizationController extends BaseController {
 		@Queries() query: {},
 		@Body() body: PermittedOrganizationCreateBodyInterface
 	): Promise<PublicPermittedOrganizationAttributes> {
-		const model = await this.permittedOrganizationsService.create(
-			body,
-			"orgIds" in this.principal && Array.isArray(this.principal.orgIds) ? this.principal.orgIds : []
-		);
+		const model = await this.permittedOrganizationsService.create(body, this.principal.parentOrgIds ?? []);
 		this.response.status(201);
 
 		await this.eventBus.publish(
@@ -156,7 +153,7 @@ export class PermittedOrganizationController extends BaseController {
 		const model = await this.permittedOrganizationsService.update(
 			permittedOrganizationId,
 			body,
-			"orgIds" in this.principal && Array.isArray(this.principal.orgIds) ? this.principal.orgIds : []
+			this.principal.parentOrgIds ?? []
 		);
 
 		await this.eventBus.publish(

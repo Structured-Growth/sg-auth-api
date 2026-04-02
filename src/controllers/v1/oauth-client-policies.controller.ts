@@ -94,10 +94,7 @@ export class OAuthClientPolicyController extends BaseController {
 		@Queries() query: {},
 		@Body() body: OAuthClientPolicyCreateBodyInterface
 	): Promise<PublicOAuthClientPolicyAttributes> {
-		const model = await this.oauthClientPoliciesService.create(
-			body,
-			"orgIds" in this.principal && Array.isArray(this.principal.orgIds) ? this.principal.orgIds : []
-		);
+		const model = await this.oauthClientPoliciesService.create(body, this.principal.parentOrgIds ?? []);
 		this.response.status(201);
 
 		await this.eventBus.publish(
@@ -159,7 +156,7 @@ export class OAuthClientPolicyController extends BaseController {
 		const model = await this.oauthClientPoliciesService.update(
 			oauthClientPolicyId,
 			body,
-			"orgIds" in this.principal && Array.isArray(this.principal.orgIds) ? this.principal.orgIds : []
+			this.principal.parentOrgIds ?? []
 		);
 
 		await this.eventBus.publish(

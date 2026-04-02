@@ -18,7 +18,7 @@ export class OauthClientsService {
 	}
 
 	public async create(params: OAuthClientCreateBodyInterface, inheritedOrgIds: number[] = []): Promise<OAuthClient> {
-		await this.customFieldService.validate("OAuthClient", params.metadata, params.orgId, inheritedOrgIds);
+		await this.customFieldService.validate("OAuthClient", params.metadata, [params.orgId, ...inheritedOrgIds]);
 
 		return this.oauthClientsRepository.create({
 			accountId: params.accountId,
@@ -29,7 +29,7 @@ export class OauthClientsService {
 			defaultOrgName: params.defaultOrgName,
 			grants: params.grants,
 			redirectUris: params.redirectUris,
-			metadata: params.metadata ?? null,
+			metadata: params.metadata ?? {},
 		});
 	}
 
@@ -46,13 +46,11 @@ export class OauthClientsService {
 			);
 		}
 
-		const nextOAuthClient = {
-			...model.toJSON(),
-			...params,
-			metadata: params.metadata !== undefined ? params.metadata : model.metadata,
-		};
-
-		await this.customFieldService.validate("OAuthClient", nextOAuthClient.metadata, model.orgId, inheritedOrgIds);
+		await this.customFieldService.validate(
+			"OAuthClient",
+			params.metadata !== undefined ? params.metadata : model.metadata,
+			[model.orgId, ...inheritedOrgIds]
+		);
 
 		return this.oauthClientsRepository.update(id, params);
 	}
