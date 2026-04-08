@@ -13,13 +13,16 @@ export interface OTPsAttributes extends Omit<DefaultModelInterface, keyof Belong
 	providerType: "email" | "phoneNumber" | "username" | "google" | "github" | "wechat";
 	code: string;
 	lifeTime: number;
+	metadata: Record<string, unknown>;
 	status: "active" | "inactive" | "archived";
 }
 
 export interface OTPsCreationAttributes
-	extends Omit<OTPsAttributes, "id" | "arn" | "createdAt" | "updatedAt" | "deletedAt"> {}
+	extends Omit<OTPsAttributes, "id" | "arn" | "createdAt" | "updatedAt" | "deletedAt" | "metadata"> {
+	metadata?: Record<string, unknown>;
+}
 
-export interface OTPsUpdateAttributes extends Partial<Pick<OTPsAttributes, "status">> {}
+export interface OTPsUpdateAttributes extends Partial<Pick<OTPsAttributes, "status" | "metadata">> {}
 
 @Table({
 	tableName: "otps",
@@ -48,6 +51,9 @@ export class OTPs extends Model<OTPsAttributes, OTPsCreationAttributes> implemen
 
 	@Column
 	lifeTime: number;
+
+	@Column(DataType.JSONB)
+	metadata: Record<string, unknown>;
 
 	@Column(DataType.STRING)
 	status: OTPsAttributes["status"];

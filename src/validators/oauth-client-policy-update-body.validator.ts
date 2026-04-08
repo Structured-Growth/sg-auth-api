@@ -10,6 +10,7 @@ export const OAuthClientPolicyUpdateBodyValidator = joi.object({
 			.label("validator.oauthClientPolicies.providerType"),
 		passwordRequired: joi.boolean().label("validator.oauthClientPolicies.passwordRequired"),
 		twoFaEnabled: joi.boolean().label("validator.oauthClientPolicies.twoFaEnabled"),
+		metadata: joi.object().label("validator.oauthClientPolicies.metadata"),
 		status: joi.string().valid("active", "inactive", "archived").label("validator.oauthClientPolicies.status"),
 	}),
 });

@@ -4,18 +4,21 @@ import { CredentialsRepository } from "./credentials.repository";
 import { CredentialsCheckBodyInterface } from "../../interfaces/credentials-check-body.interface";
 import { CredentialsCreateBodyInterface } from "../../interfaces/credentials-create-body.interface";
 import { CredentialsChangePasswordBodyInterface } from "../../interfaces/credentials-change-password-body.interface";
+import { CredentialsUpdateBodyInterface } from "../../interfaces/credentials-update-body.interface";
+import { CustomFieldService } from "../custom-fields/custom-field.service";
 
 @autoInjectable()
 export class CredentialsService {
 	private i18n: I18nType;
 	constructor(
 		@inject("CredentialsRepository") private credentialsRepository: CredentialsRepository,
+		@inject("CustomFieldService") private customFieldService: CustomFieldService,
 		@inject("i18n") private getI18n: () => I18nType
 	) {
 		this.i18n = this.getI18n();
 	}
 
-	public async create(params: CredentialsCreateBodyInterface): Promise<Credentials> {
+	public async create(params: CredentialsCreateBodyInterface, inheritedOrgIds: number[] = []): Promise<Credentials> {
 		const result = await this.credentialsRepository.search({
 			orgId: params.orgId,
 			provider: params.provider,
@@ -26,6 +29,8 @@ export class CredentialsService {
 			throw new ValidationError({}, this.i18n.__("error.credential.provider_id"));
 		}
 
+		await this.customFieldService.validate("Credentials", params.metadata, [params.orgId, ...inheritedOrgIds]);
+
 		return this.credentialsRepository.create({
 			accountId: params.accountId,
 			orgId: params.orgId,
@@ -34,9 +39,30 @@ export class CredentialsService {
 			providerId: params.providerId,
 			...(params.otpId && { otpId: params.otpId }),
 			password: params.password,
+			metadata: params.metadata ?? {},
 			region: params.region,
 			status: params.status || "verification",
 		});
+	}
+
+	public async update(
+		id: number,
+		params: CredentialsUpdateBodyInterface,
+		inheritedOrgIds: number[] = []
+	): Promise<Credentials> {
+		const credential = await this.credentialsRepository.read(id);
+
+		if (!credential) {
+			throw new ValidationError({}, this.i18n.__("error.credential.credentials_invalid"));
+		}
+
+		await this.customFieldService.validate(
+			"Credentials",
+			params.metadata !== undefined ? params.metadata : credential.metadata,
+			[credential.orgId, ...inheritedOrgIds]
+		);
+
+		return this.credentialsRepository.update(id, params);
 	}
 
 	public async check(params: CredentialsCheckBodyInterface): Promise<Credentials> {

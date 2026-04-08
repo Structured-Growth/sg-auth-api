@@ -14,6 +14,7 @@ export interface CredentialsCreateBodyInterface extends BelongsToAccountInterfac
 	 */
 	providerId: CredentialsAttributes["providerId"];
 	otpId?: number;
+	metadata?: Record<string, unknown>;
 	/**
 	 * Password is required if local (e.g. email/password) provider is used.
 	 */

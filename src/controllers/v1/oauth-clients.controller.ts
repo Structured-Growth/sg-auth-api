@@ -16,6 +16,7 @@ import { OAuthClientSearchParamsInterface } from "../../interfaces/oauth-client-
 import { OAuthClientCreateBodyInterface } from "../../interfaces/oauth-client-create-body.interface";
 import { OAuthClientUpdateBodyInterface } from "../../interfaces/oauth-client-update-body.interface";
 import { OauthClientsRepository } from "../../modules/oauth-clients/oauth-clients.repository";
+import { OauthClientsService } from "../../modules/oauth-clients/oauth-clients.service";
 import { pick } from "lodash";
 import { OAuthClientsSearchParamsValidator } from "../../validators/oauth-clients-search-params.validator";
 import { OAuthClientCreateBodyValidator } from "../../validators/oauth-client-create-body.validator";
@@ -33,6 +34,7 @@ const publicOAuthClientAttributes = [
 	"status",
 	"grants",
 	"redirectUris",
+	"metadata",
 	"createdAt",
 	"updatedAt",
 	"arn",
@@ -47,6 +49,7 @@ export class OAuthClientController extends BaseController {
 	private i18n: I18nType;
 	constructor(
 		@inject("OauthClientsRepository") private oauthClientsRepository: OauthClientsRepository,
+		@inject("OauthClientsService") private oauthClientsService: OauthClientsService,
 		@inject("i18n") private getI18n: () => I18nType
 	) {
 		super();
@@ -97,16 +100,7 @@ export class OAuthClientController extends BaseController {
 			clientSecret: string;
 		}
 	> {
-		const model = await this.oauthClientsRepository.create({
-			accountId: body.accountId,
-			orgId: body.orgId,
-			region: body.region,
-			status: body.status || "active",
-			title: body.title,
-			defaultOrgName: body.defaultOrgName,
-			grants: body.grants,
-			redirectUris: body.redirectUris,
-		});
+		const model = await this.oauthClientsService.create(body, this.principal.parentOrgIds ?? []);
 		this.response.status(201);
 
 		await this.eventBus.publish(
@@ -166,7 +160,7 @@ export class OAuthClientController extends BaseController {
 		@Queries() query: {},
 		@Body() body: OAuthClientUpdateBodyInterface
 	): Promise<PublicOAuthClientAttributes> {
-		const model = await this.oauthClientsRepository.update(oauthClientId, body);
+		const model = await this.oauthClientsService.update(oauthClientId, body, this.principal.parentOrgIds ?? []);
 
 		await this.eventBus.publish(
 			new EventMutation(this.principal.arn, model.arn, `${this.appPrefix}:oauth-client/update`, JSON.stringify(body))

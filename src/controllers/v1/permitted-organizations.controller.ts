@@ -15,6 +15,7 @@ import { PermittedOrganizationsSearchParamsInterface } from "../../interfaces/pe
 import { PermittedOrganizationCreateBodyInterface } from "../../interfaces/permitted-organization-create-body.interface";
 import { PermittedOrganizationUpdateBodyInterface } from "../../interfaces/permitted-organization-update-body.interface";
 import { PermittedOrganizationsRepository } from "../../modules/permitted-organizations/permitted-organizations.repository";
+import { PermittedOrganizationsService } from "../../modules/permitted-organizations/permitted-organizations.service";
 import { pick } from "lodash";
 import { PermittedOrganizationsSearchParamsValidator } from "../../validators/permitted-organizations-search-params.validator";
 import { PermittedOrganizationCreateBodyValidator } from "../../validators/permitted-organization-create-body.validator";
@@ -28,6 +29,7 @@ const publicPermittedOrganizationAttributes = [
 	"orgId",
 	"region",
 	"accountId",
+	"metadata",
 	"status",
 	"createdAt",
 	"updatedAt",
@@ -44,6 +46,8 @@ export class PermittedOrganizationController extends BaseController {
 	constructor(
 		@inject("PermittedOrganizationsRepository")
 		private permittedOrganizationsRepository: PermittedOrganizationsRepository,
+		@inject("PermittedOrganizationsService")
+		private permittedOrganizationsService: PermittedOrganizationsService,
 		@inject("i18n") private getI18n: () => I18nType
 	) {
 		super();
@@ -88,7 +92,7 @@ export class PermittedOrganizationController extends BaseController {
 		@Queries() query: {},
 		@Body() body: PermittedOrganizationCreateBodyInterface
 	): Promise<PublicPermittedOrganizationAttributes> {
-		const model = await this.permittedOrganizationsRepository.create(body);
+		const model = await this.permittedOrganizationsService.create(body, this.principal.parentOrgIds ?? []);
 		this.response.status(201);
 
 		await this.eventBus.publish(
@@ -146,7 +150,11 @@ export class PermittedOrganizationController extends BaseController {
 		@Queries() query: {},
 		@Body() body: PermittedOrganizationUpdateBodyInterface
 	): Promise<PublicPermittedOrganizationAttributes> {
-		const model = await this.permittedOrganizationsRepository.update(permittedOrganizationId, body);
+		const model = await this.permittedOrganizationsService.update(
+			permittedOrganizationId,
+			body,
+			this.principal.parentOrgIds ?? []
+		);
 
 		await this.eventBus.publish(
 			new EventMutation(

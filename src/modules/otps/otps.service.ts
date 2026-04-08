@@ -3,18 +3,21 @@ import { OTPsRepository } from "./otps.repository";
 import { OTPsCreateBodyInterface } from "../../interfaces/otps-create-body.interface";
 import { OTPsCheckBodyInterface } from "../../interfaces/otps-check-body.interface";
 import OTPs from "../../../database/models/otps";
+import { OTPsUpdateBodyInterface } from "../../interfaces/otps-update-body.interface";
+import { CustomFieldService } from "../custom-fields/custom-field.service";
 
 @autoInjectable()
 export class OTPsService {
 	private i18n: I18nType;
 	constructor(
 		@inject("OTPsRepository") private otpsRepository: OTPsRepository,
+		@inject("CustomFieldService") private customFieldService: CustomFieldService,
 		@inject("i18n") private getI18n: () => I18nType
 	) {
 		this.i18n = this.getI18n();
 	}
 
-	public async create(params: OTPsCreateBodyInterface): Promise<OTPs> {
+	public async create(params: OTPsCreateBodyInterface, inheritedOrgIds: number[] = []): Promise<OTPs> {
 		const result = await this.otpsRepository.search({
 			orgId: params.orgId,
 			providerType: params.providerType,
@@ -25,6 +28,8 @@ export class OTPsService {
 			await Promise.all(result.data.map((otp) => this.otpsRepository.update(otp.id, { status: "archived" })));
 		}
 
+		await this.customFieldService.validate("OTP", params.metadata, [params.orgId, ...inheritedOrgIds]);
+
 		return this.otpsRepository.create({
 			orgId: params.orgId,
 			region: params.region,
@@ -33,8 +38,24 @@ export class OTPsService {
 			providerType: params.providerType,
 			code: params.code,
 			lifeTime: params.lifeTime,
+			metadata: params.metadata ?? {},
 			status: params.status,
 		});
+	}
+
+	public async update(id: number, params: OTPsUpdateBodyInterface, inheritedOrgIds: number[] = []): Promise<OTPs> {
+		const otp = await this.otpsRepository.read(id);
+
+		if (!otp) {
+			throw new ValidationError({}, this.i18n.__("error.otp.code_invalid"));
+		}
+
+		await this.customFieldService.validate("OTP", params.metadata !== undefined ? params.metadata : otp.metadata, [
+			otp.orgId,
+			...inheritedOrgIds,
+		]);
+
+		return this.otpsRepository.update(id, params);
 	}
 
 	public async check(params: OTPsCheckBodyInterface): Promise<OTPs> {
