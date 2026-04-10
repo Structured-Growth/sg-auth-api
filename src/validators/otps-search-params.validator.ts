@@ -13,6 +13,7 @@ export const OTPsSearchParamsValidator = joi.object({
 			.label("validator.otps.status"),
 		orgId: joi.number().positive().label("validator.otps.orgId"),
 		credentialId: joi.number().positive().label("validator.otps.credentialId"),
+		metadata: joi.object().label("validator.otps.metadata"),
 		id: joi.array().items(joi.number().positive().required()).label("validator.common.id"),
 		arn: joi.array().valid(joi.string().required()).label("validator.common.arn"),
 		page: joi.number().positive().label("validator.common.page"),

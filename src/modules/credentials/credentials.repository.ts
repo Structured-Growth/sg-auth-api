@@ -1,4 +1,4 @@
-import { Op } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 import {
 	autoInjectable,
 	RepositoryInterface,
@@ -22,7 +22,9 @@ export class CredentialsRepository
 	constructor(@inject("i18n") private getI18n: () => I18nType) {
 		this.i18n = this.getI18n();
 	}
-	public async search(params: CredentialsSearchParamsInterface): Promise<SearchResultInterface<Credentials>> {
+	public async search(
+		params: CredentialsSearchParamsInterface & { metadata?: Record<string, unknown> }
+	): Promise<SearchResultInterface<Credentials>> {
 		const page = params.page || 1;
 		const limit = params.limit || 20;
 		const offset = (page - 1) * limit;
@@ -37,6 +39,28 @@ export class CredentialsRepository
 		params.id && (where["id"] = { [Op.in]: params.id });
 		params.otpId && (where["otpId"] = params.otpId);
 		params.status && (where["status"] = { [Op.in]: params.status });
+
+		if (params.metadata && typeof params.metadata === "object") {
+			where[Op.and] = where[Op.and] ?? [];
+
+			for (const [keyRaw, valRaw] of Object.entries(params.metadata)) {
+				if (valRaw === null || valRaw === undefined) continue;
+
+				const key = String(keyRaw).replace(/[^a-zA-Z0-9_-]/g, "");
+				if (!key) continue;
+
+				const value = String(valRaw).trim();
+				if (!value) continue;
+
+				const left = Sequelize.literal(`("metadata"->>'${key}')`);
+
+				if (value.includes("*")) {
+					where[Op.and].push(Sequelize.where(left, { [Op.iLike]: value.replace(/\*/g, "%") }));
+				} else {
+					where[Op.and].push(Sequelize.where(left, { [Op.eq]: value }));
+				}
+			}
+		}
 
 		// todo search by ARN with wildcards
 

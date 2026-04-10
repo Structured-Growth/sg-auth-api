@@ -5,5 +5,6 @@ export const OTPsUpdateBodyValidator = joi.object({
 	query: joi.object(),
 	body: joi.object({
 		status: joi.string().valid("archived", "inactive").label("validator.otps.status"),
+		metadata: joi.object().label("validator.otps.metadata"),
 	}),
 });

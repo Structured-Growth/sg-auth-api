@@ -6,4 +6,9 @@ export interface PermittedOrganizationsSearchParamsInterface
 	orgId?: number;
 	accountId?: number[];
 	status?: PermittedOrganizationsAttributes["status"][];
+	/**
+	 * Search by custom entity fields.
+	 * Example: metadata[externalRef]=PO-11
+	 */
+	"metadata[customFieldName]"?: string;
 }

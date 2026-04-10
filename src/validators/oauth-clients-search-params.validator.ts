@@ -10,6 +10,7 @@ export const OAuthClientsSearchParamsValidator = joi.object({
 			.label("validator.oauthClients.status"),
 		orgId: joi.number().positive().label("validator.oauthClients.orgId"),
 		accountId: joi.number().positive().label("validator.oauthClients.accountId"),
+		metadata: joi.object().label("validator.oauthClients.metadata"),
 		id: joi.array().items(joi.number().positive().required()).label("validator.common.id"),
 		arn: joi.array().valid(joi.string().required()).label("validator.common.arn"),
 		page: joi.number().positive().label("validator.common.page"),

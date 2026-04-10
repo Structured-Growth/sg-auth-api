@@ -10,17 +10,30 @@ export interface OAuthClientAttributes extends DefaultModelInterface {
 	clientSecretHashIv: string;
 	grants: string[];
 	redirectUris: string[];
+	metadata: Record<string, unknown>;
 	status: "active" | "inactive" | "archived";
 }
 
 export interface OAuthClientCreationAttributes
 	extends Omit<
 		OAuthClientAttributes,
-		"id" | "arn" | "clientId" | "clientSecretHash" | "clientSecretHashIv" | "createdAt" | "updatedAt" | "deletedAt"
-	> {}
+		| "id"
+		| "arn"
+		| "clientId"
+		| "clientSecretHash"
+		| "clientSecretHashIv"
+		| "createdAt"
+		| "updatedAt"
+		| "deletedAt"
+		| "metadata"
+	> {
+	metadata?: Record<string, unknown>;
+}
 
 export interface OAuthClientUpdateAttributes
-	extends Partial<Pick<OAuthClientAttributes, "title" | "status" | "defaultOrgName" | "grants" | "redirectUris">> {}
+	extends Partial<
+		Pick<OAuthClientAttributes, "title" | "status" | "defaultOrgName" | "grants" | "redirectUris" | "metadata">
+	> {}
 
 @Table({
 	tableName: "oauth_clients",
@@ -64,6 +77,9 @@ export class OAuthClient
 
 	@Column(DataType.JSON)
 	redirectUris: string[];
+
+	@Column(DataType.JSONB)
+	metadata: Record<string, unknown>;
 
 	static get arnPattern(): string {
 		return [container.resolve("appPrefix"), "<region>", "<orgId>", "<accountId>", `oauth-client/<credentialsId>`].join(

@@ -7,5 +7,6 @@ export interface OTPsCreateBodyInterface extends BelongsToOrgInterface {
 	providerType: OTPsAttributes["providerType"];
 	code: string;
 	lifeTime: number;
+	metadata?: Record<string, unknown>;
 	status: OTPsAttributes["status"];
 }

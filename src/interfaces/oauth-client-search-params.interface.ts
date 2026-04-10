@@ -7,4 +7,9 @@ export interface OAuthClientSearchParamsInterface extends Omit<DefaultSearchPara
 	clientId?: string;
 	title?: OAuthClientAttributes["title"][];
 	status?: OAuthClientAttributes["status"][];
+	/**
+	 * Search by custom entity fields.
+	 * Example: metadata[externalRef]=OC-11
+	 */
+	"metadata[customFieldName]"?: string;
 }

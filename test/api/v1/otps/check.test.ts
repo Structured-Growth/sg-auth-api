@@ -4,7 +4,6 @@ import { App } from "../../../../src/app/app";
 import { container, webServer } from "@structured-growth/microservice-sdk";
 import { agent } from "supertest";
 import { routes } from "../../../../src/routes";
-import Credentials from "../../../../database/models/credentials";
 
 describe("PUT /api/v1/otps", () => {
 	const server = agent(webServer(routes));

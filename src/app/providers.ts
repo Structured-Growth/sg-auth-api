@@ -23,6 +23,9 @@ import { PermittedOrganizationsRepository } from "../modules/permitted-organizat
 import { PermittedOrganizationsService } from "../modules/permitted-organizations/permitted-organizations.service";
 import { OTPsRepository } from "../modules/otps/otps.repository";
 import { OTPsService } from "../modules/otps/otps.service";
+import { CustomFieldRepository } from "../modules/custom-fields/custom-field.repository";
+import { CustomFieldService } from "../modules/custom-fields/custom-field.service";
+import { OauthClientsService } from "../modules/oauth-clients/oauth-clients.service";
 
 // load and validate env variables
 loadEnvironment();
@@ -47,6 +50,8 @@ container.register("App", App, { lifecycle: Lifecycle.Singleton });
 container.register("CredentialsService", CredentialsService);
 container.register("PermittedOrganizationsService", PermittedOrganizationsService);
 container.register("OauthClientPoliciesService", OauthClientPoliciesService);
+container.register("OauthClientsService", OauthClientsService);
+container.register("CustomFieldService", CustomFieldService);
 
 container.register("eventbusName", { useValue: process.env.EVENTBUS_NAME || "sg-eventbus-dev" });
 container.register("EventbusProvider", eventBusProviders[process.env.EVENTBUS_PROVIDER || "TestEventbusProvider"]);
@@ -74,3 +79,4 @@ container.register("OauthClientsRepository", OauthClientsRepository);
 container.register("OauthClientPoliciesRepository", OauthClientPoliciesRepository);
 container.register("PermittedOrganizationsRepository", PermittedOrganizationsRepository);
 container.register("OTPsRepository", OTPsRepository);
+container.register("CustomFieldRepository", CustomFieldRepository);
