@@ -117,7 +117,7 @@ export class PermittedOrganizationController extends BaseController {
 	@Get("/:permittedOrganizationId")
 	@SuccessResponse(200, "Returns permitted organization info")
 	@DescribeAction("permitted-organizations/read")
-	@DescribeResource("PermittedOrganization", ({ params }) => [Number(params.permittedOrganizationId)])
+	@DescribeResource("PermittedOrganizations", ({ params }) => [Number(params.permittedOrganizationId)])
 	@ValidateFuncArgs(PermittedOrganizationReadParamsValidator)
 	async get(@Path() permittedOrganizationId: number): Promise<PublicPermittedOrganizationAttributes> {
 		const model = await this.permittedOrganizationsRepository.read(permittedOrganizationId);
@@ -143,7 +143,7 @@ export class PermittedOrganizationController extends BaseController {
 	@Put("/:permittedOrganizationId")
 	@SuccessResponse(200, "Returns updated Permitted organization")
 	@DescribeAction("permitted-organizations/update")
-	@DescribeResource("PermittedOrganization", ({ params }) => [Number(params.permittedOrganizationId)])
+	@DescribeResource("PermittedOrganizations", ({ params }) => [Number(params.permittedOrganizationId)])
 	@ValidateFuncArgs(PermittedOrganizationUpdateBodyValidator)
 	async update(
 		@Path() permittedOrganizationId: number,
@@ -178,7 +178,7 @@ export class PermittedOrganizationController extends BaseController {
 	@Delete("/:permittedOrganizationId")
 	@SuccessResponse(204, "Returns nothing")
 	@DescribeAction("permitted-organizations/delete")
-	@DescribeResource("PermittedOrganization", ({ params }) => [Number(params.permittedOrganizationId)])
+	@DescribeResource("PermittedOrganizations", ({ params }) => [Number(params.permittedOrganizationId)])
 	@ValidateFuncArgs(PermittedOrganizationDeleteParamsValidator)
 	async delete(@Path() permittedOrganizationId: number): Promise<void> {
 		const model = await this.permittedOrganizationsRepository.read(permittedOrganizationId);
