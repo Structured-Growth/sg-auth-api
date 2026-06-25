@@ -1,5 +1,12 @@
-import { autoInjectable, inject, ValidationError, I18nType } from "@structured-growth/microservice-sdk";
-import Credentials from "../../../database/models/credentials";
+import {
+	autoInjectable,
+	inject,
+	ValidationError,
+	I18nType,
+	Emits,
+	EventbusService,
+} from "@structured-growth/microservice-sdk";
+import Credentials, { CredentialsAttributes } from "../../../database/models/credentials";
 import { CredentialsRepository } from "./credentials.repository";
 import { CredentialsCheckBodyInterface } from "../../interfaces/credentials-check-body.interface";
 import { CredentialsCreateBodyInterface } from "../../interfaces/credentials-create-body.interface";
@@ -13,11 +20,13 @@ export class CredentialsService {
 	constructor(
 		@inject("CredentialsRepository") private credentialsRepository: CredentialsRepository,
 		@inject("CustomFieldService") private customFieldService: CustomFieldService,
+		@inject("EventbusService") private eventBus: EventbusService,
 		@inject("i18n") private getI18n: () => I18nType
 	) {
 		this.i18n = this.getI18n();
 	}
 
+	@Emits<CredentialsAttributes>("events/credentials/created", [Credentials])
 	public async create(params: CredentialsCreateBodyInterface, inheritedOrgIds: number[] = []): Promise<Credentials> {
 		const result = await this.credentialsRepository.search({
 			orgId: params.orgId,
@@ -31,7 +40,7 @@ export class CredentialsService {
 
 		await this.customFieldService.validate("Credentials", params.metadata, [params.orgId, ...inheritedOrgIds]);
 
-		return this.credentialsRepository.create({
+		const credential = await this.credentialsRepository.create({
 			accountId: params.accountId,
 			orgId: params.orgId,
 			provider: params.provider,
@@ -43,6 +52,14 @@ export class CredentialsService {
 			region: params.region,
 			status: params.status || "verification",
 		});
+
+		await this.eventBus.publish({
+			arn: `events/credentials/created`,
+			data: credential.toJSON(),
+			resources: [credential.arn],
+		});
+
+		return credential;
 	}
 
 	public async update(
